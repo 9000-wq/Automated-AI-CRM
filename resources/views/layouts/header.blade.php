@@ -19,7 +19,9 @@
 	<link href="{{asset('css/app.css')}}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://cdn.datatables.net/2.3.1/css/dataTables.dataTables.min.css" rel="stylesheet">
 	
+
 	<style>
 		nav li{
 			border-bottom: 2px solid white;
@@ -53,12 +55,27 @@
 					</li>
 
 					@if(Auth::user()->user_role =='super admin')
+					
 					<li class="sidebar-item active">
-						<a class="sidebar-link" href="index.html">
+						<a class="sidebar-link" href="{{route('plans.index')}}">
+						<i class="fas fa-list-alt" ></i> <span class="align-middle">Plans Managment</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item active">
+						<a class="sidebar-link" href="{{route('manageprices')}}">
 						<i class="fas fa-money-bill-alt	" ></i> <span class="align-middle">Price Managment</span>
 						</a>
 					</li>
+
+					
 					@endif
+
+					<li class="sidebar-item active">
+						<a class="sidebar-link" href="{{route('users.index')}}">
+						<i class="fas fa-users" ></i> <span class="align-middle">Users</span>
+						</a>
+					</li>
 
 					<li class="sidebar-item active">
 						<a class="sidebar-link"  href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -87,7 +104,7 @@
               </a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                <img src="img/avatars/myavatar.jpg" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span class="text-dark">{{Auth::user()->name}}</span>
+                <img src="{{asset('img/avatars/myavatar.jpg')}}" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span class="text-dark">{{Auth::user()->name}}</span>
               </a>
 							<div class="dropdown-menu dropdown-menu-end">
 								<a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1" data-feather="user"></i> Profile</a>

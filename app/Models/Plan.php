@@ -5,17 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CompanyPlan;
 
-class Company extends Model
+class Plan extends Model
 {
     
     protected $fillable = [
-        'company_name',
-        'business_type',
-        'company_email',
-        'company_address',
-        'country',
+        'name', 'description', 'price', 'billing_cycle', 'features'
     ];
-
 
     public function companyPlans()
     {
