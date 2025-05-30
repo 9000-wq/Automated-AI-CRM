@@ -34,6 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:super admin'])->group(function () {
 
     Route::get('/manageprices', [HomeController::class, 'index'])->name('manageprices');
+    Route::get('/newplan/{companyid?}', [HomeController::class, 'newplan'])->name('newplan');
+    Route::post('savenewplan', [HomeController::class,'savenewplan'])->name('savenewplan');
+    Route::post('deletenewplan', [HomeController::class,'deletenewplan'])->name('deletenewplan');
+    Route::get('seeallplans/{companyid?}', [HomeController::class,'seeallplans'])->name('seeallplans');
     Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');           // List all plans
     Route::get('/createplans', [PlanController::class, 'create'])->name('plans.create');   // Show form to create
     Route::post('/plans', [PlanController::class, 'store'])->name('plans.store');           // Store new plan

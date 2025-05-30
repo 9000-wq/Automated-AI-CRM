@@ -116,6 +116,7 @@ class UserController extends Controller
 
          $validated['company_id'] = $request->company;
          unset($validated['company']);
+         $validated['name'] = $request->first_name." ".$request->last_name;
  
          $user->update($validated);
  

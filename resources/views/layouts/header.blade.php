@@ -29,10 +29,51 @@
 			padding-top: 10px;
 		}
 		
-		
-		nav li:hover{
-			
+		.sidebar-link{
+			color: white !important;
 		}
+	
+
+		.dt-search{
+			text-align: end !important;
+		}
+
+		.dt-paging{
+			text-align: end !important;
+			margin-top: 10px !important;
+		}
+
+		
+		.sidebar-item:hover {
+		background-color: white;
+		transition:2s;
+		}
+
+		.sidebar-item:hover a,
+		.sidebar-item:hover a i,
+		.sidebar-item:hover a span {
+			color: black !important;
+			transition:2s;
+		}
+
+
+
+
+       .active{
+		background-color: white;
+	   }
+	   .active a{
+		color: black !important;
+	   }
+	   .active i{
+		color: black !important;
+	   }
+	   .active span{
+		color: black !important;
+	   }
+
+
+		
 
 	</style>
 </head>
@@ -48,21 +89,21 @@
 				<ul class="sidebar-nav">
 					
 
-					<li class="sidebar-item active">
+					<li class="sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
 						<a class="sidebar-link" href="{{route('dashboard')}}">
-						<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+						<i class="fas fa-tachometer-alt	" ></i> <span class="align-middle">Dashboard</span>
 						</a>
 					</li>
 
 					@if(Auth::user()->user_role =='super admin')
 					
-					<li class="sidebar-item active">
+					<li class="sidebar-item  {{ request()->routeIs('plans.index') ? 'active' : '' }}">
 						<a class="sidebar-link" href="{{route('plans.index')}}">
 						<i class="fas fa-list-alt" ></i> <span class="align-middle">Plans Managment</span>
 						</a>
 					</li>
 
-					<li class="sidebar-item active">
+					<li class="sidebar-item {{ request()->routeIs('manageprices') ? 'active' : '' }}">
 						<a class="sidebar-link" href="{{route('manageprices')}}">
 						<i class="fas fa-money-bill-alt	" ></i> <span class="align-middle">Price Managment</span>
 						</a>
@@ -71,13 +112,13 @@
 					
 					@endif
 
-					<li class="sidebar-item active">
+					<li class="sidebar-item  {{ request()->routeIs('users.index') ? 'active' : '' }}" >
 						<a class="sidebar-link" href="{{route('users.index')}}">
 						<i class="fas fa-users" ></i> <span class="align-middle">Users</span>
 						</a>
 					</li>
 
-					<li class="sidebar-item active">
+					<li class="sidebar-item ">
 						<a class="sidebar-link"  href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 						<i class="fas fa-sign-out-alt" ></i> <span class="align-middle">Logout</span>
 						</a>

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('plan_id')->constrained()->onDelete('cascade');
             $table->date('start_date');
             $table->date('end_date')->nullable();
-            $table->decimal('custom_price', 10, 2)->nullable(); // if price is overridden for this company
+            $table->text('custom_price')->nullable(); // if price is overridden for this company
             $table->timestamps();
         });
     }
