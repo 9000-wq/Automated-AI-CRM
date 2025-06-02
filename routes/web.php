@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LeadController;
 
 
 
@@ -30,7 +31,23 @@ Route::middleware('auth')->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
 
-    
+
+    Route::middleware(['role:super admin|admin'])->group(function () {    
+    // Lead Routes
+    Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');           
+    Route::get('/leads/create', [LeadController::class, 'create'])->name('leads.create');  
+    Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');          
+    Route::get('/leads/{lead}', [LeadController::class, 'show'])->name('leads.show');      
+    Route::get('/leads/{lead}/edit', [LeadController::class, 'edit'])->name('leads.edit'); 
+    Route::put('/leads/{lead}', [LeadController::class, 'update'])->name('leads.update');  
+    Route::delete('/leads', [LeadController::class, 'destroy'])->name('leads.destroy'); 
+    Route::get('/editcontact/{contact?}', [LeadController::class, 'editcontact'])->name('leadcontact');           
+    Route::put('/updatelead', [LeadController::class, 'updatelead'])->name('updateleadcontact');           
+    Route::delete('/deleteleadcontact/{contact?}', [LeadController::class, 'deleteleadcontact'])->name('deleteleadcontact'); 
+
+    });
+        
+
     Route::middleware(['role:super admin'])->group(function () {
 
     Route::get('/manageprices', [HomeController::class, 'index'])->name('manageprices');
