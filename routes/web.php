@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/editcontact/{contact?}', [LeadController::class, 'editcontact'])->name('leadcontact');           
     Route::put('/updatelead', [LeadController::class, 'updatelead'])->name('updateleadcontact');           
     Route::delete('/deleteleadcontact/{contact?}', [LeadController::class, 'deleteleadcontact'])->name('deleteleadcontact'); 
+    Route::post('savenotes', [LeadController::class, 'savenotes'])->name('leads.savenotes');          
+
 
     });
         

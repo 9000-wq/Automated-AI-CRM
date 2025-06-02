@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\Contact;
 use App\Models\User;
+use App\Models\Note;
 use DataTables;
 
 class LeadController extends Controller
@@ -180,6 +181,24 @@ class LeadController extends Controller
 
         Contact::where('id',$request->contact)->delete();
         return redirect()->back()->with('success', 'Contact deleted successfully');
+
+    }
+
+    public function savenotes(Request $request){
+
+       $notes= $request->notes;
+
+       $validatedData = $request->validate([
+        'notes'   => 'required',
+        ]);
+
+        Note::create([
+            'lead_id'=>$request->leadid,
+            'user_id'=>auth()->user()->id,
+            'notes'=>$notes
+        ]);
+
+        return response()->json(['Success'=>'Notes Added Successfully']);
 
     }
 
