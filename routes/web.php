@@ -45,7 +45,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/updatelead', [LeadController::class, 'updatelead'])->name('updateleadcontact');           
     Route::delete('/deleteleadcontact/{contact?}', [LeadController::class, 'deleteleadcontact'])->name('deleteleadcontact'); 
     Route::post('savenotes', [LeadController::class, 'savenotes'])->name('leads.savenotes');          
-
+    Route::get('/leads/{lead}/notes', [LeadController::class, 'fetchNotes'])->name('leads.notes');
+    Route::delete('/deletenotes', [LeadController::class, 'deletenotes'])->name('deletenotes');
+    
 
     });
         

@@ -86,13 +86,14 @@
 
                                                                         <hr class="my-4">
 
-                                                                        <!-- Sample Comment -->
-                                                                        <div class="d-flex mb-4">
-                                                                            <div>
-                                                                            <h6 class="mb-1">Jane Doe <small class="text-muted">• 2 hours ago</small></h6>
-                                                                            <p class="mb-0">This is a beautifully designed comment box! Works great on all screen sizes.</p>
+                                                                        <h4>Notes</h4>
+                                                                        
+                                                                        <div class=" mb-4">
+                                                                            <div class="appendnotes">
+                                                                            
                                                                             </div>
                                                                         </div>
+
 
                                                                    
                                                                 
@@ -152,7 +153,8 @@
     @push('scripts')
     <script>
       $(document).ready(function(){
-      
+       
+
         $('.savenotes').click(function(){
 
             let notes=$('.notesinput').val();
@@ -167,7 +169,8 @@
                     notes:notes
                 },
                 success: function (response) {
-
+                    load_notes(leadid,page='');
+                    $('.notesinput').val("");
 
                 },
                 error: function (error) {
@@ -178,6 +181,56 @@
 
 
         })
+
+
+
+    function load_notes(leadId,page){
+
+        
+
+        let button = $(this);
+
+        let url = "{{ route('leads.notes', ['lead' => '__LEAD_ID__']) }}";
+        url = url.replace('__LEAD_ID__', leadId) + `?page=${page}`;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (response) {
+               
+                if(page ==''){ 
+                    $('.appendnotes').empty();
+                }else{
+                    $('#load-more').remove();
+                }
+                $('.appendnotes').append(response);
+                // button.data('page', page + 1);
+
+                // If fewer than 10 items were returned, hide the button
+                if ($(response).filter('.note').length < 10) {
+                    button.remove();
+                }
+            },
+            error: function () {
+                alert('Could not load more notes.');
+            }
+        });
+
+    }
+
+    load_notes("{{$lead->id}}",page='');
+
+    $(document).on('click','#load-more',function(){
+
+        let button = $(this);
+        let page = button.data('page');
+
+        load_notes("{{$lead->id}}",page);
+
+    })
+
+
+   
 
     })
     </script>

@@ -202,4 +202,29 @@ class LeadController extends Controller
 
     }
 
+
+    public function fetchNotes(Request $request, $leadId)
+    {
+        $pageno= $request->page;
+        $notes = Note::join('users','notes.user_id','users.id')->select('notes.*', 'users.name')->where('lead_id', $leadId)
+            ->orderBy('notes.created_at', 'desc')
+            ->paginate(10); // Load 10 notes at a time
+
+        // if ($request->ajax()) {
+        //     return view('leads.note_items', compact('notes'))->render();
+        // }
+
+        return view('leads.shownotes', compact('notes', 'leadId','pageno'));
+    }
+
+    public function deletenotes(Request $request)
+    {
+        $noteid= $request->noteid;
+        Note::find($noteid)->delete();
+
+        return response()->json(['success'=>'Note Deleted Successfully.']);
+    }
+
+
+
 }
