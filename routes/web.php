@@ -6,6 +6,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\ContactController;
+
+use App\Http\Controllers\AccountController;
+
+Route::resource('accounts', AccountController::class);
+Route::get('/accounts/{id}/contacts', [AccountController::class, 'getContacts']);
+Route::get('/accounts/{id}/leads', [AccountController::class, 'getLeads']);
 
 
 
@@ -13,6 +20,10 @@ use App\Http\Controllers\LeadController;
 Route::get('/welcome', function () {
     return view('welcome');
 });
+
+Route::resource('contacts', ContactController::class);
+Route::get('/contacts/by-lead/{lead_id}', [ContactController::class, 'getContactsByLead']);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

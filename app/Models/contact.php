@@ -5,16 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class contact extends Model
+class Contact extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'lead_id', 'full_name', 'role', 'phone', 'email', 'address'
+        'name',
+        'email',
+        'birthday',
+        'phone',
+        'address',
+        'description',
+        'lead_id',
+        'contact_role_id',
+        'account_id'
     ];
 
+    // Relationship: Contact belongs to a Role
+    public function role()
+    {
+        return $this->belongsTo(ContactRole::class, 'contact_role_id');
+    }
+
+    // Relationship: Contact belongs to a Lead
     public function lead()
     {
-        return $this->belongsTo(Lead::class);
+        return $this->belongsTo(lead::class);
     }
 }
