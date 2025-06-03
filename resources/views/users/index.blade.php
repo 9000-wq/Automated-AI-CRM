@@ -70,7 +70,32 @@
             {data: 'email', name: 'email'},
             {data: 'user_role', name: 'user_role'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
+        ],
+        dom: 'Bfrtip', // Show buttons
+        buttons: [
+            {
+                extend: 'csv',
+                className: 'btn btn-sm btn-outline-primary',
+                text: 'Export CSV'
+            },
+            {
+                extend: 'excel',
+                className: 'btn btn-sm btn-outline-success',
+                text: 'Export Excel'
+            },
+            {
+                extend: 'pdf',
+                className: 'btn btn-sm btn-outline-danger',
+                text: 'Export PDF'
+            },
+            {
+                extend: 'print',
+                className: 'btn btn-sm btn-outline-secondary',
+                text: 'Print'
+            }
         ]
+
+
     });
 
 
@@ -99,7 +124,7 @@
                 },
                 success: function (response) {
 
-                    swal("Poof! Your user file has been deleted!", {
+                    swal("Poof! Your user has been deleted!", {
                     icon: "success",
                     });
                     location.reload(); // Reload or remove row dynamically

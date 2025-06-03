@@ -73,12 +73,27 @@
 	   }
 
 
+	   table thead{
+		background-color: #3b65ea !important;
+	   }
+
+	   table thead th{
+		color: white !important;
+		text-align:left !important;
+	   }
+
+	   table td{
+		text-align:left !important;
+	   }
+
+
 		
 
 	</style>
 </head>
 
 <body>
+	
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar js-sidebar">
 			<div  style="padding: 0px;background-color: #3b65ea;font-size: medium;" class="sidebar-content js-simplebar">
@@ -94,6 +109,14 @@
 						<i class="fas fa-tachometer-alt	" ></i> <span class="align-middle">Dashboard</span>
 						</a>
 					</li>
+
+					@if(Auth::user()->user_role =='super admin' OR  Auth::user()->user_role =='admin')
+					<li class="sidebar-item  {{ request()->routeIs('leads.index') || request()->routeIs('leads.create') || request()->routeIs('leads.show') || request()->routeIs('leads.edit') || request()->routeIs('leadcontact')   ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{route('leads.index')}}">
+						<i class="fas fa-magnet" ></i> <span class="align-middle">Lead Managment</span>
+						</a>
+					</li>
+					@endif
 
 					@if(Auth::user()->user_role =='super admin')
 					

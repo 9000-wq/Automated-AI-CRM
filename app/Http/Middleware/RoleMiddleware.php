@@ -19,8 +19,9 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
-        if (auth()->user()->user_role !== $role) {
-            // abort(403, 'Unauthorized');
+        $allowedRoles = explode('|', $role); // support multiple roles
+        if (!in_array(auth()->user()->user_role, $allowedRoles)) {
+            abort(403, 'Unauthorized');
             return response()->view('unauthorized', [], 403);
         }
 
