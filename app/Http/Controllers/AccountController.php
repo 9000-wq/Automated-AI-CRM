@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class AccountController extends Controller
 {
@@ -34,15 +35,62 @@ class AccountController extends Controller
         return response()->json(Account::all());
     }
 
+    public function showaccount()
+    {
+        return view('createaccount');
+    }
+
+    public function account(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Account::latest()->get();
+
+            return DataTables::of($data)
+                ->addColumn('status', function ($row) {
+                    if ($row->status === 'active') {
+                        return '<span class="btn btn-sm btn-success">Active</span>';
+                    } else {
+                        return '<span class="btn btn-sm btn-danger">Inactive</span>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="' . route('account.edit', $row->id) . '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a> ';
+                    $btn .= '<button id="' . $row->id . '" class="deletebtn btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>';
+                    return $btn;
+                })
+                ->editColumn('phone', function ($row) {
+                    return $row->number;
+                })
+                ->rawColumns(['status', 'action']) // Allow HTML rendering
+                ->make(true);
+        }
+
+        return view('account');
+    }
+
+    public function edit($id)
+    {
+        $account = Account::findOrFail($id);
+        return view('editaccount', compact('account'));
+    }
+
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255'
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'industry' => 'nullable|string|max:255',
+            'email' => 'required|email|max:255',
+            'number' => 'required|digits_between:7,15',
+            'website' => 'nullable|max:255',
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
+            'status' => 'required|in:active,inactive',
         ]);
 
-        $account = Account::create($request->all());
+        Account::create($validatedData);
 
-        return response()->json($account, 201);
+        return redirect()->route('home.account')->with('success', 'Account created successfully!');
     }
 
     public function show($id)
@@ -53,10 +101,22 @@ class AccountController extends Controller
 
     public function update(Request $request, $id)
     {
-        $account = Account::findOrFail($id);
-        $account->update($request->all());
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'industry' => 'nullable|string|max:255',
+            'email' => 'required|email|max:255',
+            'number' => 'required|digits_between:7,15',
+            'website' => 'nullable|max:255',
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
+            'status' => 'required|in:active,inactive',
+        ]);
 
-        return response()->json($account);
+        $account = Account::findOrFail($id);
+        $account->update($validatedData);
+
+        return redirect()->route('home.account')->with('success', 'Account edited successfully!');
     }
 
     public function destroy($id)
