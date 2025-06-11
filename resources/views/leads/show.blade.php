@@ -125,7 +125,8 @@
                                                                     </form>
 
                                                                     <br>
-                                                                    Role: {{ $contact->role }}<br>
+                                                                    Name: {{ $contact->name }}<br>
+                                                                    Role: {{ $contact->role->label }}<br>
                                                                     Email: {{ $contact->email }}<br>
                                                                     Phone: {{ $contact->phone }}<br>
                                                                     Address: {{ $contact->address }}

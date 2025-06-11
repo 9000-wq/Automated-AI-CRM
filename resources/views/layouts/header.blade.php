@@ -108,7 +108,7 @@
 							<i class="fas fa-tachometer-alt	"></i> <span class="align-middle">Dashboard</span>
 						</a>
 					</li>
-
+					<a href="#" class="sidebar-link"><strong>CRM</strong></a>
 					<li class="sidebar-item {{ request()->routeIs('home.account') ? 'active' : '' }}">
 						<a class="sidebar-link" href="{{ route('home.account') }}">
 							<i class="fas fa-user-circle"></i>
@@ -125,6 +125,23 @@
 							</a>
 						</li>
 					@endif
+
+
+					
+					<li
+						class="sidebar-item  {{ request()->routeIs('Opportunities') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{route('Opportunities')}}">
+							<i class="fas fa-dollar-sign"></i> <span class="align-middle">Opportunities</span>
+						</a>
+					</li>
+
+					<li
+						class="sidebar-item  {{ request()->routeIs('contacts.index') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{route('contacts.index')}}">
+							<i class="fas fa-address-book"></i> <span class="align-middle">Contacts</span>
+						</a>
+					</li>
+				
 
 					@if(Auth::user()->user_role == 'super admin')
 

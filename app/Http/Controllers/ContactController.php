@@ -6,6 +6,7 @@ use App\Models\Contact;
 use App\Models\ContactRole;
 use App\Models\Lead;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class ContactController extends Controller
 {
@@ -24,13 +25,25 @@ class ContactController extends Controller
     }
 
     // Get all contacts
-    public function index()
+    public function index(Request $request)
     {
-        $contacts = Contact::with(['role', 'lead'])->latest()->get();
-        return response()->json([
-            'success' => true,
-            'data' => $contacts
-        ]);
+        if ($request->ajax()) {
+
+                $contacts = Contact::with(['role', 'lead'])->latest();
+        
+                return DataTables::of($contacts)
+                    
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="' . route('contacts.show', $row->id) . '" class="btn  btn-warning"><i class="fas fa-edit"></i></a> ';
+                    $btn .= '<button id="' . $row->id . '" class="deletebtn btn  btn-danger"><i class="fas fa-trash-alt"></i></button>';
+                    return $btn;
+                })
+                ->rawColumns(['status', 'action']) // Allow HTML rendering
+                ->make(true);
+
+        }
+
+        return view('contacts.index');
     }
 
     // Store a new contact
@@ -60,10 +73,7 @@ class ContactController extends Controller
     public function show(Contact $contact)
     {
         $contact->load(['role', 'lead']);
-        return response()->json([
-            'success' => true,
-            'data' => $contact
-        ]);
+        return view('contacts.show')->with('contact',$contact);
     }
 
     // Update a contact
@@ -76,17 +86,26 @@ class ContactController extends Controller
             'phone'            => 'nullable|string|max:20',
             'address'          => 'nullable|string|max:255',
             'description'      => 'nullable|string',
-            'lead_id'          => 'required|exists:leads,id',
-            'contact_role_id'  => 'required|exists:contact_roles,id',
+            'role'  => 'required',
         ]);
 
-        $contact->update($validated);
+        $rolevalue = ContactRole::firstOrCreate(
+            ['label' => $request->role]
+        ); 
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Contact updated successfully',
-            'data' => $contact
-        ]);
+        $contact->update([
+                'name'=>$request->name,
+                'email'=>$request->email,
+                'birthday'=>$request->birthday,
+                'phone'=>$request->phone,
+                'address'=>$request->address,
+                'description'=>$request->description,
+                'contact_role_id'=>$rolevalue->id
+
+            ]);
+
+            return redirect()->back()->with('success', 'Contact updated successfully');
+
     }
 
     // Delete a contact

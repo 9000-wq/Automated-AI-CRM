@@ -2,7 +2,7 @@
 
 <main class="content">
     <div class="container-fluid p-0">
-        <h1 class="h3 mb-3"><strong>Account List</strong></h1>
+        <h1 class="h3 mb-3"><strong>Contact List</strong></h1>
 
         <div class="row">
             <div class="col-xl-12 col-xxl-12 d-flex">
@@ -13,7 +13,7 @@
                                 <div style="width: 100%;background-color: #3b65ea;height: 10px;border-radius: 10px 10px 0px 0px;"></div>
                                 <div class="card-body">
 
-                                    <a href="{{ route('account') }}" style="font-size: 20px;font-weight: 600;">Create New Account</a>
+                                   
 
                                     @if(session('success'))
                                         <p style="text-align: right;font-size: large;color: #3b65ea;">{{ session('success') }}</p>
@@ -23,14 +23,10 @@
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
-                                                <th>Industry</th>
+                                                <th>Lead</th>
+                                                <th>Role</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
-                                                <th>Website</th>
-                                                <th>Address</th>
-                                                <th>City</th>
-                                                <th>Country</th>
-                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -53,17 +49,13 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('home.account') }}",
+            ajax: "{{ route('contacts.index') }}",
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'industry', name: 'industry'},
+                {data: 'lead.name', name: 'lead.name'},
+                {data: 'role.label', name: 'role.label'},
                 {data: 'email', name: 'email'},
                 {data: 'phone', name: 'phone'},
-                {data: 'website', name: 'website'},
-                {data: 'address', name: 'address'},
-                {data: 'city', name: 'city'},
-                {data: 'country', name: 'country'},
-                {data: 'status', name: 'status'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],
             dom: 'Bfrtip',
@@ -77,8 +69,9 @@
 
         $(document).on('click', '.deletebtn', function () {
             let id = $(this).attr('id');
-            let myurl = "{{ route('accounts.destroy', ':id') }}";
+            let myurl = "{{ route('contacts.destroy', ':id') }}";
             myurl = myurl.replace(':id', id);
+
 
             swal({
                 title: "Are you sure?",
@@ -88,6 +81,7 @@
                 dangerMode: true,
             }).then((willDelete) => {
                 if (willDelete) {
+                    
                     $.ajax({
                         url: myurl,
                         type: 'DELETE',

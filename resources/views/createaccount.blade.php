@@ -17,7 +17,7 @@
                                         @csrf
 
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 mb-3">
                                                 <label for="name">Name</label>
                                                 <input type="text" name="name" id="name"
                                                     class="form-control mb-2 @error('name') is-invalid @enderror"
@@ -27,7 +27,7 @@
                                                 @enderror
                                             </div>
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 mb-3">
                                                 <label for="industry">Industry</label>
                                                 <input type="text" name="industry" id="industry"
                                                     class="form-control mb-2 @error('industry') is-invalid @enderror"
@@ -37,7 +37,7 @@
                                                 @enderror
                                             </div>
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 mb-3">
                                                 <label for="email">Email</label>
                                                 <input type="email" name="email" id="email"
                                                     class="form-control mb-2 @error('email') is-invalid @enderror"
@@ -49,17 +49,17 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 mb-3">
                                                 <label for="number">Phone</label>
-                                                <input type="text" name="number" id="number"
-                                                    class="form-control mb-2 @error('number') is-invalid @enderror"
-                                                    value="{{ old('number') }}">
-                                                @error('number')
+                                                <input type="text" name="phone" id="number"
+                                                    class="form-control mb-2 @error('phone') is-invalid @enderror"
+                                                    value="{{ old('phone') }}">
+                                                @error('phone')
                                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                                 @enderror
                                             </div>
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 mb-3">
                                                 <label for="website">Website</label>
                                                 <input type="text" name="website" id="website"
                                                     class="form-control mb-2 @error('website') is-invalid @enderror"
@@ -71,7 +71,7 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 mb-3">
                                                 <label for="address">Address</label>
                                                 <input type="text" name="address" id="address"
                                                     class="form-control mb-2 @error('address') is-invalid @enderror"
@@ -81,7 +81,7 @@
                                                 @enderror
                                             </div>
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 mb-3">
                                                 <label for="city">City</label>
                                                 <input type="text" name="city" id="city"
                                                     class="form-control mb-2 @error('city') is-invalid @enderror"
@@ -93,7 +93,7 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 mb-3">
                                                 <label for="country">Country</label>
                                                 <input type="text" name="country" id="country"
                                                     class="form-control mb-2 @error('country') is-invalid @enderror"
@@ -103,7 +103,7 @@
                                                 @enderror
                                             </div>
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 mb-3">
                                                 <label for="status">Status</label>
                                                 <select name="status" id="status"
                                                     class="form-control mb-2 @error('status') is-invalid @enderror">
@@ -147,6 +147,8 @@
                 success: function (response) {
                     $('.showalert').html(`<div class="alert alert-success">Account created successfully!</div>`);
                     $('#crmform')[0].reset();
+                    window.location="{{route('home.account')}}";
+                    
                 },
                 error: function (xhr) {
                     let errors = xhr.responseJSON.errors;

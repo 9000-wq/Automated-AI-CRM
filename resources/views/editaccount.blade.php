@@ -23,8 +23,8 @@
                     @method('PUT')
 
                     <div class="row">
-                        <div class="col-md-4">
-                            <label>Name</label>
+                        <div class="col-md-4 mb-3">
+                            <label>Name <span class="text-danger">*</span></label>
                             <input type="text" name="name"
                                 class="form-control mb-2 @error('name') is-invalid @enderror"
                                 value="{{ old('name', $account->name) }}">
@@ -32,8 +32,8 @@
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-4">
-                            <label>Industry</label>
+                        <div class="col-md-4 mb-3">
+                            <label>Industry <span class="text-danger">*</span></label>
                             <input type="text" name="industry"
                                 class="form-control mb-2 @error('industry') is-invalid @enderror"
                                 value="{{ old('industry', $account->industry) }}">
@@ -41,8 +41,8 @@
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-4">
-                            <label>Email</label>
+                        <div class="col-md-4 mb-3">
+                            <label>Email <span class="text-danger">*</span></label>
                             <input type="email" name="email"
                                 class="form-control mb-2 @error('email') is-invalid @enderror"
                                 value="{{ old('email', $account->email) }}">
@@ -53,17 +53,17 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
-                            <label>Phone</label>
-                            <input type="text" name="number"
-                                class="form-control mb-2 @error('number') is-invalid @enderror"
-                                value="{{ old('number', $account->number) }}">
-                            @error('number')
+                        <div class="col-md-6 mb-3">
+                            <label>Phone <span class="text-danger">*</span></label>
+                            <input type="text" name="phone"
+                                class="form-control mb-2 @error('phone') is-invalid @enderror"
+                                value="{{ old('phone', $account->phone) }}">
+                            @error('phone')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6">
-                            <label>Website</label>
+                        <div class="col-md-6 mb-3">
+                            <label>Website <span class="text-danger">*</span></label>
                             <input type="text" name="website"
                                 class="form-control mb-2 @error('website') is-invalid @enderror"
                                 value="{{ old('website', $account->website) }}">
@@ -74,8 +74,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
-                            <label>Address</label>
+                        <div class="col-md-6 mb-3">
+                            <label>Address <span class="text-danger">*</span></label>
                             <input type="text" name="address"
                                 class="form-control mb-2 @error('address') is-invalid @enderror"
                                 value="{{ old('address', $account->address) }}">
@@ -83,8 +83,8 @@
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6">
-                            <label>City</label>
+                        <div class="col-md-6 mb-3">
+                            <label>City <span class="text-danger">*</span></label>
                             <input type="text" name="city"
                                 class="form-control mb-2 @error('city') is-invalid @enderror"
                                 value="{{ old('city', $account->city) }}">
@@ -95,8 +95,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
-                            <label>Country</label>
+                        <div class="col-md-6 mb-3">
+                            <label>Country <span class="text-danger">*</span></label>
                             <input type="text" name="country"
                                 class="form-control mb-2 @error('country') is-invalid @enderror"
                                 value="{{ old('country', $account->country) }}">
@@ -104,8 +104,8 @@
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6">
-                            <label>Status</label>
+                        <div class="col-md-6 mb-3">
+                            <label>Status <span class="text-danger">*</span></label>
                             <select name="status"
                                 class="form-control mb-2 @error('status') is-invalid @enderror">
                                 <option value="">-- Select Status --</option>

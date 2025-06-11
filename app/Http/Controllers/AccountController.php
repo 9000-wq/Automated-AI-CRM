@@ -50,12 +50,12 @@ class AccountController extends Controller
                     if ($row->status === 'active') {
                         return '<span class="btn btn-sm btn-success">Active</span>';
                     } else {
-                        return '<span class="btn btn-sm btn-danger">Inactive</span>';
+                        return '<span class="btn btn-sm btn-secondary">InActive</span>';
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="' . route('account.edit', $row->id) . '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a> ';
-                    $btn .= '<button id="' . $row->id . '" class="deletebtn btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>';
+                    $btn = '<a href="' . route('account.edit', $row->id) . '" class="btn  btn-warning"><i class="fas fa-edit"></i></a> ';
+                    $btn .= '<button id="' . $row->id . '" class="deletebtn btn  btn-danger"><i class="fas fa-trash-alt"></i></button>';
                     return $btn;
                 })
                 ->editColumn('phone', function ($row) {
@@ -80,7 +80,7 @@ class AccountController extends Controller
             'name' => 'required|string|max:255',
             'industry' => 'nullable|string|max:255',
             'email' => 'required|email|max:255',
-            'number' => 'required|digits_between:7,15',
+            'phone' => 'required|digits_between:7,15',
             'website' => 'nullable|max:255',
             'address' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
@@ -105,7 +105,7 @@ class AccountController extends Controller
             'name' => 'required|string|max:255',
             'industry' => 'nullable|string|max:255',
             'email' => 'required|email|max:255',
-            'number' => 'required|digits_between:7,15',
+            'phone' => 'required|digits_between:7,15',
             'website' => 'nullable|max:255',
             'address' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',

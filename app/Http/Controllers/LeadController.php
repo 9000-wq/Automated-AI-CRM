@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\Contact;
+use App\Models\ContactRole;
 use App\Models\User;
 use App\Models\Note;
 use DataTables;
+use Illuminate\Validation\Rule;
+
 
 class LeadController extends Controller
 {
@@ -78,8 +81,29 @@ class LeadController extends Controller
         ));
 
         if ($request->has('contacts')) {
+            
             foreach ($request->contacts as $contact) {
-                $lead->contacts()->create($contact);
+
+
+                if($contact['full_name'] != NULL AND $contact['full_name'] !=''){
+                    
+                    $role = ContactRole::firstOrCreate(
+                        ['label' => $contact['role']]
+                    );  
+
+                    Contact::create([
+                        'name'=>$contact['full_name'],
+                        'email'=>$contact['email'],
+                        'birthday'=>$contact['birthday'],
+                        'phone'=>$contact['phone'],
+                        'description'=>$contact['description'],
+                        'address'=>$contact['address'],
+                        'lead_id'=>$lead->id,
+                        'contact_role_id'=>$role->id
+                    ]);
+
+                }              
+
             }
         }
 
@@ -139,34 +163,58 @@ class LeadController extends Controller
         $email=$request->email;
         $role=$request->role;
         $address=$request->address;
+        $description=$request->description;
+        $birthday=$request->birthday;
 
-        $validatedData = $request->validate([
+
+        $rules = [
             'full_name'   => 'required',
-            'phone'      => 'required|numeric',
-            'email'  => 'required',
-            'role'  => 'required',
-            'address'    => 'required',
-        ]);
+            'phone'       => 'required|numeric',
+            'email'       => ['required'],
+            'role'        => 'required',
+            'address'     => 'required',
+            'description' => 'required',
+            'birthday'    => 'required',
+        ];
+        
+        if (str_contains($contactid, 'lead')) {
+            $rules['email'][] = Rule::unique('contacts', 'email');
+        }
+        
+        $validatedData = $request->validate($rules);
+
+        
 
         if(!str_contains($contactid, 'lead')){
 
+            $rolevalue = ContactRole::firstOrCreate(
+                ['label' => $role]
+            ); 
+
             $contact=Contact::find($contactid);
-            $contact->full_name=$name;
+            $contact->name=$name;
             $contact->phone=$phone;
             $contact->email=$email;
-            $contact->role=$role;
+            $contact->contact_role_id=$rolevalue->id;
             $contact->address=$address;
+            $contact->description=$description;
+            $contact->birthday=$birthday;
             $contact->update();
         
             return redirect()->route('leads.show', ['lead' => $contact->lead_id]);
         }else{
             $contactid=str_replace('lead','',$contactid);
+            $rolevalue = ContactRole::firstOrCreate(
+                ['label' => $role]
+            );   
             Contact::create([
-                'full_name'=>$name,
+                'name'=>$name,
                 'phone'=>$phone,
                 'email'=>$email,
                 'address'=>$address,
-                'role'=>$role,
+                'desscription'=>$description,
+                'birthday'=>$birthday,
+                'contact_role_id'=>$rolevalue->id,
                 'lead_id'=>$contactid,
             ]);
 
@@ -225,6 +273,34 @@ class LeadController extends Controller
         return response()->json(['success'=>'Note Deleted Successfully.']);
     }
 
+
+
+    public function Opportunities()
+    {
+        return view('opportunities');
+    }
+
+    // LeadController.php
+    public function fetchLeads(Request $request)
+    {
+        $status = $request->input('status');
+        $page = $request->input('page', 1);
+        $search = $request->input('search');
+        
+        $leads = Lead::where('status', $status)
+        ->where('company_id', auth()->user()->company_id)
+        ->when(!empty($search), function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('case_ref', 'like', "%{$search}%")
+                ->orWhere('source', 'like', "%{$search}%")
+                ->orWhere('name', 'like', "%{$search}%");
+            });
+        })
+        ->paginate(10, ['*'], 'page', $page);
+
+
+        return view('layouts.leads', compact('leads', 'status'))->render();
+    }
 
 
 }

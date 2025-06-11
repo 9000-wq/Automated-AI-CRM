@@ -86,9 +86,20 @@
                                                                         </div>
 
                                                                         <div class="row">
-                                                                            <div class="col-md-12">
+                                                                            <div class="col-md-6">
+                                                                                <label class="form-label" for="birthday">Enter Birthday: </label>
+                                                                                <input type="date" class="form-control" name="contacts[0][birthday]" id="birthday">
+                                                                            </div>
+                                                                            <div class="col-md-6">
                                                                                 <label class="form-label">Enter Address:</label>
-                                                                                <textarea name="contacts[0][address]" placeholder="Address" class="form-control mb-3"></textarea>
+                                                                                <input name="contacts[0][address]" placeholder="Address" class="form-control mb-3"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="row">    
+                                                                            <div class="col-md-12">
+                                                                                <label class="form-label">Enter Description:</label>
+                                                                                <textarea name="contacts[0][description]" placeholder="Description" class="form-control mb-3"></textarea>
                                                                             </div>
                                                                         </div>
                                                                     </div>

@@ -17,8 +17,6 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
-Route::resource('contacts', ContactController::class);
-Route::get('/contacts/by-lead/{lead_id}', [ContactController::class, 'getContactsByLead']);
 
 
 Route::get('/dashboard', function () {
@@ -45,10 +43,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/account/store', [AccountController::class, 'store'])->name('account.store');
     Route::get('/home/account', [AccountController::class, 'account'])->name('home.account');
 
-Route::get('/account/{id}/edit', [AccountController::class, 'edit'])->name('account.edit');
+    Route::get('/account/{id}/edit', [AccountController::class, 'edit'])->name('account.edit');
 
-Route::put('/accounts/{id}', [AccountController::class, 'update'])->name('account.update');
+    Route::put('/accounts/{id}', [AccountController::class, 'update'])->name('account.update');
 
+    Route::get('Opportunities', [LeadController::class, 'Opportunities'])->name('Opportunities');
+    Route::get('/leads/fetch', [LeadController::class, 'fetchLeads'])->name('leads.fetch');
+    Route::resource('contacts', ContactController::class);
+    Route::get('/contacts/by-lead/{lead_id}', [ContactController::class, 'getContactsByLead']);
+    
 
 
     Route::middleware(['role:super admin|admin'])->group(function () {
