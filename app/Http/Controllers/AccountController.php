@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\ContactRole;
+use App\Models\Contact;
 
 class AccountController extends Controller
 {
@@ -86,9 +88,50 @@ class AccountController extends Controller
             'city' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:255',
             'status' => 'required|in:active,inactive',
+            
         ]);
 
-        Account::create($validatedData);
+        if ($request->has('contacts') && is_array($request->contacts) && count($request->contacts) > 0) {
+            $rules['contacts'] = 'array|min:1';
+    
+            foreach ($request->contacts as $index => $contact) {
+                $rules["contacts.$index.name"] = 'required|string|max:255';
+                $rules["contacts.$index.email"] = 'required|email|max:255|unique:contacts,email';
+                $rules["contacts.$index.phone"] = 'required|string|max:20';
+                $rules["contacts.$index.birthday"] = 'nullable|date';
+                $rules["contacts.$index.address"] = 'nullable|string|max:255';
+                $rules["contacts.$index.description"] = 'nullable|string';
+                $rules["contacts.$index.contact_role"] = 'required';
+            }
+
+            $validated = $request->validate($rules);
+        }
+    
+       
+
+        $account=Account::create($validatedData);
+
+
+        if (!empty($validated['contacts'])) {
+            foreach ($validated['contacts'] as $contactData) {
+
+                $rolevalue = ContactRole::firstOrCreate(
+                    ['label' => $contactData['contact_role']]
+                );
+
+                Contact::create([
+                    'name'            => $contactData['name'],
+                    'email'           => $contactData['email'],
+                    'phone'           => $contactData['phone'],
+                    'birthday'        => $contactData['birthday'] ?? null,
+                    'address'         => $contactData['address'] ?? null,
+                    'description'     => $contactData['description'] ?? null,
+                    'contact_role_id' => $rolevalue->id,
+                    'account_id'=>$account->id
+                ]);
+            }
+        }
+   
 
         return redirect()->route('home.account')->with('success', 'Account created successfully!');
     }

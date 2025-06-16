@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/leads/{lead}/notes', [LeadController::class, 'fetchNotes'])->name('leads.notes');
         Route::delete('/deletenotes', [LeadController::class, 'deletenotes'])->name('deletenotes');
 
+        Route::get('/fetchaccounts', [LeadController::class,'fetchaccounts'])->name('fetchaccounts');
 
     });
 

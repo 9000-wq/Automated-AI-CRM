@@ -33,7 +33,14 @@
                                                                 </div>
                                                                 
                                                                 <div class="row">
-                                                                    <div class="col-md-6">
+
+                                                                    <div class="col-md-4">
+                                                                        <label class="form-label" for="">Choose Account </label>
+                                                                        <select name="account" id="account" class="form-control mb-3">
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div class="col-md-4">
                                                                         <label class="form-label" for="">Choose Status <span class="text-danger">*</span></label>
                                                                         <select name="status" id="status" class="form-control mb-3">
                                                                             <option>New</option>
@@ -44,7 +51,7 @@
                                                                         </select>
                                                                     </div>
 
-                                                                    <div class="col-md-6">
+                                                                    <div class="col-md-4">
                                                                         <label class="form-label" for="assigned_to">Please select a user</label>
                                                                         <select name="assigned_to" id="assigned_to" class="form-select form-control mb-3">
                                                                             <option value="" selected disabled>Choose an Option</option>
@@ -152,6 +159,29 @@
 
             })
         })
+
+
+        $('#account').select2({
+        placeholder: 'Select an Account',
+        ajax: {
+            url: '{{route('fetchaccounts')}}', 
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term // search term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        }
+    });
+
+
   })
 </script>
 @endpush

@@ -117,6 +117,12 @@
                                             </div>
                                         </div>
 
+                                        <div id="contactsWrapper" style="display: none;">
+                                        <!-- Contact forms will be added here -->
+                                        </div>
+
+                                        <button id="showFormBtn" class="btn btn-primary mb-3">Add Contact</button><br>
+                                                                  
                                         <button class="btn btn-primary savebtn" type="button">Save</button>
                                         <div class="showalert mt-3"></div>
                                     </form>
@@ -130,6 +136,57 @@
         </div>
     </div>
 </main>
+
+
+
+<!-- Template to clone -->
+<div id="contactFormTemplate" class="contact-form d-none">
+
+
+    <h3>Add Contact</h3>
+    <div class="row mb-3">
+        <div class="col-md-6">
+        <label class="form-label">Name</label>
+        <input type="text" name="contacts[0][name]" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input type="email" name="contacts[0][email]" class="form-control" required>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+        <label class="form-label">Phone</label>
+        <input type="text" name="contacts[0][phone]" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+        <label class="form-label">Birthday</label>
+        <input type="date" name="contacts[0][birthday]" class="form-control">
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Address</label>
+        <input type="text" name="contacts[0][address]" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="contacts[0][description]" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="mb-3">
+
+        <label class="form-label">Role</label>    
+        <input type="text" name="contacts[0][contact_role]" class="form-control">
+
+    </div>
+
+    <button type="button" title="Remove Contact" class="btn btn-danger remove-contact-btn mb-3"><i class="fas fa-trash"></i></button>
+    <hr>
+</div>
+
 
 @push('scripts')
 <script type="text/javascript">
@@ -152,14 +209,14 @@
                 },
                 error: function (xhr) {
                     let errors = xhr.responseJSON.errors;
-                    let errorHtml = '<div class="alert alert-danger"><ul>';
+                    let errorHtml = '<div class="alert alert-danger text-danger"><ul>';
                     $.each(errors, function (key, value) {
                         // Highlight field
                         const input = $(`[name="${key}"]`);
-                        input.addClass('is-invalid');
-                        if (input.next('.invalid-feedback').length === 0) {
-                            input.after(`<div class="invalid-feedback d-block">${value[0]}</div>`);
-                        }
+                        // input.addClass('is-invalid');
+                        // if (input.next('.invalid-feedback').length === 0) {
+                            // input.after(`<div class="invalid-feedback d-block">${value[0]}</div>`);
+                        // }
                         errorHtml += `<li>${value[0]}</li>`;
                     });
                     errorHtml += '</ul></div>';
@@ -167,6 +224,46 @@
                 }
             });
         });
+
+
+
+        let contactIndex = 0;
+        function updateNames() {
+        $('#contactsWrapper .contact-form').each(function (index) {
+            $(this).find('input, select, textarea').each(function () {
+            let name = $(this).attr('name');
+            if (name) {
+                let updated = name.replace(/contacts\[\d+\]/, `contacts[${index}]`);
+                $(this).attr('name', updated);
+            }
+            });
+        });
+        }
+
+
+        $('#showFormBtn').click(function () {
+            $('#contactsWrapper').show();
+            $('#submitBtn').show();
+
+            const $template = $('#contactFormTemplate').clone().removeClass('d-none').removeAttr('id');
+            $('#contactsWrapper').append($template);
+            updateNames();
+        });
+
+        $(document).on('click','.remove-contact-btn' ,function () {
+            $(this).closest('.contact-form').remove();
+            updateNames();
+
+            if ($('#contactsWrapper .contact-form').length === 0) {
+            $('#contactsWrapper').hide();
+            $('#submitBtn').hide();
+            }
+        });
+
+
+
+
+
     });
 </script>
 @endpush

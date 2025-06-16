@@ -8,6 +8,8 @@ use App\Models\Contact;
 use App\Models\ContactRole;
 use App\Models\User;
 use App\Models\Note;
+use App\Models\Account;
+use App\Models\LeadContact;
 use DataTables;
 use Illuminate\Validation\Rule;
 
@@ -80,6 +82,8 @@ class LeadController extends Controller
             ['company_id' => auth()->user()->company_id]
         ));
 
+
+        //if any user eneter contacts in contact form while creating lead
         if ($request->has('contacts')) {
             
             foreach ($request->contacts as $contact) {
@@ -91,16 +95,21 @@ class LeadController extends Controller
                         ['label' => $contact['role']]
                     );  
 
-                    Contact::create([
+                   $contact= Contact::create([
                         'name'=>$contact['full_name'],
                         'email'=>$contact['email'],
                         'birthday'=>$contact['birthday'],
                         'phone'=>$contact['phone'],
                         'description'=>$contact['description'],
                         'address'=>$contact['address'],
-                        'lead_id'=>$lead->id,
                         'contact_role_id'=>$role->id
                     ]);
+
+                    LeadContact::create([
+                        'lead_id'=>$lead->id,
+                        'contact_id'=>$contact->id
+                    ]);
+                    
 
                 }              
 
@@ -300,6 +309,24 @@ class LeadController extends Controller
 
 
         return view('layouts.leads', compact('leads', 'status'))->render();
+    }
+
+
+    public function fetchaccounts(Request $request)
+    {
+        $search = $request->q;
+        
+        $accounts = Account::where('name', 'like', "%$search%")
+            ->where('email', 'like', "%$search%")
+            ->select('id', 'name')
+            ->limit(20)
+            ->get();
+    
+        $results = $accounts->map(function ($account) {
+            return ['id' => $account->id, 'text' => $account->name];
+        });
+    
+        return response()->json($results);
     }
 
 
