@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class RoleMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next, $role) : Response
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        $allowedRoles = explode('|', $role); // support multiple roles
+        if (!in_array(auth()->user()->user_role, $allowedRoles)) {
+            abort(403, 'Unauthorized');
+            return response()->view('unauthorized', [], 403);
+        }
+
+        return $next($request);
+    }
+}
