@@ -6,14 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\Contact;
 use App\Models\ContactRole;
-use Illuminate\Support\Facades\DB;
-
 use App\Models\User;
 use App\Models\Note;
 use App\Models\Account;
 use App\Models\LeadContact;
 use DataTables;
 use Illuminate\Validation\Rule;
+use DB;
 
 
 class LeadController extends Controller
@@ -230,36 +229,35 @@ class LeadController extends Controller
             $contact->update();
         
             return redirect()->route('leads.show', ['lead' => $contact->lead_id]);
+        }else{
+           
+            $contactid = str_replace('lead', '', $contactid);
+
+            $rolevalue = ContactRole::firstOrCreate(['label' => $role]);
+
+            $account_id = $request->input('account_id'); 
+
+            $contact = Contact::create([
+                'name' => $name,
+                'phone' => $phone,
+                'email' => $email,
+                'address' => $address,
+                'desscription' => $description,
+                'birthday' => $birthday,
+                'contact_role_id' => $rolevalue->id,
+                'lead_id' => $contactid,
+                'account_id' => $account_id, 
+            ]);
+
+            LeadContact::create([
+                'lead_id' => $contactid,
+                'contact_id' => $contact->id,
+            ]);
+
+            return redirect()->route('leads.index');
+
         }
-       
-else {
-    $contactid = str_replace('lead', '', $contactid);
-
-    $rolevalue = ContactRole::firstOrCreate(['label' => $role]);
-
-    $account_id = $request->input('account_id'); 
-
-    $contact = Contact::create([
-        'name' => $name,
-        'phone' => $phone,
-        'email' => $email,
-        'address' => $address,
-        'desscription' => $description,
-        'birthday' => $birthday,
-        'contact_role_id' => $rolevalue->id,
-        'lead_id' => $contactid,
-        'account_id' => $account_id, 
-    ]);
-
-    DB::table('lead_contacts')->insert([
-        'lead_id' => $contactid,
-        'contact_id' => $contact->id,
-    ]);
-
-    return redirect()->route('leads.index');
-}
-
-
+        
 
     }
 
