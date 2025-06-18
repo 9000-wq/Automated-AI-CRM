@@ -22,14 +22,24 @@ class Contact extends Model
     ];
 
     // Relationship: Contact belongs to a Role
-    public function role()
+    public function ContactRole()
     {
         return $this->belongsTo(ContactRole::class, 'contact_role_id');
     }
 
-    // Relationship: Contact belongs to a Lead
-    public function lead()
+    public function Role()
     {
-        return $this->belongsTo(lead::class);
+        return $this->belongsTo(ContactRole::class, 'contact_role_id');
     }
+
+
+    public function leads()
+    {
+        return $this->belongsToMany(Lead::class, 'lead_contacts', 'contact_id', 'lead_id');
+    }
+    // Relationship: Contact belongs to a Lead
+    // public function lead()
+    // {
+    //     return $this->belongsTo(lead::class);
+    // }
 }

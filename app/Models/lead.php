@@ -14,10 +14,16 @@ class lead extends Model
         'case_ref', 'name', 'source', 'status', 'assigned_to','company_id', 'account_id'
     ];
 
+    // public function contacts()
+    // {
+    //     return $this->hasMany(Contact::class);
+    // }
+
     public function contacts()
     {
-        return $this->hasMany(Contact::class);
+        return $this->belongsToMany(Contact::class, 'lead_contacts', 'lead_id', 'contact_id');
     }
+
 
     public function user()
     {

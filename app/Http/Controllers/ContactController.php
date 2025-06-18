@@ -38,7 +38,7 @@ class ContactController extends Controller
                     $btn .= '<button id="' . $row->id . '" class="deletebtn btn  btn-danger"><i class="fas fa-trash-alt"></i></button>';
                     return $btn;
                 })
-                ->rawColumns(['status', 'action']) // Allow HTML rendering
+                ->rawColumns(['status', 'action']) 
                 ->make(true);
 
         }

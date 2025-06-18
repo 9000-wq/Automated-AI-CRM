@@ -51,6 +51,9 @@ class LeadController extends Controller
 
                         return '<button class="btn btn-sm btn-' . $color . '">' . e($status) . '</button>';
                     })
+                    ->filterColumn('assigned_user_name', function($query, $keyword) {
+                        $query->where('users.name', 'like', "%{$keyword}%");
+                    })
                     ->rawColumns(['action','status'])
                     ->make(true);
         }
@@ -83,6 +86,19 @@ class LeadController extends Controller
         ));
 
 
+        if($request->account !='' AND  $request->account !=NULL){
+            $contactids=Contact::where('account_id',$request->account)->pluck('id');
+ 
+            foreach($contactids as $contactid){
+                 LeadContact::create([
+                     'lead_id'=>$lead->id,
+                     'contact_id'=>$contactid,
+                     'account_id'=>$request->account
+                 ]);   
+            }
+        }
+
+        
         //if any user eneter contacts in contact form while creating lead
         if ($request->has('contacts')) {
             
@@ -121,6 +137,7 @@ class LeadController extends Controller
 
     public function show(Lead $lead)
     {
+      
         return view('leads.show', compact('lead'));
     }
 
@@ -236,7 +253,7 @@ class LeadController extends Controller
     public function deleteleadcontact(Request $request)
     {
 
-        Contact::where('id',$request->contact)->delete();
+        LeadContact::where('contact_id',$request->contact)->where('lead_id',$request->lead)->delete();
         return redirect()->back()->with('success', 'Contact deleted successfully');
 
     }
@@ -317,7 +334,7 @@ class LeadController extends Controller
         $search = $request->q;
         
         $accounts = Account::where('name', 'like', "%$search%")
-            ->where('email', 'like', "%$search%")
+            ->orwhere('email', 'like', "%$search%")
             ->select('id', 'name')
             ->limit(20)
             ->get();

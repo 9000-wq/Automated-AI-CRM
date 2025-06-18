@@ -115,7 +115,7 @@
                                                                 <div class="mb-3" style="font-size: large;font-weight: 500;">
                                                                     <strong>{{ $contact->full_name }}</strong> 
                                                                     <a href="{{ route('leadcontact', $contact->id) }}" class="btn btn-info m-1" style="float:right;"><i class="fas fa-edit"></i></a>
-                                                                    <form action="{{ route('deleteleadcontact', $contact->id) }}" method="POST" style="display: inline;">
+                                                                    <form action="{{ route('deleteleadcontact', [$contact->id, $lead->id]) }}" method="POST" style="display: inline;">
                                                                         @csrf
                                                                         @method('DELETE')
                                                                         <button type="submit" class="btn btn-danger m-1" style="float:right;" >

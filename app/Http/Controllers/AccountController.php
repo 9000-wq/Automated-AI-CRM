@@ -56,13 +56,16 @@ class AccountController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="' . route('account.edit', $row->id) . '" class="btn  btn-warning"><i class="fas fa-edit"></i></a> ';
-                    $btn .= '<button id="' . $row->id . '" class="deletebtn btn  btn-danger"><i class="fas fa-trash-alt"></i></button>';
-                    return $btn;
-                })
-                ->editColumn('phone', function ($row) {
-                    return $row->number;
-                })
+    return '<div class="d-flex gap-1">
+                <a href="' . route('account.edit', $row->id) . '" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <button id="' . $row->id . '" class="deletebtn btn btn-danger btn-sm">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>';
+})
+
                 ->rawColumns(['status', 'action']) // Allow HTML rendering
                 ->make(true);
         }
@@ -70,11 +73,13 @@ class AccountController extends Controller
         return view('account');
     }
 
-    public function edit($id)
-    {
-        $account = Account::findOrFail($id);
-        return view('editaccount', compact('account'));
-    }
+   public function edit($id)
+{
+    $account = Account::with('contacts.ContactRole')->findOrFail($id);
+    return view('editaccount', compact('account'));
+}
+
+
 
     public function store(Request $request)
     {
@@ -142,31 +147,93 @@ class AccountController extends Controller
         return response()->json($account);
     }
 
-    public function update(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'industry' => 'nullable|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|digits_between:7,15',
-            'website' => 'nullable|max:255',
-            'address' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'status' => 'required|in:active,inactive',
-        ]);
+  public function update(Request $request, $id)
+  
+{
+    
+    $validatedData = $request->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'status' => 'required',
+        // other account validations...
+    ]);
 
-        $account = Account::findOrFail($id);
-        $account->update($validatedData);
+    if ($request->has('contacts') && is_array($request->contacts) && count($request->contacts) > 0) {
+            $rules['contacts'] = 'array|min:1';
+    
+            foreach ($request->contacts as $index => $contact) {
+  
+               
+                    $rules["contacts.$index.name"] = 'required|string|max:255';
+                    $rules["contacts.$index.phone"] = 'required|string|max:20';
+                    $rules["contacts.$index.birthday"] = 'nullable|date';
+                    $rules["contacts.$index.address"] = 'nullable|string|max:255';
+                    $rules["contacts.$index.description"] = 'nullable|string';
+                    $rules["contacts.$index.contact_role"] = 'required';
+                
+                    if (!isset($contact['contact_id'])) {
+                        $rules["contacts.$index.email"] = 'required|email|max:255|unique:contacts,email';
+                    } else {
+                        $rules["contacts.$index.email"] = 'required|email|max:255';
+                    }
 
-        return redirect()->route('home.account')->with('success', 'Account edited successfully!');
+            }
+
+            $validated = $request->validate($rules);
+        }
+
+    $account = Account::findOrFail($id);
+    $account->update($validatedData);
+
+    // Add updated contacts
+    if ($request->contacts) {
+        foreach ($request->contacts as $contact) {
+            $role = ContactRole::firstOrCreate(['label' => $contact['contact_role'] ?? '']);
+
+        if (isset($contact['contact_id'])) {
+
+                Contact::where('id',$contact['contact_id'] )->update([
+                'name' => $contact['name'],
+                'email' => $contact['email'],
+                'phone' => $contact['phone'],
+                'birthday' => $contact['birthday'] ?? null,
+                'address' => $contact['address'] ?? null,
+                'description' => $contact['description'] ?? null,
+                'contact_role_id' => $role->id,
+                'account_id'=>$account->id
+            ]);
+        }
+        else{
+                Contact::create([
+                'name' => $contact['name'],
+                'email' => $contact['email'],
+                'phone' => $contact['phone'],
+                'birthday' => $contact['birthday'] ?? null,
+                'address' => $contact['address'] ?? null,
+                'description' => $contact['description'] ?? null,
+                'contact_role_id' => $role->id,
+                'account_id'=>$account->id
+            ]);
+        }
+           
+        }
     }
 
-    public function destroy($id)
-    {
-        $account = Account::findOrFail($id);
-        $account->delete();
+    return redirect()->route('home.account')->with('success', 'Account updated with contacts');
+}
 
-        return response()->json(['message' => 'Account deleted']);
-    }
+
+   public function destroy($id)
+{
+    $account = Account::findOrFail($id);
+
+    // Delete all associated contacts first
+    $account->contacts()->delete();
+
+    // Then delete the account
+    $account->delete();
+
+    return response()->json(['message' => 'Account and associated contacts deleted successfully']);
+}
+
 }
