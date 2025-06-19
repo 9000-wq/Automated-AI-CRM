@@ -56,17 +56,17 @@ class AccountController extends Controller
             return DataTables::of($data)
                 ->addColumn('status', function ($row) {
                     if ($row->status === 'active') {
-                        return '<span class="btn btn-sm btn-success">Active</span>';
+                        return '<span class="btn btn-success">Active</span>';
                     } else {
-                        return '<span class="btn btn-sm btn-secondary">InActive</span>';
+                        return '<span class="btn btn-secondary">InActive</span>';
                     }
                 })
                 ->addColumn('action', function ($row) {
     return '<div class="d-flex gap-1">
-                <a href="' . route('account.edit', $row->id) . '" class="btn btn-warning btn-sm">
+                <a href="' . route('account.edit', $row->id) . '" class="btn btn-warning">
                     <i class="fas fa-edit"></i>
                 </a>
-                <button id="' . $row->id . '" class="deletebtn btn btn-danger btn-sm">
+                <button id="' . $row->id . '" class="deletebtn btn btn-danger">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>';
