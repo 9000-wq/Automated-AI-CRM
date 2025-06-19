@@ -51,6 +51,7 @@
 <script type="text/javascript">
     $(function () {
         var table = $('.data-table').DataTable({
+            responsive: true,
             processing: true,
             serverSide: true,
             ajax: "{{ route('home.account') }}",
@@ -73,6 +74,7 @@
                 {extend: 'pdf', className: 'btn btn-sm btn-outline-danger', text: 'Export PDF'},
                 {extend: 'print', className: 'btn btn-sm btn-outline-secondary', text: 'Print'}
             ]
+           
         });
 
         $(document).on('click', '.deletebtn', function () {

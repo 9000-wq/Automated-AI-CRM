@@ -11,7 +11,7 @@ class Account extends Model
 
     protected $fillable = [
         'name', 'industry', 'email', 'phone', 'website',
-        'address', 'city', 'country', 'status'
+        'address', 'city', 'country', 'status','company_id'
     ];
 
     public function leads()

@@ -119,7 +119,9 @@ class LeadController extends Controller
                         'phone'=>$contact['phone'],
                         'description'=>$contact['description'],
                         'address'=>$contact['address'],
-                        'contact_role_id'=>$role->id
+                        'contact_role_id'=>$role->id,
+                        'company_id'=>auth()->user()->company_id
+
                     ]);
 
                     LeadContact::create([
@@ -226,6 +228,7 @@ class LeadController extends Controller
             $contact->address=$address;
             $contact->description=$description;
             $contact->birthday=$birthday;
+            $contact->company_id= auth()->user()->company_id;
             $contact->update();
         
             return redirect()->route('leads.show', ['lead' => $contact->lead_id]);
@@ -247,6 +250,8 @@ class LeadController extends Controller
                 'contact_role_id' => $rolevalue->id,
                 'lead_id' => $contactid,
                 'account_id' => $account_id, 
+                'company_id'=>auth()->user()->company_id
+
             ]);
 
             LeadContact::create([

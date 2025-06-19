@@ -45,7 +45,13 @@ class AccountController extends Controller
     public function account(Request $request)
     {
         if ($request->ajax()) {
-            $data = Account::latest()->get();
+
+
+            if(auth()->user()->user_role =='super admin'){
+                $data = Account::select('*');
+            }else{
+                $data = Account::select('*')->where('company_id',auth()->user()->company_id);
+            }
 
             return DataTables::of($data)
                 ->addColumn('status', function ($row) {
@@ -113,6 +119,7 @@ class AccountController extends Controller
         }
     
        
+        $validatedData['company_id'] = auth()->user()->company_id; 
 
         $account=Account::create($validatedData);
 
@@ -132,7 +139,8 @@ class AccountController extends Controller
                     'address'         => $contactData['address'] ?? null,
                     'description'     => $contactData['description'] ?? null,
                     'contact_role_id' => $rolevalue->id,
-                    'account_id'=>$account->id
+                    'account_id'=>$account->id,
+                    'company_id'=>auth()->user()->company_id
                 ]);
             }
         }
@@ -182,6 +190,7 @@ class AccountController extends Controller
             $validated = $request->validate($rules);
         }
 
+    $validatedData['company_id'] = auth()->user()->company_id; 
     $account = Account::findOrFail($id);
     $account->update($validatedData);
 
@@ -200,7 +209,8 @@ class AccountController extends Controller
                 'address' => $contact['address'] ?? null,
                 'description' => $contact['description'] ?? null,
                 'contact_role_id' => $role->id,
-                'account_id'=>$account->id
+                'account_id'=>$account->id,
+                'company_id'=>auth()->user()->company_id
             ]);
         }
         else{
@@ -212,7 +222,8 @@ class AccountController extends Controller
                 'address' => $contact['address'] ?? null,
                 'description' => $contact['description'] ?? null,
                 'contact_role_id' => $role->id,
-                'account_id'=>$account->id
+                'account_id'=>$account->id,
+                'company_id'=>auth()->user()->company_id
             ]);
         }
            

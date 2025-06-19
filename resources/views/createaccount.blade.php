@@ -20,111 +20,48 @@
                                         <div class="row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="name">Name</label>
-<<<<<<< HEAD
-                                                <input type="text" name="name" id="name"
-                                                    class="form-control mb-2 @error('name') is-invalid @enderror"
-                                                    value="{{ old('name') }}">
-                                                @error('name')
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                @enderror
-=======
                                                 <input type="text" name="name" id="name" class="form-control mb-2 @error('name') is-invalid @enderror" value="{{ old('name') }}">
                                                 @error('name')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
->>>>>>> 62775e31a9f85035341934667d35791ce1147993
                                             </div>
 
                                             <div class="col-md-4 mb-3">
                                                 <label for="industry">Industry</label>
-<<<<<<< HEAD
-                                                <input type="text" name="industry" id="industry"
-                                                    class="form-control mb-2 @error('industry') is-invalid @enderror"
-                                                    value="{{ old('industry') }}">
-                                                @error('industry')
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                @enderror
-=======
                                                 <input type="text" name="industry" id="industry" class="form-control mb-2 @error('industry') is-invalid @enderror" value="{{ old('industry') }}">
                                                 @error('industry')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
->>>>>>> 62775e31a9f85035341934667d35791ce1147993
                                             </div>
 
                                             <div class="col-md-4 mb-3">
                                                 <label for="email">Email</label>
-<<<<<<< HEAD
-                                                <input type="email" name="email" id="email"
-                                                    class="form-control mb-2 @error('email') is-invalid @enderror"
-                                                    value="{{ old('email') }}">
-                                                @error('email')
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                @enderror
-=======
                                                 <input type="email" name="email" id="email" class="form-control mb-2 @error('email') is-invalid @enderror" value="{{ old('email') }}">
                                                 @error('email')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
->>>>>>> 62775e31a9f85035341934667d35791ce1147993
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
                                                 <label for="number">Phone</label>
-<<<<<<< HEAD
-                                                <input type="text" name="phone" id="number"
-                                                    class="form-control mb-2 @error('phone') is-invalid @enderror"
-                                                    value="{{ old('phone') }}">
-                                                @error('phone')
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                @enderror
-=======
                                                 <input type="text" name="phone" id="number" class="form-control mb-2 @error('phone') is-invalid @enderror" value="{{ old('phone') }}">
                                                 @error('phone')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
->>>>>>> 62775e31a9f85035341934667d35791ce1147993
                                             </div>
 
                                             <div class="col-md-6 mb-3">
                                                 <label for="website">Website</label>
-<<<<<<< HEAD
-                                                <input type="text" name="website" id="website"
-                                                    class="form-control mb-2 @error('website') is-invalid @enderror"
-                                                    value="{{ old('website') }}">
-                                                @error('website')
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                @enderror
-=======
                                                 <input type="text" name="website" id="website" class="form-control mb-2 @error('website') is-invalid @enderror" value="{{ old('website') }}">
                                                 @error('website')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
->>>>>>> 62775e31a9f85035341934667d35791ce1147993
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
                                                 <label for="address">Address</label>
-<<<<<<< HEAD
-                                                <input type="text" name="address" id="address"
-                                                    class="form-control mb-2 @error('address') is-invalid @enderror"
-                                                    value="{{ old('address') }}">
-                                                @error('address')
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                @enderror
-=======
                                                 <input type="text" name="address" id="address" class="form-control mb-2 @error('address') is-invalid @enderror" value="{{ old('address') }}">
                                                 @error('address')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
->>>>>>> 62775e31a9f85035341934667d35791ce1147993
                                             </div>
 
                                             <div class="col-md-6 mb-3">
                                                 <label for="city">City</label>
-<<<<<<< HEAD
-                                                <input type="text" name="city" id="city"
-                                                    class="form-control mb-2 @error('city') is-invalid @enderror"
-                                                    value="{{ old('city') }}">
-                                                @error('city')
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                @enderror
-=======
                                                 <input type="text" name="city" id="city" class="form-control mb-2 @error('city') is-invalid @enderror" value="{{ old('city') }}">
                                                 @error('city')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
->>>>>>> 62775e31a9f85035341934667d35791ce1147993
                                             </div>
                                         </div>
 

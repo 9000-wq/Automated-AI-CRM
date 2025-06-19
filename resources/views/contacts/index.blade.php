@@ -52,7 +52,7 @@
             ajax: "{{ route('contacts.index') }}",
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'lead.name', name: 'lead.name'},
+                {data: 'leadname', name: 'leadname'},
                 {data: 'role.label', name: 'role.label'},
                 {data: 'email', name: 'email'},
                 {data: 'phone', name: 'phone'},

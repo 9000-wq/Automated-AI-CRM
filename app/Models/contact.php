@@ -18,7 +18,8 @@ class Contact extends Model
         'description',
         'lead_id',
         'contact_role_id',
-        'account_id'
+        'account_id',
+        'company_id'
     ];
 
     // Relationship: Contact belongs to a Role
@@ -38,8 +39,8 @@ class Contact extends Model
         return $this->belongsToMany(Lead::class, 'lead_contacts', 'contact_id', 'lead_id');
     }
     // Relationship: Contact belongs to a Lead
-    // public function lead()
-    // {
-    //     return $this->belongsTo(lead::class);
-    // }
+    public function lead()
+    {
+        return $this->belongsTo(lead::class);
+    }
 }

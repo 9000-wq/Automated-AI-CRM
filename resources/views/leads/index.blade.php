@@ -63,8 +63,9 @@
 @push('scripts')
 <script>
  $(document).ready(function(){
-   
+  
     var table = $('.data-table').DataTable({
+        responsive: true,
         processing: true,
         serverSide: true,
         ajax: "{{ route('leads.index') }}",

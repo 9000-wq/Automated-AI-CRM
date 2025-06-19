@@ -6,7 +6,7 @@
             <p class="card-text">{{$lead->source}}</p>
             <p class="card-text">{{$lead->case_ref}}</p>
             <p style="text-align: end;">{{ \Carbon\Carbon::parse($lead->created_at)->diffForHumans() }}</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <a href="{{route('leads.show',$lead->id)}}" class="btn btn-primary">View Lead</a>
         </div>
     </div>
 @endforeach

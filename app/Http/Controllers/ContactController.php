@@ -29,14 +29,25 @@ class ContactController extends Controller
     {
         if ($request->ajax()) {
 
-                $contacts = Contact::with(['role', 'lead'])->latest();
+
         
+                if(auth()->user()->user_role =='super admin'){
+                    $contacts = Contact::with(['role', 'leads']);
+                }else{
+                    $contacts = Contact::with(['role', 'leads'])->where('company_id',auth()->user()->company_id);
+                }
+
                 return DataTables::of($contacts)
                     
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="' . route('contacts.show', $row->id) . '" class="btn  btn-warning"><i class="fas fa-edit"></i></a> ';
                     $btn .= '<button id="' . $row->id . '" class="deletebtn btn  btn-danger"><i class="fas fa-trash-alt"></i></button>';
                     return $btn;
+                })
+                ->editColumn('leadname',function($row){
+                    if(count($row->leads) > 0){
+                        return $row->leads[0]->name;
+                    }
                 })
                 ->rawColumns(['status', 'action']) 
                 ->make(true);
@@ -59,6 +70,8 @@ class ContactController extends Controller
             'lead_id'          => 'required|exists:leads,id',
             'contact_role_id'  => 'required|exists:contact_roles,id',
         ]);
+
+        $validated['company_id'] = auth()->user()->company_id; 
 
         $contact = Contact::create($validated);
 
@@ -100,7 +113,8 @@ class ContactController extends Controller
                 'phone'=>$request->phone,
                 'address'=>$request->address,
                 'description'=>$request->description,
-                'contact_role_id'=>$rolevalue->id
+                'contact_role_id'=>$rolevalue->id,
+                'company_id'=>auth()->user()->company_id
 
             ]);
 

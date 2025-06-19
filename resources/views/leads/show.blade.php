@@ -133,7 +133,7 @@
                                                                 </div>
                                                             @endforeach
 
-                                                            <a href="{{ route('leads.index') }}" class="btn btn-secondary">Back</a>
+                                                            <a href="#" onClick="history.back()" class="btn btn-secondary">Back</a>
                                                         
                                                         </div>
 										
