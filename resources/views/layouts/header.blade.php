@@ -196,6 +196,12 @@
 								<i class="align-middle" data-feather="settings"></i>
 							</a>
 
+							<button id="fullscreenBtn" class="btn" style="outline: none;border: none;font-size: 20px;" title="Toggle Fullscreen">
+								<i id="fullscreenIcon" style="color: #0d6efd;" class="fas fa-expand-arrows-alt mt-2"></i>
+							</button>
+
+
+
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
 								data-bs-toggle="dropdown">
 								<img src="{{asset('img/avatars/myavatar.jpg')}}" class="avatar img-fluid rounded me-1"

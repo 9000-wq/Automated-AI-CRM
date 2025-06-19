@@ -260,6 +260,38 @@
 				defaultDate: defaultDate
 			});
 		});
+
+
+		const fullscreenBtn = document.getElementById('fullscreenBtn');
+		const fullscreenIcon = document.getElementById('fullscreenIcon');
+
+		fullscreenBtn.addEventListener('click', function () {
+			if (!document.fullscreenElement) {
+				document.documentElement.requestFullscreen().then(() => {
+					fullscreenIcon.classList.remove('fa-expand-arrows-alt');
+					fullscreenIcon.classList.add('fa-compress-arrows-alt');
+				}).catch(err => {
+					alert(`Error attempting to enable full-screen mode: ${err.message}`);
+				});
+			} else {
+				document.exitFullscreen().then(() => {
+					fullscreenIcon.classList.remove('fa-compress-arrows-alt');
+					fullscreenIcon.classList.add('fa-expand-arrows-alt');
+				});
+			}
+		});
+
+		// Also handle if user exits fullscreen via ESC key or browser control
+		document.addEventListener('fullscreenchange', () => {
+			if (!document.fullscreenElement) {
+				fullscreenIcon.classList.remove('fa-compress-arrows-alt');
+				fullscreenIcon.classList.add('fa-expand-arrows-alt');
+			}
+		});
+
+
+
+
 	</script>
 
     @stack('scripts')
