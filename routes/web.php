@@ -7,8 +7,9 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ContactController;
-
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AiCallController;
+
 
 
 
@@ -19,14 +20,27 @@ Route::get('/welcome', function () {
 
 
 
+
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/csrf-token', function () {
+    return response()->json([
+        'csrf_token' => csrf_token()
+    ]);
+});
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    //CRUD for AI Calls table
+
 
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
