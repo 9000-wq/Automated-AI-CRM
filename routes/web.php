@@ -7,6 +7,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CallController;
 
 use App\Http\Controllers\AccountController;
 
@@ -56,6 +57,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['role:super admin|admin'])->group(function () {
         // Lead Routes
+
         Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
         Route::get('/leads/create', [LeadController::class, 'create'])->name('leads.create');
         Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
@@ -74,7 +76,8 @@ Route::middleware('auth')->group(function () {
 
     });
 
-
+   Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
+Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
     Route::middleware(['role:super admin'])->group(function () {
 
         Route::get('/manageprices', [HomeController::class, 'index'])->name('manageprices');
