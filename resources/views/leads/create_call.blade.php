@@ -23,7 +23,6 @@
             --warning-color: #ffc107;
         }
 
-        /* Isolated container for call scheduling */
         .call-scheduling-container {
             background-color: #f5f7fb;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -50,13 +49,7 @@
             color: #495057;
         }
 
-        .call-scheduling-container .modal-title-text a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .call-scheduling-container .close,
-        .call-scheduling-container .collapse-button {
+        .call-scheduling-container .close {
             color: #6c757d;
             opacity: 0.7;
             font-size: 18px;
@@ -64,8 +57,7 @@
             cursor: pointer;
         }
 
-        .call-scheduling-container .close:hover,
-        .call-scheduling-container .collapse-button:hover {
+        .call-scheduling-container .close:hover {
             color: #495057;
             opacity: 1;
         }
@@ -158,14 +150,6 @@
             margin: 0 5px;
         }
 
-        .call-scheduling-container .input-group-link-parent .btn {
-            padding: 6px 8px;
-        }
-
-        .call-scheduling-container .input-group-link-parent .form-control {
-            height: 32px;
-        }
-
         .call-scheduling-container .panel {
             margin-bottom: 15px;
             border: 1px solid #e9ecef;
@@ -197,56 +181,6 @@
 
         .call-scheduling-container .panel-body-form {
             padding: 10px 15px;
-        }
-
-        .call-scheduling-container .avatar {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            margin-right: 8px;
-            object-fit: cover;
-        }
-
-        .call-scheduling-container .avatar-in-input {
-            position: absolute;
-            right: 60px;
-            top: 7px;
-        }
-
-        .call-scheduling-container .link-container {
-            margin-bottom: 8px;
-        }
-
-        .call-scheduling-container .list-group-item {
-            padding: 6px 12px;
-            border: 1px solid #e9ecef;
-            border-radius: var(--border-radius);
-            margin-bottom: 5px;
-            background-color: #f8f9fa;
-            font-size: 13px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .call-scheduling-container .list-group-item .remove-item {
-            cursor: pointer;
-            color: #6c757d;
-        }
-
-        .call-scheduling-container .list-group-item .remove-item:hover {
-            color: var(--danger-color);
-        }
-
-        .call-scheduling-container .add-team .form-control {
-            border-radius: var(--border-radius) 0 0 var(--border-radius);
-        }
-
-        .call-scheduling-container .add-team .btn {
-            border-radius: 0 var(--border-radius) var(--border-radius) 0;
-            padding: 6px 10px;
-            background-color: #e9ecef;
-            border: 1px solid #ced4da;
         }
 
         .call-scheduling-container .btn-primary {
@@ -310,14 +244,6 @@
             margin-top: 15px;
         }
 
-        .call-scheduling-container .sticked {
-            position: relative;
-        }
-
-        .call-scheduling-container .headered .panel-heading {
-            padding: 8px 15px;
-        }
-
         .call-scheduling-container .first {
             margin-top: 0;
         }
@@ -326,26 +252,11 @@
             margin-bottom: 0;
         }
 
-        .call-scheduling-container .call-status-badge {
-            padding: 4px 8px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .call-scheduling-container .status-planned {
-            background-color: #e0f7fa;
-            color: #00838f;
-        }
-
-        .call-scheduling-container .status-held {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .call-scheduling-container .status-not-held {
-            background-color: #ffebee;
-            color: #c62828;
+        .call-scheduling-container .card-top-border {
+            width: 100%;
+            background-color: var(--primary-color);
+            height: 10px;
+            border-radius: 10px 10px 0px 0px;
         }
 
         .notification {
@@ -378,66 +289,14 @@
             background-color: var(--primary-color);
         }
 
-        .call-scheduling-container .card-top-border {
-            width: 100%;
-            background-color: var(--primary-color);
-            height: 10px;
-            border-radius: 10px 10px 0px 0px;
+        .call-scheduling-container .is-invalid {
+            border-color: var(--danger-color) !important;
         }
 
-        .call-scheduling-container .call-history-container {
-            margin-top: 30px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: var(--box-shadow);
-            padding: 15px;
-        }
-
-        .call-scheduling-container .call-history-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #495057;
-            display: flex;
-            align-items: center;
-        }
-
-        .call-scheduling-container .call-history-title i {
-            margin-right: 10px;
-            color: var(--primary-color);
-        }
-
-        .call-scheduling-container .call-history-item {
-            padding: 10px 15px;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .call-scheduling-container .call-history-item:last-child {
-            border-bottom: none;
-        }
-
-        .call-scheduling-container .call-history-info {
-            flex: 1;
-        }
-
-        .call-scheduling-container .call-history-name {
-            font-weight: 500;
-            margin-bottom: 3px;
-        }
-
-        .call-scheduling-container .call-history-meta {
+        .call-scheduling-container .error-message {
             font-size: 12px;
-            color: #6c757d;
-            display: flex;
-            gap: 15px;
-        }
-
-        .call-scheduling-container .call-history-actions button {
-            padding: 3px 8px;
-            font-size: 12px;
+            color: var(--danger-color);
+            margin-top: 5px;
         }
 
         @media (max-width: 992px) {
@@ -464,11 +323,8 @@
                 <button type="button" id="save-call" class="btn btn-primary btn-xs-wide radius-left">
                     <i class="fas fa-save me-1"></i> Save
                 </button>
-                <button type="button" class="btn btn-default btn-xs-wide">
-                    <i class="fas fa-expand me-1"></i> Full Form
-                </button>
-                <button type="button" id="cancel-call" class="btn btn-default btn-xs-wide radius-right">
-                    <i class="fas fa-times me-1"></i> Cancel
+                <button type="button" id="reset-form" class="btn btn-default btn-xs-wide radius-right">
+                    <i class="fas fa-undo me-1"></i> Reset
                 </button>
             </div>
 
@@ -726,12 +582,8 @@
                                                                                     <span class="input-group-btn">
                                                                                         <button type="button"
                                                                                             class="btn btn-default btn-icon"
-                                                                                            id="assign-to-me"><i
-                                                                                                class="fas fa-user"></i></button>
-                                                                                        <button type="button"
-                                                                                            class="btn btn-default btn-icon"
                                                                                             id="search-user"><i
-                                                                                                class="fas fa-angle-up"></i></button>
+                                                                                                class="fas fa-search"></i></button>
                                                                                     </span>
                                                                                 </div>
                                                                             </div>
@@ -743,21 +595,9 @@
                                                                                 class="cell form-group col-sm-6 col-md-12">
                                                                                 <label
                                                                                     class="control-label">Teams</label>
-                                                                                <div class="link-container list-group"
-                                                                                    id="teams-container">
-                                                                                    <!-- Teams will be added here -->
-                                                                                </div>
-                                                                                <div class="input-group add-team">
-                                                                                    <input class="form-control"
-                                                                                        type="text" id="new-team"
-                                                                                        placeholder="Select team">
-                                                                                    <span class="input-group-btn">
-                                                                                        <button type="button"
-                                                                                            class="btn btn-default btn-icon"
-                                                                                            id="add-team-btn"><span
-                                                                                                class="fas fa-plus"></span></button>
-                                                                                    </span>
-                                                                                </div>
+                                                                                <input class="form-control"
+                                                                                    type="text" id="teams"
+                                                                                    placeholder="Enter teams">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -776,21 +616,9 @@
                                                                                 class="cell form-group col-sm-6 col-md-12">
                                                                                 <label
                                                                                     class="control-label">Users</label>
-                                                                                <div class="link-container list-group"
-                                                                                    id="users-container">
-                                                                                    <!-- Users will be added here -->
-                                                                                </div>
-                                                                                <div class="input-group add-team">
-                                                                                    <input class="form-control"
-                                                                                        type="text" id="new-user"
-                                                                                        placeholder="Add user">
-                                                                                    <span class="input-group-btn">
-                                                                                        <button type="button"
-                                                                                            class="btn btn-default btn-icon"
-                                                                                            id="add-user-btn"><span
-                                                                                                class="fas fa-plus"></span></button>
-                                                                                    </span>
-                                                                                </div>
+                                                                                <input class="form-control"
+                                                                                    type="text" id="users"
+                                                                                    placeholder="Enter users">
                                                                             </div>
                                                                         </div>
 
@@ -800,21 +628,9 @@
                                                                                 class="cell form-group col-sm-6 col-md-12">
                                                                                 <label
                                                                                     class="control-label">Contacts</label>
-                                                                                <div class="link-container list-group"
-                                                                                    id="contacts-container">
-                                                                                    <!-- Contacts will be added here -->
-                                                                                </div>
-                                                                                <div class="input-group add-team">
-                                                                                    <input class="form-control"
-                                                                                        type="text" id="new-contact"
-                                                                                        placeholder="Add contact">
-                                                                                    <span class="input-group-btn">
-                                                                                        <button type="button"
-                                                                                            class="btn btn-default btn-icon"
-                                                                                            id="add-contact-btn"><span
-                                                                                                class="fas fa-plus"></span></button>
-                                                                                    </span>
-                                                                                </div>
+                                                                                <input class="form-control"
+                                                                                    type="text" id="contacts"
+                                                                                    placeholder="Enter contacts">
                                                                             </div>
                                                                         </div>
 
@@ -824,21 +640,9 @@
                                                                                 class="cell form-group col-sm-6 col-md-12">
                                                                                 <label
                                                                                     class="control-label">Leads</label>
-                                                                                <div class="link-container list-group"
-                                                                                    id="leads-container">
-                                                                                    <!-- Leads will be added here -->
-                                                                                </div>
-                                                                                <div class="input-group add-team">
-                                                                                    <input class="form-control"
-                                                                                        type="text" id="new-lead"
-                                                                                        placeholder="Add lead">
-                                                                                    <span class="input-group-btn">
-                                                                                        <button type="button"
-                                                                                            class="btn btn-default btn-icon"
-                                                                                            id="add-lead-btn"><span
-                                                                                                class="fas fa-plus"></span></button>
-                                                                                    </span>
-                                                                                </div>
+                                                                                <input class="form-control"
+                                                                                    type="text" id="leads"
+                                                                                    placeholder="Enter leads">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -866,6 +670,7 @@
             src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+
         <script>
             $(document).ready(function () {
                 // Initialize datepickers
@@ -884,46 +689,78 @@
                 // Set current date and time
                 function setCurrentDateTime() {
                     const today = new Date();
-                    const day = today.getDate().toString().padStart(2, '0');
-                    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-                    const year = today.getFullYear();
-                    const todayStr = `${day}.${month}.${year}`;
+                    let day = today.getDate().toString().padStart(2, '0');
+                    let month = (today.getMonth() + 1).toString().padStart(2, '0');
+                    let year = today.getFullYear();
+                    let todayStr = `${day}.${month}.${year}`;
 
-                    // Set current time rounded to next 5 minutes
+                    // Round time to next 5 minutes
                     const minutes = today.getMinutes();
                     const roundedMinutes = Math.ceil(minutes / 5) * 5;
                     let hours = today.getHours();
                     let newMinutes = roundedMinutes;
+                    
                     if (roundedMinutes >= 60) {
                         hours += 1;
                         newMinutes = 0;
+                        if (hours >= 24) {
+                            hours = 0;
+                            // If we cross midnight, increment the date
+                            today.setDate(today.getDate() + 1);
+                            day = today.getDate().toString().padStart(2, '0');
+                            month = (today.getMonth() + 1).toString().padStart(2, '0');
+                            year = today.getFullYear();
+                            todayStr = `${day}.${month}.${year}`;
+                        }
                     }
+                    
                     const timeStr = `${hours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
 
                     // Set values
                     $('#date-start').val(todayStr);
                     $('#time-start').val(timeStr);
                     $('#date-end').val(todayStr);
-
+                    
+                    // Calculate end time based on default duration
                     calculateEndTime();
                 }
 
+                // Reset form to default values
                 function resetForm() {
+                    // Clear all input fields
                     $('#call-name').val('');
-                    $('#call-status').val('Planned');
-                    $('#call-direction').val('Outbound');
-                    $('#parent-name').val('');
-                    $('#parent-type').val('Lead');
                     $('#call-description').val('');
                     $('#assigned-user').val('');
-
+                    $('#teams').val('');
+                    $('#users').val('');
+                    $('#contacts').val('');
+                    $('#leads').val('');
+                    
+                    // Reset select fields to default values
+                    $('#call-status').val('Planned');
+                    $('#call-direction').val('Outbound');
+                    $('#call-duration').val('300');
+                    $('#parent-type').val('Lead');
+                    $('#parent-name').val('');
+                    
+                    // Set current date and time
                     setCurrentDateTime();
-
-                    $('#teams-container, #users-container, #contacts-container, #leads-container').empty();
-
-                    $('#new-team, #new-user, #new-contact, #new-lead').val('');
+                    
+                    // Clear any validation errors
+                    $('.form-control').removeClass('is-invalid');
+                    $('.error-message').remove();
+                    
+                    // If we have a lead ID, repopulate the parent fields
+                    const leadId = $('#lead_id').val();
+                    if (leadId) {
+                        @if(isset($parentData))
+                            $('#parent-type').val('{{ $parentData['type'] }}');
+                            $('#parent-name').val('{{ $parentData['name'] }}');
+                        @endif
+                    }
                 }
 
+                // Calculate end time based on start time and duration
                 function calculateEndTime() {
                     const dateStart = $('#date-start').val();
                     const timeStart = $('#time-start').val();
@@ -934,7 +771,6 @@
                         const [hours, minutes] = timeStart.split(':');
 
                         const startDate = new Date(year, month - 1, day, hours, minutes);
-
                         const endDate = new Date(startDate.getTime() + duration * 1000);
 
                         const formattedEndDate = `${endDate.getDate().toString().padStart(2, '0')}.${(endDate.getMonth() + 1).toString().padStart(2, '0')}.${endDate.getFullYear()}`;
@@ -945,8 +781,7 @@
                     }
                 }
 
-                $('#date-start, #time-start, #call-duration').on('change', calculateEndTime);
-
+                // Show notification message
                 function showNotification(message, type) {
                     const notification = $('#notification');
                     notification.text(message);
@@ -958,154 +793,140 @@
                     }, 3000);
                 }
 
-                function addListItem(containerId, inputId, type) {
-                    const value = $(`#${inputId}`).val().trim();
-                    if (value) {
-                        $(`#${containerId}`).append(`
-                                    <div class="list-group-item">
-                                        ${value}
-                                        <i class="fas fa-times remove-item"></i>
-                                    </div>
-                                `);
-                        $(`#${inputId}`).val('');
-                        bindItemRemoval();
-                        showNotification(`${type} added successfully`, 'success');
+                // Validate form fields
+                function validateForm() {
+                    let isValid = true;
+                    
+                    // Clear previous validations
+                    $('.form-control').removeClass('is-invalid');
+                    $('.error-message').remove();
+                    
+                    // Validate required fields
+                    if (!$('#call-name').val()) {
+                        $('#call-name').addClass('is-invalid');
+                        $('#call-name').after('<div class="error-message">Call name is required</div>');
+                        isValid = false;
                     }
+                    
+                    if (!$('#date-start').val() || !$('#time-start').val()) {
+                        if (!$('#date-start').val()) {
+                            $('#date-start').addClass('is-invalid');
+                            $('#date-start').after('<div class="error-message">Start date is required</div>');
+                        }
+                        if (!$('#time-start').val()) {
+                            $('#time-start').addClass('is-invalid');
+                            $('#time-start').after('<div class="error-message">Start time is required</div>');
+                        }
+                        isValid = false;
+                    }
+                    
+                    if (!$('#assigned-user').val()) {
+                        $('#assigned-user').addClass('is-invalid');
+                        $('#assigned-user').after('<div class="error-message">Assigned user is required</div>');
+                        isValid = false;
+                    }
+                    
+                    return isValid;
                 }
 
-                function bindItemRemoval() {
-                    $('.remove-item').off('click').on('click', function () {
-                        $(this).parent().remove();
-                        showNotification('Item removed', 'info');
-                    });
-                }
-        bindItemRemoval();
+                // Event listeners
+                $('#date-start, #time-start, #call-duration').on('change', calculateEndTime);
 
-                    $('#add-team-btn').click(() => addListItem('teams-container', 'new-team', 'Team'));
-                    $('#add-user-btn').click(() => addListItem('users-container', 'new-user', 'User'));
-                    $('#add-contact-btn').click(() => addListItem('contacts-container', 'new-contact', 'Contact'));
-                    $('#add-lead-btn').click(() => addListItem('leads-container', 'new-lead', 'Lead'));
-
-                    $('#assign-to-me').click(function () {
-                        $('#assigned-user').val('Your Name');
-                        showNotification('Assigned to you', 'success');
-                    });
-
-                    $('#clear-parent').click(function () {
-                        $('#parent-name').val('');
-                        showNotification('Parent cleared', 'info');
-                    });
-
-                    $('#search-parent').click(function () {
-                        showNotification('Search functionality would open here', 'info');
-                    });
-
-                    function collectItems(containerId) {
-                        const items = [];
-                        $(`#${containerId} .list-group-item`).each(function () {
-                            items.push($(this).clone().children().remove().end().text().trim());
-                        });
-                        return items;
-                    }
-
-                    $('#save-call').click(function () {
-                        const formData = {
-                            'name': $('#call-name').val(),
-                            'status': $('#call-status').val(),
-                            'direction': $('#call-direction').val(),
-                            'date_start': $('#date-start').val(),  
-                            'time_start': $('#time-start').val(),
-                            'date_end': $('#date-end').val(),
-                            'time_end': $('#time-end').val(),
-                            'duration': $('#call-duration').val(),
-                            'parent_type': $('#parent-type').val(),
-                            'parent_name': $('#parent-name').val(),
-                            'description': $('#call-description').val(),
-                            'assigned_user_name': $('#assigned-user').val(),
-                            'teams': $('#new-team').val(),
-                            'users': $('#new-user').val(),
-                            'contacts': $('#new-contact').val(),
-                            'leads': $('#new-lead').val(),
-                            'lead_id': $('#lead_id').val()
-                        };
-
-                        // Validate required fields
-                        if (!formData.name) {
-                            showNotification('Call name is required!', 'error');
-                            return;
-                        }
-
-                        if (!formData.date_start || !formData.time_start) {
-                            showNotification('Start date and time are required!', 'error');
-                            return;
-                        }
-
-                        // Show loading state
-                        const saveBtn = $('#save-call');
-                        const originalText = saveBtn.html();
-                        saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Saving...');
-
-                        // Send AJAX request
-                        $.ajax({
-                            type: 'POST',
-                            url: '{{ route("store.call", ['lead' => $lead ?? null]) }}',
-                            data: formData,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function (response) {
-                                if (response.success) {
-                                    showNotification('Call scheduled successfully!', 'success');
-                                    if (response.data.lead_id) {
-                                        // window.location.href = `/leads/${response.data.lead_id}`;
-                                    } else {
-                                        resetForm();
-                                    }
-                                } else {
-                                    showNotification(response.message || 'Error saving call', 'error');
-                                }
-                            },
-                            error: function (xhr) {
-                                let message = 'Error saving call';
-                                if (xhr.responseJSON && xhr.responseJSON.message) {
-                                    message = xhr.responseJSON.message;
-                                }
-                                showNotification(message, 'error');
-                            },
-                            complete: function () {
-                                saveBtn.prop('disabled', false).html(originalText);
-                            }
-                        });
-                    });
-
-                    $('#cancel-call').click(function () {
-                        if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
-                            const leadId = $('#lead_id').val();
-                            if (leadId) {
-                                window.location.href = `/leads/${leadId}`;
-                            } else {
-                                resetForm();
-                                showNotification('Call creation canceled', 'info');
-                            }
-                        }
-                    });
-
-                    // Initialize form
-                    setCurrentDateTime();
-
-                    // Pre-fill parent fields if we have a lead
-                    const leadId = $('#lead_id').val();
-                    if (leadId) {
-                        @if(isset($parentData))
-                            $('#parent-type').val('{{ $parentData['type'] }}');
-                            $('#parent-name').val('{{ $parentData['name'] }}');
-                        @endif
-                    }
+                $('#reset-form').click(function(e) {
+                    e.preventDefault();
+                    resetForm();
+                    showNotification('Form has been reset to default values', 'info');
                 });
-            </script>
+
+                $('#clear-parent').click(function () {
+                    $('#parent-name').val('');
+                    showNotification('Parent cleared', 'info');
+                });
+
+                $('#search-parent').click(function () {
+                    showNotification('Search functionality would open here', 'info');
+                });
+
+                $('#search-user').click(function () {
+                    showNotification('User search would open here', 'info');
+                });
+
+                $('#save-call').click(function() {
+                    if (!validateForm()) {
+                        showNotification('Please fix the validation errors', 'error');
+                        return;
+                    }
+                    
+                    const formData = {
+                        'name': $('#call-name').val(),
+                        'status': $('#call-status').val(),
+                        'direction': $('#call-direction').val(),
+                        'date_start': $('#date-start').val(),  
+                        'time_start': $('#time-start').val(),
+                        'date_end': $('#date-end').val(),
+                        'time_end': $('#time-end').val(),
+                        'duration': $('#call-duration').val(),
+                        'parent_type': $('#parent-type').val(),
+                        'parent_name': $('#parent-name').val(),
+                        'description': $('#call-description').val(),
+                        'assigned_user_name': $('#assigned-user').val(),
+                        'teams': $('#teams').val(),
+                        'users': $('#users').val(),
+                        'contacts': $('#contacts').val(),
+                        'leads': $('#leads').val(),
+                        'lead_id': $('#lead_id').val()
+                    };
+
+                    // Show loading state
+                    const saveBtn = $('#save-call');
+                    const originalText = saveBtn.html();
+                    saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Saving...');
+
+                    // Send AJAX request
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route("store.call", ['lead' => $lead ?? null]) }}',
+                        data: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification('Call scheduled successfully!', 'success');
+                                // Reset form after successful save
+                                resetForm();
+                            } else {
+                                showNotification(response.message || 'Error saving call', 'error');
+                            }
+                        },
+                        error: function (xhr) {
+                            let message = 'Error saving call';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                message = xhr.responseJSON.message;
+                            }
+                            showNotification(message, 'error');
+                        },
+                        complete: function () {
+                            saveBtn.prop('disabled', false).html(originalText);
+                        }
+                    });
+                });
+
+                // Initialize form
+                resetForm();
+
+                // Pre-fill parent fields if we have a lead
+                const leadId = $('#lead_id').val();
+                if (leadId) {
+                    @if(isset($parentData))
+                        $('#parent-type').val('{{ $parentData['type'] }}');
+                        $('#parent-name').val('{{ $parentData['name'] }}');
+                    @endif
+                }
+            });
+        </script>
     @endpush
 
     @include('layouts.footer')
 </body>
-
 </html>

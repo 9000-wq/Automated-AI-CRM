@@ -131,7 +131,7 @@
                                 </div>
                             </div>
 
-                            <!-- Activities Card -->
+                            <!-- History Card -->
                             <div class="card mt-3" style="border-radius:10px;">
                                 <div
                                     style="width: 100%; background-color: #3b65ea; height: 10px; border-radius: 10px 10px 0 0;">
@@ -149,6 +149,22 @@
 
                                                 <i class="fas fa-phone me-2" style="cursor: pointer;"></i>
                                             </a>
+
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                             <div class="card mt-3" style="border-radius:10px;">
+                                <div
+                                    style="width: 100%; background-color: #3b65ea; height: 10px; border-radius: 10px 10px 0 0;">
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h3>History</h3>
+                                        <div>
+                                           
 
                                             <i class="fas fa-ellipsis-h"></i>
                                         </div>
