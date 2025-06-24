@@ -26,7 +26,10 @@ return new class extends Migration
             $table->text('leads')->nullable();
              $table->text('lead_id')->nullable();
             $table->text('company_id')->nullable();
-
+            $table->text('transcript')->nullable();
+            $table->string('sentiment')->nullable();
+            $table->string('outcome')->nullable();
+            $table->string('audio_link')->nullable();
             $table->timestamps();
         });
     }

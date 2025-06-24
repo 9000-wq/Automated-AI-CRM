@@ -151,7 +151,12 @@
 							<i class="fas fa-address-book"></i> <span class="align-middle">Contacts</span>
 						</a>
 					</li>
-				
+				<li
+						class="sidebar-item  {{ request()->routeIs('create.call') && count(request()->route()->parameters()) === 0 ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{route('create.call')}}">
+							<i class="fas fa-phone"></i> <span class="align-middle">Calls</span>
+						</a>
+					</li>
 
 					@if(Auth::user()->user_role == 'super admin')
 
