@@ -90,6 +90,14 @@
 		table td {
 			text-align: left !important;
 		}
+
+		div.dt-container .dt-paging .dt-paging-button.current, div.dt-container .dt-paging .dt-paging-button.current{
+			background-color: #3b65ea !important;
+			color: white !important;
+			border: none !important;
+			outline: none !important;
+		}
+
 	</style>
 </head>
 

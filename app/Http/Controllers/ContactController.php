@@ -44,11 +44,15 @@ class ContactController extends Controller
                     $btn .= '<button id="' . $row->id . '" class="deletebtn btn  btn-danger"><i class="fas fa-trash-alt"></i></button>';
                     return $btn;
                 })
-                ->editColumn('leadname',function($row){
-                    if(count($row->leads) > 0){
-                        return $row->leads[0]->name;
-                    }
+                ->editColumn('leadname', function ($row) {
+                    return $row->leads->first()->name ?? '';
+                })     
+                ->filterColumn('leadname', function($query, $keyword) {
+                    $query->whereHas('leads', function($q) use ($keyword) {
+                        $q->where('leads.name', 'like', "%{$keyword}%");
+                    });
                 })
+                
                 ->rawColumns(['status', 'action']) 
                 ->make(true);
 
