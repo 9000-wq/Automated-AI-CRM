@@ -17,7 +17,7 @@ class CreateAiCallsTable extends Migration
             $table->enum('outcome', ['Converted', 'No Answer', 'Escalated'])->nullable();
             $table->text('audio_link')->nullable();
             $table->timestamps();
-
+            $table->unsignedBigInteger('lead_id')->nullable();
             $table->foreign('contact_id')
                   ->references('id')
                   ->on('contacts')

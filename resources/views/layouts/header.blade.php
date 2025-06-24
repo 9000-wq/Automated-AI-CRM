@@ -185,8 +185,22 @@
 					</li>
 
 					
+					<a href="#" class="sidebar-link"><strong>AI Modules</strong></a>
 
-					
+					<li
+						class="sidebar-item  {{ request()->routeIs('AiCalls') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{route('AiCalls')}}">
+							<i class="fas fa-phone"></i> <span class="align-middle">AI Calls</span>
+						</a>
+					</li>
+
+					<li
+						class="sidebar-item  {{ request()->routeIs('AiEmails') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{route('AiEmails')}}">
+							<i class="fa fa-envelope"></i> <span class="align-middle">AI Emails</span>
+						</a>
+					</li>
+	
 
 					<li class="sidebar-item ">
 						<a class="sidebar-link" href="#"

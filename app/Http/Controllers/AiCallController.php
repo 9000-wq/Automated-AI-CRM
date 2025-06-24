@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use DataTables;
+
+
 
 class AiCallController extends Controller
 {
@@ -114,5 +117,36 @@ class AiCallController extends Controller
                 'error' => 'AI Call not found.'
             ], Response::HTTP_NOT_FOUND);
         }
+    }
+
+
+    public function aicalls(Request $request){
+
+
+        if ($request->ajax()) {
+
+            if (auth()->user()->user_role == 'super admin') {
+                $data = AiCall::select('leads.name as leadname','contacts.name as contactname','ai_calls.*')->leftjoin('leads','leads.id','ai_calls.lead_id')->leftjoin('contacts','contacts.id','ai_calls.contact_id');
+            } else {
+                $data = AiCall::select('leads.name as leadname','contacts.name as contactname','ai_calls.*')->leftjoin('leads','leads.id','ai_calls.lead_id')->leftjoin('contacts','contacts.id','ai_calls.contact_id')->where('contacts.company_id', auth()->user()->company_id);
+            }
+
+
+
+
+            return Datatables::of($data)
+                ->addIndexColumn()       
+                ->filterColumn('contactname', function ($query, $keyword) {
+                    $query->where('contacts.name', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('leadname', function ($query, $keyword) {
+                    $query->where('leads.name', 'like', "%{$keyword}%");
+                })
+                ->rawColumns([])
+                ->make(true);
+        }
+
+
+        return view('ai.calls');
     }
 }

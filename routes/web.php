@@ -10,6 +10,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CallController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AiCallController;
+use App\Http\Controllers\AiEmailController;
 
 
 
@@ -68,6 +69,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/contacts/by-lead/{lead_id}', [ContactController::class, 'getContactsByLead']);
     
 
+    Route::get('/AiCalls', [AiCallController::class,'aicalls'])->name('AiCalls');
+    Route::get('/AiEmails', [AiEmailController::class,'aiemails'])->name('AiEmails');
+
+
 
     Route::middleware(['role:super admin|admin'])->group(function () {
         // Lead Routes
@@ -88,6 +93,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/fetchaccounts', [LeadController::class,'fetchaccounts'])->name('fetchaccounts');
 
+        
     });
 
    Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
