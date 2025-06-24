@@ -144,17 +144,12 @@
 							<i class="fas fa-dollar-sign"></i> <span class="align-middle">Opportunities</span>
 						</a>
 					</li>
+					
 
 					<li
 						class="sidebar-item  {{ request()->routeIs('contacts.index') ? 'active' : '' }}">
 						<a class="sidebar-link" href="{{route('contacts.index')}}">
 							<i class="fas fa-address-book"></i> <span class="align-middle">Contacts</span>
-						</a>
-					</li>
-				<li
-						class="sidebar-item  {{ request()->routeIs('create.call') && count(request()->route()->parameters()) === 0 ? 'active' : '' }}">
-						<a class="sidebar-link" href="{{route('create.call')}}">
-							<i class="fas fa-phone"></i> <span class="align-middle">Calls</span>
 						</a>
 					</li>
 
@@ -174,12 +169,24 @@
 
 
 					@endif
-
+					
 					<li class="sidebar-item  {{ request()->routeIs('users.index') ? 'active' : '' }}">
 						<a class="sidebar-link" href="{{route('users.index')}}">
 							<i class="fas fa-users"></i> <span class="align-middle">Users</span>
 						</a>
 					</li>
+
+					<a href="#" class="sidebar-link"><strong>Activities</strong></a>
+					<li
+						class="sidebar-item  {{ request()->routeIs('create.call') && count(request()->route()->parameters()) === 0 ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{route('create.call')}}">
+							<i class="fas fa-phone"></i> <span class="align-middle">Calls</span>
+						</a>
+					</li>
+
+					
+
+					
 
 					<li class="sidebar-item ">
 						<a class="sidebar-link" href="#"
