@@ -181,7 +181,6 @@
                                     @endforeach
                                 </div>
                             </div>
-
                             <!-- History Card -->
                             <div class="card mt-3" style="border-radius:10px;">
                                 <div style="width: 100%; background-color: #3b65ea; height: 10px; border-radius: 10px 10px 0 0;"></div>
