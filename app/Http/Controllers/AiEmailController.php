@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use DataTables;
+
+
 
 class AiEmailController extends Controller
 {
@@ -117,5 +120,35 @@ class AiEmailController extends Controller
                 'error' => 'AI Email not found'
             ], Response::HTTP_NOT_FOUND);
         }
+    }
+
+    public function aiemails(Request $request){
+
+
+        if ($request->ajax()) {
+
+            if (auth()->user()->user_role == 'super admin') {
+                $data = AiEmail::select('leads.name as leadname','contacts.name as contactname','ai_emails.*')->leftjoin('leads','leads.id','ai_emails.lead_id')->leftjoin('contacts','contacts.id','ai_emails.contact_id');
+            } else {
+                $data = AiEmail::select('leads.name as leadname','contacts.name as contactname','ai_emails.*')->leftjoin('leads','leads.id','ai_emails.lead_id')->leftjoin('contacts','contacts.id','ai_emails.contact_id')->where('contacts.company_id', auth()->user()->company_id);
+            }
+
+
+
+
+            return Datatables::of($data)
+                ->addIndexColumn()       
+                ->filterColumn('contactname', function ($query, $keyword) {
+                    $query->where('contacts.name', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('leadname', function ($query, $keyword) {
+                    $query->where('leads.name', 'like', "%{$keyword}%");
+                })
+                ->rawColumns([])
+                ->make(true);
+        }
+
+
+        return view('ai.emails');
     }
 }
