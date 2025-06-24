@@ -375,8 +375,7 @@
                                                                                             selected>Planned</option>
                                                                                         <option value="Held">Held
                                                                                         </option>
-                                                                                        <option value="Not Held">Not
-                                                                                            Held</option>
+                                                                                       
                                                                                     </select>
                                                                                 </div>
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Call;
 
 use Illuminate\Http\Request;
 use App\Models\Lead;
@@ -149,11 +150,20 @@ class LeadController extends Controller
         return view('leads.create_call', compact('lead'));
     }
 
-    public function show(Lead $lead)
-    {
+  public function show(Lead $lead)
+{
+    $activities = Call::where('lead_id', $lead->id)
+                    ->whereIn('status', ['planned'])
+                    ->orderBy('date_start', 'desc')
+                    ->get();
 
-        return view('leads.show', compact('lead'));
-    }
+    $history = Call::where('lead_id', $lead->id)
+                 ->where('status', 'held')
+                 ->orderBy('date_start', 'desc')
+                 ->get();
+
+    return view('leads.show', compact('lead', 'activities', 'history'));
+}
 
     public function edit(Lead $lead)
     {

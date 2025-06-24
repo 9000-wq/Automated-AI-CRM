@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
 
    Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
 Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
+
     Route::middleware(['role:super admin'])->group(function () {
 
         Route::get('/manageprices', [HomeController::class, 'index'])->name('manageprices');
