@@ -96,9 +96,10 @@ Route::middleware('auth')->group(function () {
         
     });
 
-   Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
-Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
-
+        Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
+        Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
+        Route::get('/calls/history/{lead}/{call?}', [CallController::class, 'history'])->name('call.history');
+        Route::post('/leads/{lead}/call-history', [CallController::class, 'updateDetails'])->name('call.history.update');
     Route::middleware(['role:super admin'])->group(function () {
 
         Route::get('/manageprices', [HomeController::class, 'index'])->name('manageprices');

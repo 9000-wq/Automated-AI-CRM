@@ -9,6 +9,52 @@ use DateTime;
 
 class CallController extends Controller
 {
+
+  public function history(Lead $lead, Call $call)
+{
+    if (!$call) {
+        $call = Call::where('lead_id', $lead->id)
+                  ->where('status', 'planned')
+                  ->latest()
+                  ->first();
+    }
+
+    return view('leads.callhistory', compact('lead', 'call'));
+}
+
+public function updateDetails(Request $request, Lead $lead)
+{
+    $validated = $request->validate([
+        'transcript' => 'nullable|string',
+        'sentiment' => 'nullable|in:positive,neutral,negative',
+        'outcome' => 'nullable|string|max:255',
+        'audio_link' => 'nullable|url',
+        'call_id' => 'required|exists:calls,id'
+    ]);
+
+    $call = Call::find($request->call_id);
+
+    if ($call && $call->lead_id == $lead->id) {
+        $call->update([
+            'transcript' => $validated['transcript'],
+            'sentiment' => $validated['sentiment'],
+            'outcome' => $validated['outcome'],
+            'audio_link' => $validated['audio_link'],
+            'status' => 'held'
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Call details saved successfully!',
+            'redirect' => route('leads.show', $lead->id)
+        ]);
+    }
+
+    return response()->json([
+        'success' => false,
+        'message' => 'Call not found or doesn\'t belong to this lead'
+    ], 404);
+}
     public function create($lead = null)
     {
         $parentData = null;

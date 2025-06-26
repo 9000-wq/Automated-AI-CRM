@@ -145,42 +145,49 @@
                             </div>
 
                             <!-- Activities Card -->
-                            <div class="card mt-3" style="border-radius:10px;">
-                                <div style="width: 100%; background-color: #3b65ea; height: 10px; border-radius: 10px 10px 0 0;"></div>
-                                <div class="card-body activities-container">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h3>Activities</h3>
-                                        <div>
-                                            <i class="fas fa-envelope me-2"></i>
-                                            <i class="fas fa-calendar-alt me-2"></i>
-                                            <a href="{{ route('create.call', ['lead' => $lead->id]) }}" title="Make a Call">
-                                                <i class="fas fa-phone me-2" style="cursor: pointer;"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    
-                                    @foreach($activities as $call)
-                                    <div class="call-item mb-3">
-                                        <div class="d-flex justify-content-between">
-                                            <strong>{{ $call->name }}</strong>
-                                            <span class="badge bg-{{ $call->status == 'planned' ? 'warning' : 'info' }}">
-                                                {{ ucfirst(str_replace('_', ' ', $call->status)) }}
-                                            </span>
-                                        </div>
-                                        <div class="call-time">
-                                            <?php 
-                                                $start = new DateTime($call->date_start);
-                                                $end = new DateTime($call->date_end);
-                                                echo $start->format('M d, Y H:i') . ' - ' . $end->format('H:i');
-                                            ?>
-                                        </div>
-                                        @if($call->description)
-                                        <div class="call-description">{{ $call->description }}</div>
-                                        @endif
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
+                           <!-- Activities Card -->
+<div class="card mt-3" style="border-radius:10px;">
+    <div style="width: 100%; background-color: #3b65ea; height: 10px; border-radius: 10px 10px 0 0;"></div>
+    <div class="card-body activities-container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Activities</h3>
+            <div>
+                <i class="fas fa-envelope me-2"></i>
+                <i class="fas fa-calendar-alt me-2"></i>
+                <a href="{{ route('create.call', ['lead' => $lead->id]) }}" title="Make a Call">
+                    <i class="fas fa-phone me-2" style="cursor: pointer;"></i>
+                </a>
+                <!-- Three-dot button for history -->
+                <a href="{{ route('call.history', ['lead' => $lead->id]) }}" title="View History">
+                    <i class="fas fa-ellipsis-v" style="cursor: pointer;"></i>
+                </a>
+            </div>
+        </div>
+        
+       @foreach($activities as $call)
+<div class="call-item mb-3">
+    <div class="d-flex justify-content-between">
+        <strong>{{ $call->name }}</strong>
+        <div>
+            <span class="badge bg-{{ $call->status == 'planned' ? 'warning' : 'info' }}">
+                {{ ucfirst(str_replace('_', ' ', $call->status)) }}
+            </span>
+            <!-- Updated three-dot button link -->
+            <a href="{{ route('call.history', ['lead' => $lead->id, 'call' => $call->id]) }}" class="ms-2">
+                <i class="fas fa-ellipsis-v" style="cursor: pointer;"></i>
+            </a>
+        </div>
+    </div>
+    <div class="call-time">
+        {{ $call->date_start->format('M d, Y H:i') }} - {{ $call->date_end->format('H:i') }}
+    </div>
+    @if($call->description)
+    <div class="call-description">{{ $call->description }}</div>
+    @endif
+</div>
+@endforeach
+    </div>
+</div>
                             <!-- History Card -->
                             <div class="card mt-3" style="border-radius:10px;">
                                 <div style="width: 100%; background-color: #3b65ea; height: 10px; border-radius: 10px 10px 0 0;"></div>
