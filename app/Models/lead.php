@@ -29,4 +29,9 @@ class lead extends Model
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
+
+    public function calls()
+    {
+        return $this->hasMany(Call::class);
+    }
 }

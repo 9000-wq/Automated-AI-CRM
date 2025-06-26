@@ -37,5 +37,10 @@ class Call extends Model
         'date_end' => 'datetime',
     ];
     
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
+    }
     
 }

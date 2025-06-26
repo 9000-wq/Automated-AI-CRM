@@ -573,12 +573,13 @@
                                                                                         class="required-sign">*</span>
                                                                                 </label>
                                                                                 <div class="input-group">
-                                                                                    <input class="form-control"
-                                                                                        type="text"
-                                                                                        name="assigned_user_name"
-                                                                                        id="assigned-user"
-                                                                                        placeholder="Assign user">
-                                                                                    <span class="input-group-btn">
+
+                                                                                        <select name="assigned_user_name" id="assigned-user" class="form-control" required> 
+                                                                                                <option value="{{ $lead->user->id }}" selected>
+                                                                                                    {{ $lead->user->name }}
+                                                                                                </option>
+                                                                                        </select>
+                                                                                    <span class="input-group-btn d-none">
                                                                                         <button type="button"
                                                                                             class="btn btn-default btn-icon"
                                                                                             id="search-user"><i
@@ -729,7 +730,7 @@
                     // Clear all input fields
                     $('#call-name').val('');
                     $('#call-description').val('');
-                    $('#assigned-user').val('');
+                    // $('#assigned-user').val('');
                     $('#teams').val('');
                     $('#users').val('');
                     $('#contacts').val('');
