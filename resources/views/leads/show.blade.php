@@ -38,6 +38,98 @@
         margin-top: 5px;
         font-size: 0.9rem;
     }
+
+    /* modal css */
+
+    /* Modal Trigger */
+    .open-modal-btn {
+      padding: 0.8rem 1.5rem;
+      background-color: #4A90E2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    /* Hidden checkbox toggle */
+    #modal-toggle {
+      display: none;
+    }
+
+    /* Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    #modal-toggle:checked + .modal-overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Modal Box */
+    .modal-box {
+      background: #fff;
+      padding: 2rem;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 10px;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: slideIn 0.4s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Close Button */
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      color: #999;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .modal-close:hover {
+      color: #333;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .modal-box {
+        padding: 1.5rem;
+      }
+
+      .modal-close {
+        top: 5px;
+        right: 10px;
+      }
+    }
+
+    /* end modal css */
+
 </style>
 
 <main class="content">
@@ -152,7 +244,9 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3>Activities</h3>
             <div>
-                <i class="fas fa-envelope me-2"></i>
+                <a href="#" title="Make a Call" id="openModal">
+                    <i class="fas fa-envelope me-2"></i>
+                </a>
                 <i class="fas fa-calendar-alt me-2"></i>
                 <a href="{{ route('create.call', ['lead' => $lead->id]) }}" title="Make a Call">
                     <i class="fas fa-phone me-2" style="cursor: pointer;"></i>
@@ -188,7 +282,10 @@
 @endforeach
     </div>
 </div>
-                            <!-- History Card -->
+            
+
+
+<!-- History Card -->
                             <div class="card mt-3" style="border-radius:10px;">
                                 <div style="width: 100%; background-color: #3b65ea; height: 10px; border-radius: 10px 10px 0 0;"></div>
                                 <div class="card-body history-container">
@@ -226,6 +323,21 @@
     </div>
 </main>
 
+
+  <!-- Hidden Checkbox Toggle -->
+  <input type="checkbox" id="modal-toggle">
+
+  <!-- Modal Overlay & Box -->
+  <div class="modal-overlay">
+    <div class="modal-box">
+      <label for="modal-toggle" class="modal-close">&times;</label>
+      <h2>Welcome!</h2>
+      <p>This is a pure CSS modal dialog without using any JavaScript or frameworks. It works on all screen sizes.</p>
+      <p>You can use this modal as a lightweight replacement for Bootstrap modals.</p>
+    </div>
+  </div>
+
+  
 @push('scripts')
 <script>
     $(document).ready(function () {
@@ -307,21 +419,39 @@
                         let start = new Date(call.date_start);
                         let end = new Date(call.date_end);
                         
+                        // activitiesHtml += `
+                        // <div class="call-item mb-3">
+                        //     <div class="d-flex justify-content-between">
+                        //         <strong>${call.name}</strong>
+                        //         <span class="badge bg-${call.status === 'planned' ? 'warning' : 'info'}">
+                        //             ${call.status === 'planned' ? 'Planned'}
+                        //         </span>
+                        //     </div>
+                        //     <div class="call-time">
+                        //         ${start.toLocaleString('default', { month: 'short' })} ${start.getDate()}, ${start.getFullYear()} ${start.getHours()}:${start.getMinutes().toString().padStart(2, '0')} - 
+                        //         ${end.getHours()}:${end.getMinutes().toString().padStart(2, '0')}
+                        //     </div>
+                        //     ${call.description ? `<div class="call-description">${call.description}</div>` : ''}
+                        // </div>`; 
+
                         activitiesHtml += `
-                        <div class="call-item mb-3">
-                            <div class="d-flex justify-content-between">
-                                <strong>${call.name}</strong>
-                                <span class="badge bg-${call.status === 'planned' ? 'warning' : 'info'}">
-                                    ${call.status === 'planned' ? 'Planned'}
-                                </span>
-                            </div>
-                            <div class="call-time">
-                                ${start.toLocaleString('default', { month: 'short' })} ${start.getDate()}, ${start.getFullYear()} ${start.getHours()}:${start.getMinutes().toString().padStart(2, '0')} - 
-                                ${end.getHours()}:${end.getMinutes().toString().padStart(2, '0')}
-                            </div>
-                            ${call.description ? `<div class="call-description">${call.description}</div>` : ''}
-                        </div>`;
-                    });
+                            <div class="call-item mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <strong>${call.name}</strong>
+                                    <span class="badge bg-${call.status === 'planned' ? 'warning' : 'info'}">
+                                        ${call.status.charAt(0).toUpperCase() + call.status.slice(1)}
+                                    </span>
+                                </div>
+                                <div class="call-time">
+                                    ${start.toLocaleString('default', { month: 'short' })} ${start.getDate()}, ${start.getFullYear()} ${start.getHours()}:${start.getMinutes().toString().padStart(2, '0')} - 
+                                    ${end.getHours()}:${end.getMinutes().toString().padStart(2, '0')}
+                                </div>
+                                ${call.description ? `<div class="call-description">${call.description}</div>` : ''}
+                            </div>`;
+
+                        });
+
+
                     $('.activities-container').html(activitiesHtml);
 
                     // Update history section
@@ -357,6 +487,12 @@
         // Initial load and periodic refresh
         refreshCalls();
         setInterval(refreshCalls, 30000); // Refresh every 30 seconds
+
+        $('#openModal').click(function () {
+            
+            $('#modal-toggle').prop('checked', true);
+        });
+
     });
 </script>
 @endpush

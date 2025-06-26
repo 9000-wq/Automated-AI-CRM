@@ -1,6 +1,6 @@
 @if(count($leads) > 0)
 @foreach($leads as $lead)
-    <div class="card" style="width: 18rem;">
+    <div class="card" style="border-radius:9px;width:16rem" >
         <div class="card-body">
             <h5 class="card-title">{{$lead->name}}</h5>
             <p class="card-text">{{$lead->source}}</p>
