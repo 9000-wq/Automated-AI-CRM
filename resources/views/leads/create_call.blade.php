@@ -579,12 +579,7 @@
                                                                                                     {{ $lead->user->name }}
                                                                                                 </option>
                                                                                         </select>
-                                                                                    <span class="input-group-btn d-none">
-                                                                                        <button type="button"
-                                                                                            class="btn btn-default btn-icon"
-                                                                                            id="search-user"><i
-                                                                                                class="fas fa-search"></i></button>
-                                                                                    </span>
+                                                                                   
                                                                                 </div>
                                                                             </div>
                                                                         </div>

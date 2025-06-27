@@ -1,5 +1,5 @@
 @include('layouts.header')
-
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 <style>
     textarea.form-control:focus {
         box-shadow: 0 0 0 0.2rem rgba(59, 101, 234, 0.25);
@@ -39,97 +39,152 @@
         font-size: 0.9rem;
     }
 
-    /* modal css */
-
-    /* Modal Trigger */
-    .open-modal-btn {
-      padding: 0.8rem 1.5rem;
-      background-color: #4A90E2;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    /* Hidden checkbox toggle */
-    #modal-toggle {
+   #modal-toggle {
       display: none;
     }
-
-    /* Overlay */
+    
+    /* Modal Styles */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      height: 100%;
-      width: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      display: flex;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
       justify-content: center;
       align-items: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
+      z-index: 1000;
     }
-
-    #modal-toggle:checked + .modal-overlay {
-      opacity: 1;
-      pointer-events: auto;
+    
+    /* Show modal when checkbox is checked */
+    #modal-toggle:checked ~ .modal-overlay {
+      display: flex;
     }
-
-    /* Modal Box */
+    
     .modal-box {
-      background: #fff;
-      padding: 2rem;
-      width: 90%;
-      max-width: 500px;
-      border-radius: 10px;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      width: 700px;
+      max-width: 90%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
       position: relative;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      animation: slideIn 0.4s ease-out;
     }
-
-    @keyframes slideIn {
-      from {
-        transform: translateY(-50px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    /* Close Button */
+    
     .modal-close {
       position: absolute;
-      top: 10px;
+      top: 15px;
       right: 15px;
-      font-size: 1.5rem;
-      color: #999;
+      font-size: 1.8rem;
       cursor: pointer;
-      transition: color 0.2s ease;
+      background: none;
+      border: none;
+      color: #777;
+      line-height: 1;
     }
-
-    .modal-close:hover {
-      color: #333;
+    
+    /* Email Form Styles */
+    .email-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
     }
-
-    /* Responsive adjustments */
-    @media (max-width: 480px) {
-      .modal-box {
-        padding: 1.5rem;
-      }
-
-      .modal-close {
-        top: 5px;
-        right: 10px;
-      }
+    
+    .btn {
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
     }
-
-    /* end modal css */
-
+    
+    .btn-send {
+      background: #1a73e8;
+      color: white;
+      border: none;
+    }
+    
+    .btn-send:hover {
+      background: #0d62c9;
+    }
+    
+    .btn-secondary {
+      background: #f1f3f4;
+      color: #3c4043;
+      border: 1px solid #dadce0;
+    }
+    
+    .btn-secondary:hover {
+      background: #e8eaed;
+    }
+    
+    .email-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .parallel-fields {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    
+    .field-group label {
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #3c4043;
+      font-size: 0.9rem;
+    }
+    
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      padding: 10px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      transition: border 0.2s;
+    }
+    
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      outline: none;
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+    }
+    
+    .field-group textarea {
+      min-height: 200px;
+      resize: vertical;
+    }
+    
+    .required::after {
+      content: " *";
+      color: #d93025;
+    }
+    
+    /* Open button styles */
+    .open-modal-btn {
+      padding: 10px 20px;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    .open-modal-btn:hover {
+      background: #0d62c9;
+    }
 </style>
 
 <main class="content">
@@ -241,22 +296,22 @@
 <div class="card mt-3" style="border-radius:10px;">
     <div style="width: 100%; background-color: #3b65ea; height: 10px; border-radius: 10px 10px 0 0;"></div>
     <div class="card-body activities-container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3>Activities</h3>
-            <div>
-                <a href="#" title="Make a Call" id="openModal">
-                    <i class="fas fa-envelope me-2"></i>
-                </a>
-                <i class="fas fa-calendar-alt me-2"></i>
-                <a href="{{ route('create.call', ['lead' => $lead->id]) }}" title="Make a Call">
-                    <i class="fas fa-phone me-2" style="cursor: pointer;"></i>
-                </a>
-                <!-- Three-dot button for history -->
-                <a href="{{ route('call.history', ['lead' => $lead->id]) }}" title="View History">
-                    <i class="fas fa-ellipsis-v" style="cursor: pointer;"></i>
-                </a>
-            </div>
-        </div>
+       <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Activities</h3>
+    <div>
+        <label for="modal-toggle" title="Send Email">
+            <i class="fas fa-envelope me-2" style="cursor: pointer;"></i>
+        </label>
+        <i class="fas fa-calendar-alt me-2"></i>
+        <a href="{{ route('create.call', ['lead' => $lead->id]) }}" title="Make a Call">
+            <i class="fas fa-phone me-2" style="cursor: pointer;"></i>
+        </a>
+        <!-- Three-dot button for history -->
+        <a href="{{ route('call.history', ['lead' => $lead->id]) }}" title="View History">
+            <i class="fas fa-ellipsis-v" style="cursor: pointer;"></i>
+        </a>
+    </div>
+</div>
         
        @foreach($activities as $call)
 <div class="call-item mb-3">
@@ -324,20 +379,59 @@
 </main>
 
 
-  <!-- Hidden Checkbox Toggle -->
-  <input type="checkbox" id="modal-toggle">
+   <!-- Hidden checkbox toggle -->
+<input type="checkbox" id="modal-toggle">
 
-  <!-- Modal Overlay & Box -->
-  <div class="modal-overlay">
-    <div class="modal-box">
-      <label for="modal-toggle" class="modal-close">&times;</label>
-      <h2>Welcome!</h2>
-      <p>This is a pure CSS modal dialog without using any JavaScript or frameworks. It works on all screen sizes.</p>
-      <p>You can use this modal as a lightweight replacement for Bootstrap modals.</p>
+<!-- Modal overlay -->
+<div class="modal-overlay">
+  <div class="modal-box">
+    <label for="modal-toggle" class="modal-close">&times;</label>
+    <h2>Compose Email</h2>
+    
+    <div class="email-controls">
+      <button class="btn btn-send" onclick="sendEmail()">Send</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+    </div>
+    
+    <div class="email-fields">
+      <div class="parallel-fields">
+        <div class="field-group">
+          <label class="required">To</label>
+          <input type="text" id="emailTo" placeholder="Enter your Email">
+        </div>
+        
+        <div class="field-group">
+          <label>CC</label>
+          <input type="text" id="emailCC">
+        </div>
+      </div>
+      
+      <div class="parallel-fields">
+        <div class="field-group">
+          <label>Parent</label>
+          <select id="emailParent">
+            <option value="">-- Select --</option>
+            <option value="lead">Lead</option>
+            <option value="andrew" selected>Andrew Peterson</option>
+          </select>
+        </div>
+        
+        <div class="field-group">
+          <label class="required">Subject</label>
+          <input type="text" id="emailSubject" placeholder="No Subject">
+        </div>
+      </div>
+      
+      <div class="field-group">
+        <label>Body</label>
+        <textarea id="emailBody" rows="6"></textarea>
+      </div>
     </div>
   </div>
-
+</div>
   
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 @push('scripts')
 <script>
     $(document).ready(function () {
@@ -488,11 +582,53 @@
         refreshCalls();
         setInterval(refreshCalls, 30000); // Refresh every 30 seconds
 
-        $('#openModal').click(function () {
-            
-            $('#modal-toggle').prop('checked', true);
-        });
+       
 
+
+function closeModal() {
+    document.getElementById('modal-toggle').checked = false;
+  }
+  
+  // Email sending function
+  function sendEmail() {
+    const to = document.getElementById('emailTo').value;
+    const cc = document.getElementById('emailCC').value;
+    const parent = document.getElementById('emailParent').value;
+    const subject = document.getElementById('emailSubject').value;
+    const body = document.getElementById('emailBody').value;
+    
+    // Validation
+    if (!to) {
+      alert('Please enter a recipient');
+      document.getElementById('emailTo').focus();
+      return;
+    }
+    
+    if (!subject) {
+      alert('Please enter a subject');
+      document.getElementById('emailSubject').focus();
+      return;
+    }
+    
+    // Here you would typically send the email via AJAX
+    console.log('Email data:', { 
+      to: to,
+      cc: cc,
+      parent: parent,
+      subject: subject,
+      body: body 
+    });
+    
+    alert('Email sent successfully!');
+    closeModal();
+  }
+  
+  // Close modal when clicking outside
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+      closeModal();
+    }
+  });
     });
 </script>
 @endpush
