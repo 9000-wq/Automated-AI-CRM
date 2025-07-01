@@ -1,5 +1,10 @@
 @include('layouts.header')
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{asset('plugins/Tagging-System-Autocomplete/css/amsify.suggestags.css')}}">
+<link href="{{asset('plugins/wysiwyg-editor-master/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css" rel="stylesheet">
+
+
 <style>
     textarea.form-control:focus {
         box-shadow: 0 0 0 0.2rem rgba(59, 101, 234, 0.25);
@@ -55,6 +60,7 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      overflow-y: scroll;
     }
     
     /* Show modal when checkbox is checked */
@@ -66,7 +72,7 @@
       background: white;
       padding: 25px;
       border-radius: 8px;
-      width: 700px;
+      width: 900px;
       max-width: 90%;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
       position: relative;
@@ -184,6 +190,10 @@
     
     .open-modal-btn:hover {
       background: #0d62c9;
+    }
+
+    #fr-logo{
+        display:none !important;
     }
 </style>
 
@@ -383,58 +393,86 @@
 <input type="checkbox" id="modal-toggle">
 
 <!-- Modal overlay -->
-<div class="modal-overlay">
-  <div class="modal-box">
+<div class="modal-overlay" >
+  <div class="modal-box" >
     <label for="modal-toggle" class="modal-close">&times;</label>
     <h2>Compose Email</h2>
     
     <div class="email-controls">
-      <button class="btn btn-send" onclick="sendEmail()">Send</button>
-      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="sendEmail()">Send</button>
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
     </div>
+
+    <div class="messageinfo"></div>
     
-    <div class="email-fields">
-      <div class="parallel-fields">
-        <div class="field-group">
-          <label class="required">To</label>
-          <input type="text" id="emailTo" placeholder="Enter your Email">
-        </div>
+    <form id="sendleademails">
+        <div class="email-fields">
+            <div class="parallel-fields">
+                <div class="field-group">
+                    <label class="required">To</label>
+                    <input type="text" id="emailTo" placeholder="Enter your Email">
+                </div>
+            
+                <div class="field-group">
+                    <label>CC</label>
+                    <input type="text" name="emailCC" id="emailCC">
+                </div>
+            </div>
         
-        <div class="field-group">
-          <label>CC</label>
-          <input type="text" id="emailCC">
-        </div>
-      </div>
-      
-      <div class="parallel-fields">
-        <div class="field-group">
-          <label>Parent</label>
-          <select id="emailParent">
-            <option value="">-- Select --</option>
-            <option value="lead">Lead</option>
-            <option value="andrew" selected>Andrew Peterson</option>
-          </select>
-        </div>
+            <div class="parallel-fields">
+                <div class="field-group">
+                    <label>Parent</label>
+                    <select id="emailParent">
+                        <option value="{{ $lead->id }}" selected>{{ $lead->name }}</option>
+                    </select>
+                </div>
+            
+                <div class="field-group">
+                    <label class="required">Subject</label>
+                    <input type="text" id="emailSubject" placeholder="No Subject">
+                </div>
+            </div>
         
-        <div class="field-group">
-          <label class="required">Subject</label>
-          <input type="text" id="emailSubject" placeholder="No Subject">
+            <div class="field-group">
+                <label>Body</label>
+                <textarea id="emailBody" ></textarea>
+            </div>
         </div>
-      </div>
-      
-      <div class="field-group">
-        <label>Body</label>
-        <textarea id="emailBody" rows="6"></textarea>
-      </div>
-    </div>
+    </form>
   </div>
 </div>
   
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="{{asset('plugins/Tagging-System-Autocomplete/js/jquery.amsify.suggestags.js')}}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
 <script>
     $(document).ready(function () {
+
+
+      
+        new FroalaEditor('#emailBody', {
+            imageUploadURL: '{{route('leaduploadimage')}}',
+            fileUploadURL: '{{route('leaduploadfile')}}',
+            requestHeaders: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            fileAllowedTypes: [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            ],
+            toolbarButtons: ['bold', 'italic', 'underline','align','formatOL','formatUL', 'insertImage', 'insertFile', 'undo', 'redo'],
+
+        });
+
+        // Mutiple selector input plugin 
+
+        $('input[name="emailCC"]').amsifySuggestags({
+            type :'amsify',
+        });
+
         // Notes functionality
         $('.savenotes').click(function () {
             let notes = $('.notesinput').val();
@@ -585,51 +623,93 @@
        
 
 
-function closeModal() {
-    document.getElementById('modal-toggle').checked = false;
-  }
   
-  // Email sending function
-  function sendEmail() {
-    const to = document.getElementById('emailTo').value;
-    const cc = document.getElementById('emailCC').value;
-    const parent = document.getElementById('emailParent').value;
-    const subject = document.getElementById('emailSubject').value;
-    const body = document.getElementById('emailBody').value;
-    
-    // Validation
-    if (!to) {
-      alert('Please enter a recipient');
-      document.getElementById('emailTo').focus();
-      return;
-    }
-    
-    if (!subject) {
-      alert('Please enter a subject');
-      document.getElementById('emailSubject').focus();
-      return;
-    }
-    
-    // Here you would typically send the email via AJAX
-    console.log('Email data:', { 
-      to: to,
-      cc: cc,
-      parent: parent,
-      subject: subject,
-      body: body 
-    });
-    
-    alert('Email sent successfully!');
-    closeModal();
-  }
+      
   
-  // Close modal when clicking outside
-  document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('modal-overlay')) {
-      closeModal();
-    }
-  });
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+            closeModal();
+            }
+        });
+
+  
+
+
     });
+
+
+    function closeModal() {
+
+        document.getElementById('modal-toggle').checked = false;
+    
+    }
+
+
+    // Email sending function
+    function sendEmail() {
+        const to = document.getElementById('emailTo').value;
+        const cc = document.getElementById('emailCC').value;
+        const leadid = document.getElementById('emailParent').value;
+        const leadname = document.getElementById('emailParent').options[
+            document.getElementById('emailParent').selectedIndex
+        ].text;
+        const subject = document.getElementById('emailSubject').value;
+        const body = document.getElementById('emailBody').value;
+        
+       
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        }); 
+      
+        
+      
+        $.ajax({
+            url:"{{route('sendleademail')}}",
+            data:{ 
+            to: to,
+            cc: cc,
+            leadid: leadid,
+            leadname:leadname,
+            subject: subject,
+            body: body,
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type:"post",
+        }).done(function(response){
+  
+            document.getElementById('emailTo').value = '';
+            document.getElementById('emailCC').value = '';
+            document.getElementById('emailSubject').value = '';
+            document.getElementById('emailBody').value = '';
+
+            
+            $('.messageinfo').html('<div class="text-primary">Email sent Successfully.</div>');
+            closeModal();
+
+        }).fail(function(xhr){
+            console.log(xhr)
+
+            if (xhr.status === 422) {
+                var errors = xhr.responseJSON.errors;
+                var errorHtml = '<div class="alert alert-danger"><ul>';
+                $.each(errors, function (key, value) {
+                    errorHtml += '<li class="text-danger">' + value[0] + '</li>';
+                });
+                errorHtml += '</ul></div>';
+                $('.messageinfo').html(errorHtml);
+            } else {
+                $('.messageinfo').html('<div class="alert alert-danger">An error occurred.</div>');
+            }
+
+           
+        })
+        
+    }
+
+
 </script>
 @endpush
 

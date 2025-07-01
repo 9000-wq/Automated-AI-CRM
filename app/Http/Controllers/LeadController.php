@@ -11,9 +11,14 @@ use App\Models\User;
 use App\Models\Note;
 use App\Models\Account;
 use App\Models\LeadContact;
+use App\Models\EmailLog;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LeadEmail;
 use DataTables;
 use Illuminate\Validation\Rule;
 use DB;
+use Illuminate\Support\Facades\Log;
+
 
 
 class LeadController extends Controller
@@ -387,6 +392,128 @@ class LeadController extends Controller
 
         return response()->json($results);
     }
+
+
+    
+    function extractFilePathsFromHtml($html)
+    {
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true); // Prevents warning on malformed HTML
+        $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
+
+        $files = [];
+
+        // Extract images
+        foreach ($dom->getElementsByTagName('img') as $img) {
+            $src = $img->getAttribute('src');
+            if ($this->isLocalFile($src)) {
+                $files[] = $this->convertToStoragePath($src);
+            }
+        }
+
+        // Extract file links (e.g., PDFs or docs)
+        foreach ($dom->getElementsByTagName('a') as $a) {
+            $href = $a->getAttribute('href');
+            if ($this->isLocalFile($href)) {
+                $files[] = $this->convertToStoragePath($href);
+            }
+        }
+
+        return $files;
+    }
+
+    function isLocalFile($url)
+    {
+        return str_contains($url, '/storage/') || str_contains($url, '/uploads/');
+    }
+
+    function convertToStoragePath($url)
+    {
+        // Example: http://yoursite.com/storage/uploads/file.pdf → uploads/file.pdf
+        $relative = parse_url($url, PHP_URL_PATH);
+        return ltrim(str_replace('/storage/', 'public/', $relative), '/');
+    }
+
+
+
+
+    public function sendleademail(Request $request)
+    {
+
+        $to= $request->to;
+        $cc= $request->cc;
+        $subject= $request->subject;
+        $body= $request->body;
+        $leadname= $request->leadname;
+        $leadid= $request->leadid;
+        $attachments=$this->extractFilePathsFromHtml($body);
+        
+
+        $validated = $request->validate([
+            'to' => 'required|email',
+            'cc' => 'nullable|email',
+            'subject' => 'required|string|max:255',
+            'body' => 'required|string',
+        ]);
+
+
+       try {
+            Mail::to($validated['to'])
+                ->cc($validated['cc'])
+                ->send(new LeadEmail($validated['subject'], $validated['body'],$attachments));
+
+            return response()->json(['success' => 'Email sent successfully.']);
+        } catch (\Exception $e) {
+            // Log error for debugging
+            Log::error('Email sending failed: ' . $e->getMessage());
+
+            return response()->json(['error' => 'Failed to send email. Please try again.'], 500);
+        }
+
+
+        $emaillog=new EmailLog();
+        $emaillog->email=$request->to;
+        $emaillog->cc=$request->cc;
+        $emaillog->subject=$request->subject;
+        $emaillog->body=$request->body;
+        $emaillog->lead_id=$request->leadid;
+        $emaillog->save();
+
+
+        
+
+
+        return response()->json(['Email sent Successfully.']);
+
+
+
+    }
+
+
+    public function leaduploadImage(Request $request)
+    {
+        $file = $request->file('file');
+        $filename = time().'_'.$file->getClientOriginalName();
+        $file->move(public_path('uploads/email'), $filename);
+
+        return response()->json([
+            'link' => asset('uploads/email/' . $filename)
+        ]);
+    }
+
+    public function leaduploadFile(Request $request)
+    {
+        $file = $request->file('file');
+        $filename = time().'_'.$file->getClientOriginalName();
+        $file->move(public_path('uploads/email'), $filename);
+
+        return response()->json([
+            'link' => asset('uploads/email/' . $filename)
+        ]);
+    }
+
+
 
 
 }

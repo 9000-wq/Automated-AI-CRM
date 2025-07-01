@@ -96,6 +96,10 @@ Route::middleware('auth')->group(function () {
         
     });
 
+        Route::post('sendleademail', [LeadController::class, 'sendleademail'])->name('sendleademail');
+        Route::post('leaduploadimage', [LeadController::class, 'leaduploadimage'])->name('leaduploadimage');
+        Route::post('leaduploadfile', [LeadController::class, 'leaduploadfile'])->name('leaduploadfile');
+
         Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
         Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
         Route::get('/calls/history/{lead}/{call?}', [CallController::class, 'history'])->name('call.history');
