@@ -238,12 +238,10 @@
 
                 <div class="parallel-fields">
                     <div class="field-group">
-                        <label>Parent</label>
+                        <label>Lead <span class="text-danger">*</span></label>
                         <select class="lead-select" id="emailParent">
                             <option value="">Select a lead by ID (optional)</option>
-                            @foreach($leads as $lead)
-                                <option value="{{ $lead->id }}">{{ $lead->id }}</option> {{-- Only show ID --}}
-                            @endforeach
+                          
                         </select>
                     </div>
 
@@ -289,7 +287,6 @@
                 type: 'amsify',
             });
 
-            // Initialize Select2 for lead selection
             $('.lead-select').select2({
                 placeholder: 'Search by lead name',
                 allowClear: true,
@@ -299,8 +296,7 @@
                     delay: 250,
                     data: function (params) {
                         return {
-                            // Send search term as 'id' parameter to backend
-                            id: params.term,  // Only search by ID
+                            term: params.term,  // ✅ clearer param name (optional)
                             page: params.page
                         };
                     },
@@ -309,8 +305,8 @@
                         return {
                             results: data.data.map(function (item) {
                                 return {
-                                    id: item.name,
-                                    text: item.name  // Only display ID in dropdown
+                                    id: item.id,       // ✅ form will submit ID
+                                    text: item.name    // ✅ user sees name
                                 };
                             }),
                             pagination: {
@@ -322,6 +318,7 @@
                 },
                 minimumInputLength: 1
             });
+
 
             // DataTable initialization
             var table = $('.data-table').DataTable({
@@ -374,6 +371,8 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+        
 
             $.ajax({
                 url: "{{ route('sendleademail') }}",

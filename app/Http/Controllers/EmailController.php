@@ -11,8 +11,8 @@ class EmailController extends Controller
 {
     public function showEmailLogs()
     {
-        $leads = Lead::all(); // Get all leads for the dropdown
-        return view('leads.emailindex', compact('leads')); 
+       
+        return view('leads.emailindex'); 
     }
 
     public function sendEmail(Request $request)
@@ -77,7 +77,8 @@ class EmailController extends Controller
 
     public function getLeads(Request $request)
 {
-     $search = $request->input('id');
+
+    $search = $request->input('term');
 
     $leads = Lead::query()
         ->where('company_id', auth()->user()->company_id)
