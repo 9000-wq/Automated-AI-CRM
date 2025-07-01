@@ -438,58 +438,38 @@ class LeadController extends Controller
 
 
 
-    public function sendleademail(Request $request)
-    {
-
-        $to= $request->to;
-        $cc= $request->cc;
-        $subject= $request->subject;
-        $body= $request->body;
-        $leadname= $request->leadname;
-        $leadid= $request->leadid;
-        $attachments=$this->extractFilePathsFromHtml($body);
-        
+   public function sendleademail(Request $request)
+{
+    
 
         $validated = $request->validate([
             'to' => 'required|email',
-            'cc' => 'nullable|email',
             'subject' => 'required|string|max:255',
             'body' => 'required|string',
         ]);
 
 
-       try {
-            Mail::to($validated['to'])
-                ->cc($validated['cc'])
-                ->send(new LeadEmail($validated['subject'], $validated['body'],$attachments));
+  
+        $attachments = $this->extractFilePathsFromHtml($request->body);
 
-            return response()->json(['success' => 'Email sent successfully.']);
-        } catch (\Exception $e) {
-            // Log error for debugging
-            Log::error('Email sending failed: ' . $e->getMessage());
+        $ccemails=explode(',',$request->cc);
 
-            return response()->json(['error' => 'Failed to send email. Please try again.'], 500);
-        }
+        Mail::to($validated['to'])
+            ->cc($ccemails)
+            ->queue(new LeadEmail($validated['subject'], $validated['body'], $attachments));
 
-
-        $emaillog=new EmailLog();
-        $emaillog->email=$request->to;
-        $emaillog->cc=$request->cc;
-        $emaillog->subject=$request->subject;
-        $emaillog->body=$request->body;
-        $emaillog->lead_id=$request->leadid;
+        // Save to database after successful email send
+        $emaillog = new EmailLog();
+        $emaillog->email = $request->to;
+        $emaillog->cc = $request->cc;
+        $emaillog->subject = $request->subject;
+        $emaillog->body = $request->body;
+        $emaillog->lead_id = $request->leadid;
         $emaillog->save();
 
-
-        
-
-
-        return response()->json(['Email sent Successfully.']);
-
-
-
-    }
-
+        return response()->json(['success' => 'Email sent successfully.']);
+    
+}
 
     public function leaduploadImage(Request $request)
     {

@@ -185,6 +185,15 @@
 						</a>
 					</li>
 
+					<li
+						class="sidebar-item  {{ request()->routeIs('email-logs') && count(request()->route()->parameters()) === 0 ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{route('email-logs')}}">
+							<i class="fas fa-envelope"></i> <span class="align-middle">Emails</span>
+						</a>
+					</li>
+
+
+
 					
 					<a href="#" class="sidebar-link"><strong>AI Modules</strong></a>
 

@@ -17,5 +17,14 @@ class EmailLog extends Model
         'body',
     ];
 
+
+    // app/Models/EmailLog.php
+public function lead()
+{
+    return $this->belongsTo(Lead::class);
+}
+
   
 }
+
+

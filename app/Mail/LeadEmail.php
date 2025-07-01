@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 
 
-class LeadEmail extends Mailable
+class LeadEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
     

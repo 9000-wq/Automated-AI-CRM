@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
@@ -95,7 +96,9 @@ Route::middleware('auth')->group(function () {
 
         
     });
-
+        Route::get('/email-logs', [EmailController::class, 'showEmailLogs'])->name('email-logs');
+        Route::get('/email-logs/data', [EmailController::class, 'getEmailLogsData'])->name('email-logs-data');
+        Route::get('/ajax/leads', [EmailController::class, 'getLeads'])->name('ajax.leads');
         Route::post('sendleademail', [LeadController::class, 'sendleademail'])->name('sendleademail');
         Route::post('leaduploadimage', [LeadController::class, 'leaduploadimage'])->name('leaduploadimage');
         Route::post('leaduploadfile', [LeadController::class, 'leaduploadfile'])->name('leaduploadfile');
