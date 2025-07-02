@@ -6,6 +6,8 @@ use App\Models\Call;
 use App\Models\Lead;
 use Illuminate\Http\Request;
 use DateTime;
+use Twilio\Jwt\AccessToken;
+use Twilio\Jwt\Grants\VoiceGrant;
 
 class CallController extends Controller
 {
@@ -145,4 +147,62 @@ public function updateDetails(Request $request, Lead $lead)
         'history' => $history
     ]);
 }
+
+
+    public function callScreen(Request $request)
+    {
+        
+        $leadid= $request->leadid;
+        $contact= $request->contact;
+
+        $leadcontacts=[];
+
+        if($contact ==''){
+            $leadcontacts=Lead::find($leadid);
+            $leadcontacts=$leadcontacts->contacts->pluck('phone');
+        }
+
+        return view('call_screen')->with('leadcontacts',$leadcontacts)->with('contact',$contact)->with('leadid',$leadid);
+    }
+
+   
+    
+
+    public function generateTwilioToken()
+    {
+        $accountSid = config('twilio.sid');
+        $apiKeySid = config('twilio.api_key');
+        $apiKeySecret = config('twilio.api_secret');
+        $outgoingAppSid = config('twilio.twiml_app_sid');
+
+        $identity = "agent_" . rand(1000, 9999);
+
+        $token = new AccessToken($accountSid, $apiKeySid, $apiKeySecret, 3600, $identity);
+
+        $voiceGrant = new VoiceGrant();
+        $voiceGrant->setOutgoingApplicationSid($outgoingAppSid);
+        $voiceGrant->setIncomingAllow(true);
+
+        $token->addGrant($voiceGrant);
+
+        return response()->json(['token' => $token->toJWT()]);
+    }
+
+
+    public function handleVoiceCall(Request $request)
+    {
+        $twiml = new \Twilio\TwiML\VoiceResponse();
+        $to = $request->input('To');
+
+        if ($to) {
+            $twiml->dial($to);
+        } else {
+            $twiml->say("Sorry, the number was invalid.");
+        }
+
+        return response($twiml)->header('Content-Type', 'text/xml');
+    }
+
+
+
 }

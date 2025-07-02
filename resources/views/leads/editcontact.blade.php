@@ -26,6 +26,8 @@
 
                                                                     <input type="hidden" id="contactid" name="contactid" value="{{ count($contact) > 0 ? $contact[0]->id : $leadid  }}">
 
+                                                                    <input type="hidden" id="leadid" name="leadid" value="{{ $lead_id  }}">
+
                                                                     <div class="col-md-6">
                                                                         <label for="role" class="form-label">Enter Role <span class="text-danger">*</span></label>
                                                                         <input type="text" id="role" name="role"  value="{{ old('role', count($contact) > 0 ? $contact[0]->role->label : '') }}"  class="form-control mb-3">          

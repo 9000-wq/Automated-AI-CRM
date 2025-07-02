@@ -85,7 +85,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/leads/{lead}/edit', [LeadController::class, 'edit'])->name('leads.edit');
         Route::put('/leads/{lead}', [LeadController::class, 'update'])->name('leads.update');
         Route::delete('/leads', [LeadController::class, 'destroy'])->name('leads.destroy');
-        Route::get('/editcontact/{contact?}', [LeadController::class, 'editcontact'])->name('leadcontact');
+        Route::get('/editcontact/{contact?}/{leadid?}', [LeadController::class, 'editcontact'])->name('leadcontact');
         Route::put('/updatelead', [LeadController::class, 'updatelead'])->name('updateleadcontact');
         Route::delete('/deleteleadcontact/{contact?}/{lead?}', [LeadController::class, 'deleteleadcontact'])->name('deleteleadcontact');
         Route::post('savenotes', [LeadController::class, 'savenotes'])->name('leads.savenotes');
@@ -102,6 +102,12 @@ Route::middleware('auth')->group(function () {
         Route::post('sendleademail', [LeadController::class, 'sendleademail'])->name('sendleademail');
         Route::post('leaduploadimage', [LeadController::class, 'leaduploadimage'])->name('leaduploadimage');
         Route::post('leaduploadfile', [LeadController::class, 'leaduploadfile'])->name('leaduploadfile');
+
+        Route::get('/call-screen/{leadid?}/{contact?}', [CallController::class, 'callScreen'])->name('call-screen');
+        Route::get('generate-twilio-token', [CallController::class, 'generateTwilioToken'])->name('generate-twilio-token');
+
+
+        
 
         Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
         Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
@@ -132,4 +138,7 @@ require __DIR__ . '/auth.php';
 Route::fallback(function () {
     return response()->view('404', [], 404);
 });
+
+Route::post('/twilio/voice', [CallController::class, 'handleVoiceCall']);
+
 

@@ -202,6 +202,7 @@ class LeadController extends Controller
     {
         $contact = [];
         $leadid = $request->contact;
+        $lead_id=$request->leadid;
         if (
             $request->contact != null &&
             $request->contact != '' &&
@@ -211,7 +212,7 @@ class LeadController extends Controller
 
         }
 
-        return view('leads.editcontact')->with('contact', $contact)->with('leadid', $leadid);
+        return view('leads.editcontact')->with('contact', $contact)->with('leadid', $leadid)->with('lead_id',$lead_id);
     }
 
     public function updatelead(Request $request)
@@ -224,6 +225,7 @@ class LeadController extends Controller
         $address = $request->address;
         $description = $request->description;
         $birthday = $request->birthday;
+        $leadid = $request->leadid;
 
 
         $rules = [
@@ -261,7 +263,7 @@ class LeadController extends Controller
             $contact->company_id = auth()->user()->company_id;
             $contact->update();
 
-            return redirect()->route('leads.show', ['lead' => $contact->lead_id]);
+            return redirect()->route('leads.show', ['lead' => $leadid]);
         } else {
 
             $contactid = str_replace('lead', '', $contactid);
@@ -275,10 +277,9 @@ class LeadController extends Controller
                 'phone' => $phone,
                 'email' => $email,
                 'address' => $address,
-                'desscription' => $description,
+                'description' => $description,
                 'birthday' => $birthday,
                 'contact_role_id' => $rolevalue->id,
-                'lead_id' => $contactid,
                 'account_id' => $account_id,
                 'company_id' => auth()->user()->company_id
 

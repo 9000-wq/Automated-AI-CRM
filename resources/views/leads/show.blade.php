@@ -280,7 +280,7 @@
                                     @foreach($lead->contacts as $contact)
                                         <div class="mb-3" style="font-size: large; font-weight: 500;">
                                             <strong>{{ $contact->full_name }}</strong>
-                                            <a href="{{ route('leadcontact', $contact->id) }}" class="btn btn-info m-1 float-end"><i class="fas fa-edit"></i></a>
+                                            <a href="{{ route('leadcontact', ['contact'=>$contact->id,'leadid'=>$lead->id ]) }}" class="btn btn-info m-1 float-end"><i class="fas fa-edit"></i></a>
                                             <form action="{{ route('deleteleadcontact', [$contact->id, $lead->id]) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
@@ -293,7 +293,7 @@
                                             Role: {{ $contact->role->label }}<br>
                                             Email: {{ $contact->email }}<br>
                                             Phone: {{ $contact->phone }}<br>
-                                            Address: {{ $contact->address }}
+                                            Address: {{ $contact->address }}<br>
                                         </div>
                                     @endforeach
 
@@ -343,6 +343,10 @@
     @if($call->description)
     <div class="call-description">{{ $call->description }}</div>
     @endif
+
+    <a href="{{route('call-screen',['leadid'=>$lead->id])}}" target="_blank" class="btn btn-sm btn-primary mt-2"> <i class="fas fa-phone me-2" style="cursor: pointer;"></i> Call Now <i style="font-size: 20px;" class="material-icons">open_in_new</i></a>
+</button>
+
 </div>
 @endforeach
     </div>
