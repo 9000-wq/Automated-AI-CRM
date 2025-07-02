@@ -113,6 +113,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
         Route::get('/calls/history/{lead}/{call?}', [CallController::class, 'history'])->name('call.history');
         Route::post('/leads/{lead}/call-history', [CallController::class, 'updateDetails'])->name('call.history.update');
+Route::get('/ajax/users/call', [UserController::class, 'searchUsers'])->name('ajax.users.call');
     Route::middleware(['role:super admin'])->group(function () {
 
         Route::get('/manageprices', [HomeController::class, 'index'])->name('manageprices');

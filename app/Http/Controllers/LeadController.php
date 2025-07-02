@@ -170,6 +170,24 @@ class LeadController extends Controller
     return view('leads.show', compact('lead', 'activities', 'history'));
 }
 
+// public function getUsers(Request $request)
+// {
+//     $search = $request->input('search');
+    
+//     $users = User::query()
+//         ->where('company_id', auth()->user()->company_id)
+//         ->when($search, function($query, $search) {
+//             return $query->where('name', 'like', "%{$search}%");
+//         })
+//         ->select(['id', 'name as text']) // Note: using 'text' as key
+//         ->paginate(10);
+
+//     return response()->json([
+//         'data' => $users->items(),
+//         'total' => $users->total()
+//     ]);
+// }
+
     public function edit(Lead $lead)
     {
         $users = User::select('name', 'id')->where('company_id', auth()->user()->company_id)->get();

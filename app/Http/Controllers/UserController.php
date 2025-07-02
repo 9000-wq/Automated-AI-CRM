@@ -130,4 +130,25 @@ class UserController extends Controller
          return redirect()->route('users.index')->with('success', 'User deleted successfully.');
      }
 
+
+
+   public function searchUsers(Request $request)
+{
+    $search = $request->input('term');
+
+    $users = User::query()
+        ->where('company_id', auth()->user()->company_id) // optional
+        ->when($search, function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%");
+        })
+        ->orderBy('name')
+        ->paginate(20, ['id', 'name']);
+
+    return response()->json([
+        'data' => $users->items(),
+        'total' => $users->total()
+    ]);
+}
+
+
 }
