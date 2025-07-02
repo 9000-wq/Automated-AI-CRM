@@ -575,9 +575,11 @@
                                                                                 <div class="input-group">
 
                                                                                         <select name="assigned_user_name" id="assigned-user" class="form-control" required> 
+                                                                                                @if($lead != null)
                                                                                                 <option value="{{ $lead->user->id }}" selected>
-                                                                                                    {{ $lead->user->name }}
+                                                                                                        {{ $lead->user->name }}
                                                                                                 </option>
+                                                                                                @endif
                                                                                         </select>
                                                                                    
                                                                                 </div>
