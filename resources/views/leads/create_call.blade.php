@@ -12,6 +12,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
+
     <style>
         :root {
             --primary-color: #3b65ea;
@@ -375,7 +376,7 @@
                                                                                             selected>Planned</option>
                                                                                         <option value="Held">Held
                                                                                         </option>
-                                                                                       
+
                                                                                     </select>
                                                                                 </div>
 
@@ -566,80 +567,86 @@
                                                                     <div class="panel-body panel-body-form">
                                                                         <!-- Assigned User -->
                                                                         <div class="row">
-                                                                            <div
-                                                                                class="cell form-group col-sm-6 col-md-12">
-                                                                                <label class="control-label">
-                                                                                    Assigned User <span
-                                                                                        class="required-sign">*</span>
-                                                                                </label>
-                                                                                <div class="input-group">
-
-                                                                                        <select name="assigned_user_name" id="assigned-user" class="form-control" required> 
-                                                                                                @if($lead != null)
-                                                                                                <option value="{{ $lead->user->id }}" selected>
-                                                                                                        {{ $lead->user->name }}
+                                                                            <div class="row">
+                                                                                <div
+                                                                                    class="cell form-group col-sm-6 col-md-12">
+                                                                                    <label class="control-label">
+                                                                                        Assigned User <span
+                                                                                            class="required-sign">*</span>
+                                                                                    </label>
+                                                                                    <div class="input-group">
+                                                                                        <select name="assigned_user_id"
+                                                                                            id="assigned-user"
+                                                                                            class="form-control assigned-user-select"
+                                                                                            required>
+                                                                                            @if($lead != null && $lead->user)
+                                                                                                <option
+                                                                                                    value="{{ $lead->user->id }}"
+                                                                                                    selected>
+                                                                                                    {{ $lead->user->name }}
                                                                                                 </option>
-                                                                                                @endif
+                                                                                            @endif
                                                                                         </select>
-                                                                                   
+
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Teams -->
+                                                                            <div class="row">
+                                                                                <div
+                                                                                    class="cell form-group col-sm-6 col-md-12">
+                                                                                    <label
+                                                                                        class="control-label">Teams</label>
+                                                                                    <input class="form-control"
+                                                                                        type="text" id="teams"
+                                                                                        placeholder="Enter teams">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-
-                                                                        <!-- Teams -->
-                                                                        <div class="row">
-                                                                            <div
-                                                                                class="cell form-group col-sm-6 col-md-12">
-                                                                                <label
-                                                                                    class="control-label">Teams</label>
-                                                                                <input class="form-control"
-                                                                                    type="text" id="teams"
-                                                                                    placeholder="Enter teams">
-                                                                            </div>
-                                                                        </div>
                                                                     </div>
-                                                                </div>
 
-                                                                <!-- Attendees Section -->
-                                                                <div
-                                                                    class="panel panel-default panel-attendees headered sticked last">
-                                                                    <div class="panel-heading">
-                                                                        <h4 class="panel-title">Attendees</h4>
-                                                                    </div>
-                                                                    <div class="panel-body panel-body-form">
-                                                                        <!-- Users -->
-                                                                        <div class="row">
-                                                                            <div
-                                                                                class="cell form-group col-sm-6 col-md-12">
-                                                                                <label
-                                                                                    class="control-label">Users</label>
-                                                                                <input class="form-control"
-                                                                                    type="text" id="users"
-                                                                                    placeholder="Enter users">
-                                                                            </div>
+                                                                    <!-- Attendees Section -->
+                                                                    <div
+                                                                        class="panel panel-default panel-attendees headered sticked last">
+                                                                        <div class="panel-heading">
+                                                                            <h4 class="panel-title">Attendees</h4>
                                                                         </div>
-
-                                                                        <!-- Contacts -->
-                                                                        <div class="row">
-                                                                            <div
-                                                                                class="cell form-group col-sm-6 col-md-12">
-                                                                                <label
-                                                                                    class="control-label">Contacts</label>
-                                                                                <input class="form-control"
-                                                                                    type="text" id="contacts"
-                                                                                    placeholder="Enter contacts">
+                                                                        <div class="panel-body panel-body-form">
+                                                                            <!-- Users -->
+                                                                            <div class="row">
+                                                                                <div
+                                                                                    class="cell form-group col-sm-6 col-md-12">
+                                                                                    <label
+                                                                                        class="control-label">Users</label>
+                                                                                    <input class="form-control"
+                                                                                        type="text" id="users"
+                                                                                        placeholder="Enter users">
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
 
-                                                                        <!-- Leads -->
-                                                                        <div class="row">
-                                                                            <div
-                                                                                class="cell form-group col-sm-6 col-md-12">
-                                                                                <label
-                                                                                    class="control-label">Leads</label>
-                                                                                <input class="form-control"
-                                                                                    type="text" id="leads"
-                                                                                    placeholder="Enter leads">
+                                                                            <!-- Contacts -->
+                                                                            <div class="row">
+                                                                                <div
+                                                                                    class="cell form-group col-sm-6 col-md-12">
+                                                                                    <label
+                                                                                        class="control-label">Contacts</label>
+                                                                                    <input class="form-control"
+                                                                                        type="text" id="contacts"
+                                                                                        placeholder="Enter contacts">
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Leads -->
+                                                                            <div class="row">
+                                                                                <div
+                                                                                    class="cell form-group col-sm-6 col-md-12">
+                                                                                    <label
+                                                                                        class="control-label">Leads</label>
+                                                                                    <input class="form-control"
+                                                                                        type="text" id="leads"
+                                                                                        placeholder="Enter leads">
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -658,96 +665,300 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    @push('scripts')
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+        @push('scripts')
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+            <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+            <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>            
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-        <script>
-            $(document).ready(function () {
-                // Initialize datepickers
-                $('.datepicker').datepicker({
-                    format: 'dd.mm.yyyy',
-                    autoclose: true,
-                    todayHighlight: true
-                });
+            <script>
 
-                // Initialize timepickers
-                $('.timepicker').timepicker({
-                    showMeridian: false,
-                    minuteStep: 5
-                });
+                $(document).ready(function () {
+                    // Initialize datepickers
+                    $('.datepicker').datepicker({
+                        format: 'dd.mm.yyyy',
+                        autoclose: true,
+                        todayHighlight: true
+                    });
 
-                // Set current date and time
-                function setCurrentDateTime() {
-                    const today = new Date();
-                    let day = today.getDate().toString().padStart(2, '0');
-                    let month = (today.getMonth() + 1).toString().padStart(2, '0');
-                    let year = today.getFullYear();
-                    let todayStr = `${day}.${month}.${year}`;
+                    // Initialize timepickers
+                    $('.timepicker').timepicker({
+                        showMeridian: false,
+                        minuteStep: 5
+                    });
 
-                    // Round time to next 5 minutes
-                    const minutes = today.getMinutes();
-                    const roundedMinutes = Math.ceil(minutes / 5) * 5;
-                    let hours = today.getHours();
-                    let newMinutes = roundedMinutes;
-                    
-                    if (roundedMinutes >= 60) {
-                        hours += 1;
-                        newMinutes = 0;
-                        if (hours >= 24) {
-                            hours = 0;
-                            // If we cross midnight, increment the date
-                            today.setDate(today.getDate() + 1);
-                            day = today.getDate().toString().padStart(2, '0');
-                            month = (today.getMonth() + 1).toString().padStart(2, '0');
-                            year = today.getFullYear();
-                            todayStr = `${day}.${month}.${year}`;
+
+                    $(document).ready(function () {
+                        $('.assigned-user-select').select2({
+                            placeholder: 'Search by user name',
+                            allowClear: true,
+                            ajax: {
+                                url: '{{ route("ajax.users.call") }}', 
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+                                    return {
+                                        term: params.term,
+                                        page: params.page
+                                    };
+                                },
+                                processResults: function (data, params) {
+                                    params.page = params.page || 1;
+                                    return {
+                                        results: data.data.map(function (user) {
+                                            return {
+                                                id: user.id,
+                                                text: user.name
+                                            };
+                                        }),
+                                        pagination: {
+                                            more: (params.page * 20) < data.total
+                                        }
+                                    };
+                                },
+                                cache: true
+                            },
+                            minimumInputLength: 1
+                        });
+                    });
+
+
+
+                    // Set current date and time
+                    function setCurrentDateTime() {
+                        const today = new Date();
+                        let day = today.getDate().toString().padStart(2, '0');
+                        let month = (today.getMonth() + 1).toString().padStart(2, '0');
+                        let year = today.getFullYear();
+                        let todayStr = `${day}.${month}.${year}`;
+
+                        // Round time to next 5 minutes
+                        const minutes = today.getMinutes();
+                        const roundedMinutes = Math.ceil(minutes / 5) * 5;
+                        let hours = today.getHours();
+                        let newMinutes = roundedMinutes;
+
+                        if (roundedMinutes >= 60) {
+                            hours += 1;
+                            newMinutes = 0;
+                            if (hours >= 24) {
+                                hours = 0;
+                                // If we cross midnight, increment the date
+                                today.setDate(today.getDate() + 1);
+                                day = today.getDate().toString().padStart(2, '0');
+                                month = (today.getMonth() + 1).toString().padStart(2, '0');
+                                year = today.getFullYear();
+                                todayStr = `${day}.${month}.${year}`;
+                            }
+                        }
+
+                        const timeStr = `${hours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
+
+                        // Set values
+                        $('#date-start').val(todayStr);
+                        $('#time-start').val(timeStr);
+                        $('#date-end').val(todayStr);
+
+                        // Calculate end time based on default duration
+                        calculateEndTime();
+                    }
+
+                    // Reset form to default values
+                    function resetForm() {
+                        // Clear all input fields
+                        $('#call-name').val('');
+                        $('#call-description').val('');
+                        // $('#assigned-user').val('');
+                        $('#teams').val('');
+                        $('#users').val('');
+                        $('#contacts').val('');
+                        $('#leads').val('');
+
+                        // Reset select fields to default values
+                        $('#call-status').val('Planned');
+                        $('#call-direction').val('Outbound');
+                        $('#call-duration').val('300');
+                        $('#parent-type').val('Lead');
+                        $('#parent-name').val('');
+
+                        // Set current date and time
+                        setCurrentDateTime();
+
+                        // Clear any validation errors
+                        $('.form-control').removeClass('is-invalid');
+                        $('.error-message').remove();
+
+                        // If we have a lead ID, repopulate the parent fields
+                        const leadId = $('#lead_id').val();
+                        if (leadId) {
+                            @if(isset($parentData))
+                                $('#parent-type').val('{{ $parentData['type'] }}');
+                                $('#parent-name').val('{{ $parentData['name'] }}');
+                            @endif
                         }
                     }
-                    
-                    const timeStr = `${hours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
 
-                    // Set values
-                    $('#date-start').val(todayStr);
-                    $('#time-start').val(timeStr);
-                    $('#date-end').val(todayStr);
-                    
-                    // Calculate end time based on default duration
-                    calculateEndTime();
-                }
+                    // Calculate end time based on start time and duration
+                    function calculateEndTime() {
+                        const dateStart = $('#date-start').val();
+                        const timeStart = $('#time-start').val();
+                        const duration = parseInt($('#call-duration').val());
 
-                // Reset form to default values
-                function resetForm() {
-                    // Clear all input fields
-                    $('#call-name').val('');
-                    $('#call-description').val('');
-                    // $('#assigned-user').val('');
-                    $('#teams').val('');
-                    $('#users').val('');
-                    $('#contacts').val('');
-                    $('#leads').val('');
-                    
-                    // Reset select fields to default values
-                    $('#call-status').val('Planned');
-                    $('#call-direction').val('Outbound');
-                    $('#call-duration').val('300');
-                    $('#parent-type').val('Lead');
-                    $('#parent-name').val('');
-                    
-                    // Set current date and time
-                    setCurrentDateTime();
-                    
-                    // Clear any validation errors
-                    $('.form-control').removeClass('is-invalid');
-                    $('.error-message').remove();
-                    
-                    // If we have a lead ID, repopulate the parent fields
+                        if (dateStart && timeStart && duration) {
+                            const [day, month, year] = dateStart.split('.');
+                            const [hours, minutes] = timeStart.split(':');
+
+                            const startDate = new Date(year, month - 1, day, hours, minutes);
+                            const endDate = new Date(startDate.getTime() + duration * 1000);
+
+                            const formattedEndDate = `${endDate.getDate().toString().padStart(2, '0')}.${(endDate.getMonth() + 1).toString().padStart(2, '0')}.${endDate.getFullYear()}`;
+                            const formattedEndTime = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
+
+                            $('#date-end').val(formattedEndDate);
+                            $('#time-end').val(formattedEndTime);
+                        }
+                    }
+
+                    // Show notification message
+                    function showNotification(message, type) {
+                        const notification = $('#notification');
+                        notification.text(message);
+                        notification.removeClass('success error info').addClass(type);
+                        notification.addClass('show');
+
+                        setTimeout(() => {
+                            notification.removeClass('show');
+                        }, 3000);
+                    }
+
+                    // Validate form fields
+                    function validateForm() {
+                        let isValid = true;
+
+                        // Clear previous validations
+                        $('.form-control').removeClass('is-invalid');
+                        $('.error-message').remove();
+
+                        // Validate required fields
+                        if (!$('#call-name').val()) {
+                            $('#call-name').addClass('is-invalid');
+                            $('#call-name').after('<div class="error-message">Call name is required</div>');
+                            isValid = false;
+                        }
+
+                        if (!$('#date-start').val() || !$('#time-start').val()) {
+                            if (!$('#date-start').val()) {
+                                $('#date-start').addClass('is-invalid');
+                                $('#date-start').after('<div class="error-message">Start date is required</div>');
+                            }
+                            if (!$('#time-start').val()) {
+                                $('#time-start').addClass('is-invalid');
+                                $('#time-start').after('<div class="error-message">Start time is required</div>');
+                            }
+                            isValid = false;
+                        }
+
+                        if (!$('#assigned-user').val()) {
+                            $('#assigned-user').addClass('is-invalid');
+                            $('#assigned-user').after('<div class="error-message">Assigned user is required</div>');
+                            isValid = false;
+                        }
+
+                        return isValid;
+                    }
+
+                    // Event listeners
+                    $('#date-start, #time-start, #call-duration').on('change', calculateEndTime);
+
+                    $('#reset-form').click(function (e) {
+                        e.preventDefault();
+                        resetForm();
+                        showNotification('Form has been reset to default values', 'info');
+                    });
+
+                    $('#clear-parent').click(function () {
+                        $('#parent-name').val('');
+                        showNotification('Parent cleared', 'info');
+                    });
+
+                    $('#search-parent').click(function () {
+                        showNotification('Search functionality would open here', 'info');
+                    });
+
+                    $('#search-user').click(function () {
+                        showNotification('User search would open here', 'info');
+                    });
+
+                    $('#save-call').click(function () {
+                        if (!validateForm()) {
+                            showNotification('Please fix the validation errors', 'error');
+                            return;
+                        }
+
+                        const formData = {
+                            'name': $('#call-name').val(),
+                            'status': $('#call-status').val(),
+                            'direction': $('#call-direction').val(),
+                            'date_start': $('#date-start').val(),
+                            'time_start': $('#time-start').val(),
+                            'date_end': $('#date-end').val(),
+                            'time_end': $('#time-end').val(),
+                            'duration': $('#call-duration').val(),
+                            'parent_type': $('#parent-type').val(),
+                            'parent_name': $('#parent-name').val(),
+                            'description': $('#call-description').val(),
+                            'assigned_user_name': $('#assigned-user').val(),
+                            'teams': $('#teams').val(),
+                            'users': $('#users').val(),
+                            'contacts': $('#contacts').val(),
+                            'leads': $('#leads').val(),
+                            'lead_id': $('#lead_id').val()
+                        };
+
+                        // Show loading state
+                        const saveBtn = $('#save-call');
+                        const originalText = saveBtn.html();
+                        saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Saving...');
+
+                        // Send AJAX request
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route("store.call", ['lead' => $lead ?? null]) }}',
+                            data: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    showNotification('Call scheduled successfully!', 'success');
+                                    // Reset form after successful save
+                                    resetForm();
+                                } else {
+                                    showNotification(response.message || 'Error saving call', 'error');
+                                }
+                            },
+                            error: function (xhr) {
+                                let message = 'Error saving call';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    message = xhr.responseJSON.message;
+                                }
+                                showNotification(message, 'error');
+                            },
+                            complete: function () {
+                                saveBtn.prop('disabled', false).html(originalText);
+                            }
+                        });
+                    });
+
+                    // Initialize form
+                    resetForm();
+
+                    // Pre-fill parent fields if we have a lead
                     const leadId = $('#lead_id').val();
                     if (leadId) {
                         @if(isset($parentData))
@@ -755,175 +966,11 @@
                             $('#parent-name').val('{{ $parentData['name'] }}');
                         @endif
                     }
-                }
-
-                // Calculate end time based on start time and duration
-                function calculateEndTime() {
-                    const dateStart = $('#date-start').val();
-                    const timeStart = $('#time-start').val();
-                    const duration = parseInt($('#call-duration').val());
-
-                    if (dateStart && timeStart && duration) {
-                        const [day, month, year] = dateStart.split('.');
-                        const [hours, minutes] = timeStart.split(':');
-
-                        const startDate = new Date(year, month - 1, day, hours, minutes);
-                        const endDate = new Date(startDate.getTime() + duration * 1000);
-
-                        const formattedEndDate = `${endDate.getDate().toString().padStart(2, '0')}.${(endDate.getMonth() + 1).toString().padStart(2, '0')}.${endDate.getFullYear()}`;
-                        const formattedEndTime = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
-
-                        $('#date-end').val(formattedEndDate);
-                        $('#time-end').val(formattedEndTime);
-                    }
-                }
-
-                // Show notification message
-                function showNotification(message, type) {
-                    const notification = $('#notification');
-                    notification.text(message);
-                    notification.removeClass('success error info').addClass(type);
-                    notification.addClass('show');
-
-                    setTimeout(() => {
-                        notification.removeClass('show');
-                    }, 3000);
-                }
-
-                // Validate form fields
-                function validateForm() {
-                    let isValid = true;
-                    
-                    // Clear previous validations
-                    $('.form-control').removeClass('is-invalid');
-                    $('.error-message').remove();
-                    
-                    // Validate required fields
-                    if (!$('#call-name').val()) {
-                        $('#call-name').addClass('is-invalid');
-                        $('#call-name').after('<div class="error-message">Call name is required</div>');
-                        isValid = false;
-                    }
-                    
-                    if (!$('#date-start').val() || !$('#time-start').val()) {
-                        if (!$('#date-start').val()) {
-                            $('#date-start').addClass('is-invalid');
-                            $('#date-start').after('<div class="error-message">Start date is required</div>');
-                        }
-                        if (!$('#time-start').val()) {
-                            $('#time-start').addClass('is-invalid');
-                            $('#time-start').after('<div class="error-message">Start time is required</div>');
-                        }
-                        isValid = false;
-                    }
-                    
-                    if (!$('#assigned-user').val()) {
-                        $('#assigned-user').addClass('is-invalid');
-                        $('#assigned-user').after('<div class="error-message">Assigned user is required</div>');
-                        isValid = false;
-                    }
-                    
-                    return isValid;
-                }
-
-                // Event listeners
-                $('#date-start, #time-start, #call-duration').on('change', calculateEndTime);
-
-                $('#reset-form').click(function(e) {
-                    e.preventDefault();
-                    resetForm();
-                    showNotification('Form has been reset to default values', 'info');
                 });
+            </script>
+        @endpush
 
-                $('#clear-parent').click(function () {
-                    $('#parent-name').val('');
-                    showNotification('Parent cleared', 'info');
-                });
-
-                $('#search-parent').click(function () {
-                    showNotification('Search functionality would open here', 'info');
-                });
-
-                $('#search-user').click(function () {
-                    showNotification('User search would open here', 'info');
-                });
-
-                $('#save-call').click(function() {
-                    if (!validateForm()) {
-                        showNotification('Please fix the validation errors', 'error');
-                        return;
-                    }
-                    
-                    const formData = {
-                        'name': $('#call-name').val(),
-                        'status': $('#call-status').val(),
-                        'direction': $('#call-direction').val(),
-                        'date_start': $('#date-start').val(),  
-                        'time_start': $('#time-start').val(),
-                        'date_end': $('#date-end').val(),
-                        'time_end': $('#time-end').val(),
-                        'duration': $('#call-duration').val(),
-                        'parent_type': $('#parent-type').val(),
-                        'parent_name': $('#parent-name').val(),
-                        'description': $('#call-description').val(),
-                        'assigned_user_name': $('#assigned-user').val(),
-                        'teams': $('#teams').val(),
-                        'users': $('#users').val(),
-                        'contacts': $('#contacts').val(),
-                        'leads': $('#leads').val(),
-                        'lead_id': $('#lead_id').val()
-                    };
-
-                    // Show loading state
-                    const saveBtn = $('#save-call');
-                    const originalText = saveBtn.html();
-                    saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Saving...');
-
-                    // Send AJAX request
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ route("store.call", ['lead' => $lead ?? null]) }}',
-                        data: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                showNotification('Call scheduled successfully!', 'success');
-                                // Reset form after successful save
-                                resetForm();
-                            } else {
-                                showNotification(response.message || 'Error saving call', 'error');
-                            }
-                        },
-                        error: function (xhr) {
-                            let message = 'Error saving call';
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                message = xhr.responseJSON.message;
-                            }
-                            showNotification(message, 'error');
-                        },
-                        complete: function () {
-                            saveBtn.prop('disabled', false).html(originalText);
-                        }
-                    });
-                });
-
-                // Initialize form
-                resetForm();
-
-                // Pre-fill parent fields if we have a lead
-                const leadId = $('#lead_id').val();
-                if (leadId) {
-                    @if(isset($parentData))
-                        $('#parent-type').val('{{ $parentData['type'] }}');
-                        $('#parent-name').val('{{ $parentData['name'] }}');
-                    @endif
-                }
-            });
-        </script>
-    @endpush
-
-    @include('layouts.footer')
+        @include('layouts.footer')
 </body>
+
 </html>
