@@ -140,6 +140,6 @@ Route::fallback(function () {
     return response()->view('404', [], 404);
 });
 
-Route::post('/twilio/voice', [CallController::class, 'handleVoiceCall']);
+Route::get('/twilio/voice', [CallController::class, 'handleVoiceCall']);
 
 

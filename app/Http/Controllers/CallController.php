@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use DateTime;
 use Twilio\Jwt\AccessToken;
 use Twilio\Jwt\Grants\VoiceGrant;
+use Illuminate\Support\Facades\Log;
 
 class CallController extends Controller
 {
@@ -192,7 +193,11 @@ public function updateDetails(Request $request, Lead $lead)
     public function handleVoiceCall(Request $request)
     {
         $twiml = new \Twilio\TwiML\VoiceResponse();
-        $to = $request->input('To');
+
+        
+        $to = $request->To;
+
+        Log::info($to);
 
         if ($to) {
             $twiml->dial($to);

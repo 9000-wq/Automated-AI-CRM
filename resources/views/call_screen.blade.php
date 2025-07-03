@@ -115,19 +115,27 @@
     document.getElementById('callButton').addEventListener('click', async function () {
         const phoneNumber = document.getElementById('displayNumber').textContent.trim();
 
+        if (!phoneNumber) {
+            alert("No phone number found!");
+            return;
+        }
+
         try {
-            const response = await fetch('{{ route('generate-twilio-token') }}');
+            const response = await fetch('{{ route("generate-twilio-token") }}');
             const { token } = await response.json();
 
-            device = new Twilio.Device(token, { debug: true });
+            const device = new Twilio.Device(token, { debug: true });
 
-            // Setup listeners ONCE
             device.on('ready', function () {
-                console.log('Twilio Device is ready');
+                console.log("Twilio Device is ready");
+                console.log("Dialing:", phoneNumber);
+                const connection = device.connect({ To: phoneNumber });
             });
 
-            device.on('error', function (error) {
-                console.error("Twilio Error:", error.message);
+            device.on('connect', function (conn) {
+                console.log(conn.message.To)
+                console.log("Call started to:", conn.message.To);
+                document.getElementById('hangupButton').disabled = false;
             });
 
             device.on('disconnect', function () {
@@ -135,17 +143,9 @@
                 document.getElementById('hangupButton').disabled = true;
             });
 
-            device.on('connect', function (conn) {
-                console.log("Call started to:", conn.parameters.To);
-                document.getElementById('hangupButton').disabled = false;
+            device.on('error', function (error) {
+                console.error("Twilio Error:", error.message);
             });
-
-            // Wait for device to be ready, then connect
-            device.once('ready', function () {
-                device.connect({ To: phoneNumber }); // <- your dynamic number
-            });
-
-            device.initialize(); // Force it to prepare connection (only needed if not auto-ready)
 
         } catch (err) {
             console.error("Token fetch or call failed:", err);
