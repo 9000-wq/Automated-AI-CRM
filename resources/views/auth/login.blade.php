@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>CRM Login</title>
+    <title>CortexCRM Login</title>
+    <link rel="shortcut icon" href="{{asset('img/mylogo.png')}}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -94,6 +95,7 @@
 
   <!-- Left panel -->
   <div class="left-panel text-center">
+    <img src="{{asset('img/mylogo.png')}}" alt="logo" width="100px" height="100px" style="border-radius: 50px;margin-bottom: 30px;">
     <h1 style="font-family: sans-serif;">Hello, Welcome!</h1>
     <p class="mt-3">Don't have an account?</p>
     <button  onClick="window.location='{{route('register')}}'" style="width: 45%;height: 15%;border-radius: 12px;" class="btn btn-outline-light mt-2" data-bs-toggle="modal" data-bs-target="#registerModal">Signup</button>

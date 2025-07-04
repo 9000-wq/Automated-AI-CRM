@@ -6,16 +6,16 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="CRM">
-	<meta name="keywords" content="CRM">
+	<meta name="author" content="CortexCRM">
+	<meta name="keywords" content="CortexCRM">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="{{asset('img/icons/icon-48x48.png')}}" />
+	<link rel="shortcut icon" href="{{asset('img/mylogo.png')}}" />
 
 	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
-	<title>CRM Dashboard</title>
+	<title>CortexCRM</title>
 
 	<link href="{{asset('css/app.css')}}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -110,7 +110,8 @@
 		<nav id="sidebar" class="sidebar js-sidebar">
 			<div style="padding: 0px;background-color: #3b65ea;font-size: medium;" class="sidebar-content js-simplebar">
 				<a class="sidebar-brand" href="index.html">
-					<span class="align-middle">CRM System</span>
+					<img src="{{asset('img/mylogo.png')}}" alt="" width="60px" height="60px" style="border-radius: 35px;">
+					<span class="align-middle" style="font-family: ui-serif;font-size: 20px;">CortexCRM</span>
 				</a>
 
 				<ul class="sidebar-nav">

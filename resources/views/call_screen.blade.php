@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Call Now</title>
+	<title>CortexCRM</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+	<link rel="shortcut icon" href="{{asset('img/mylogo.png')}}" />
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
