@@ -9,8 +9,11 @@ class AiCall extends Model
 {
     use HasFactory;
 
+    protected $table = 'ai_calls'; 
+
     protected $fillable = [
         'contact_id',
+        'lead_id',
         'direction',
         'transcript',
         'sentiment',
@@ -18,9 +21,13 @@ class AiCall extends Model
         'audio_link',
     ];
 
-    // Relationship to contact
     public function contact()
     {
         return $this->belongsTo(Contact::class);
+    }
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
     }
 }

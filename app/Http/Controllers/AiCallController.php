@@ -10,24 +10,22 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use DataTables;
 
-
-
 class AiCallController extends Controller
 {
     public function index()
     {
-        $calls = AiCall::with('contact')->latest()->get();
+        $calls = AiCall::with(['contact', 'lead'])->latest()->get();
 
         return response()->json([
             'data' => $calls
         ], Response::HTTP_OK);
     }
-
     public function store(Request $request)
     {
         try {
             $data = $request->validate([
                 'contact_id' => 'required|exists:contacts,id',
+                'lead_id' => 'nullable|exists:leads,id',
                 'direction' => 'required|in:Inbound,Outbound',
                 'transcript' => 'nullable|string',
                 'sentiment' => 'nullable|string',
@@ -59,7 +57,7 @@ class AiCallController extends Controller
     public function show($id)
     {
         try {
-            $call = AiCall::with('contact')->findOrFail($id);
+            $call = AiCall::with(['contact', 'lead'])->findOrFail($id);
 
             return response()->json([
                 'data' => $call
@@ -78,6 +76,7 @@ class AiCallController extends Controller
 
             $data = $request->validate([
                 'contact_id' => 'required|exists:contacts,id',
+                'lead_id' => 'nullable|exists:leads,id',
                 'direction' => 'required|in:Inbound,Outbound',
                 'transcript' => 'nullable|string',
                 'sentiment' => 'nullable|string',
@@ -119,34 +118,33 @@ class AiCallController extends Controller
         }
     }
 
+   public function aicalls(Request $request)
+{
+    if ($request->ajax()) {
+        $query = AiCall::select([
+                'leads.name as leadname',
+                'contacts.name as contactname',
+                'ai_calls.*'  // Make sure this matches your table name
+            ])
+            ->leftJoin('leads', 'leads.id', '=', 'ai_calls.lead_id')
+            ->leftJoin('contacts', 'contacts.id', '=', 'ai_calls.contact_id');
 
-    public function aicalls(Request $request){
-
-
-        if ($request->ajax()) {
-
-            if (auth()->user()->user_role == 'super admin') {
-                $data = AiCall::select('leads.name as leadname','contacts.name as contactname','ai_calls.*')->leftjoin('leads','leads.id','ai_calls.lead_id')->leftjoin('contacts','contacts.id','ai_calls.contact_id');
-            } else {
-                $data = AiCall::select('leads.name as leadname','contacts.name as contactname','ai_calls.*')->leftjoin('leads','leads.id','ai_calls.lead_id')->leftjoin('contacts','contacts.id','ai_calls.contact_id')->where('contacts.company_id', auth()->user()->company_id);
-            }
-
-
-
-
-            return Datatables::of($data)
-                ->addIndexColumn()       
-                ->filterColumn('contactname', function ($query, $keyword) {
-                    $query->where('contacts.name', 'like', "%{$keyword}%");
-                })
-                ->filterColumn('leadname', function ($query, $keyword) {
-                    $query->where('leads.name', 'like', "%{$keyword}%");
-                })
-                ->rawColumns([])
-                ->make(true);
+        if (auth()->user()->user_role != 'super admin') {
+            $query->where('contacts.company_id', auth()->user()->company_id);
         }
 
-
-        return view('ai.calls');
+        return Datatables::of($query)
+            ->addIndexColumn()       
+            ->filterColumn('contactname', function ($query, $keyword) {
+                $query->where('contacts.name', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('leadname', function ($query, $keyword) {
+                $query->where('leads.name', 'like', "%{$keyword}%");
+            })
+            ->rawColumns([])
+            ->make(true);
     }
+
+    return view('ai.calls');
+}
 }
