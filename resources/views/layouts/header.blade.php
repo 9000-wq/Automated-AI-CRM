@@ -134,7 +134,7 @@
 					@if(Auth::user()->user_role == 'super admin' or Auth::user()->user_role == 'admin')
 						<li class="sidebar-item {{ request()->routeIs('companyinfo') ? 'active' : '' }}">
 							<a class="sidebar-link" href="{{ route('companyinfo') }}">
-								<i class="fas fa-user-circle"></i>
+								<i class="fas fa-info-circle"></i>
 								<span class="align-middle">Company Info</span>
 							</a>
 						</li>
