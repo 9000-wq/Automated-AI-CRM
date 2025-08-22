@@ -16,7 +16,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: auto;
+      margin: 50px;
     }
     .auth-container {
       background: white;
@@ -24,8 +25,9 @@
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
       display: flex;
       overflow: hidden;
-      max-width: 900px;
+      max-width: 1200px;
       width: 100%;
+      margin-top:5%;
     }
     .left-panel {
       background: #3b65ea;
@@ -61,6 +63,14 @@
     height: 55px !important;
     }
 
+    textarea{
+      background-color: #eceef0 !important;
+    }
+
+    .hidden { 
+      display: none;
+    }
+
     @media screen and (max-width: 600px) {
        .left-panel{
             display:none;
@@ -92,11 +102,50 @@
             <!-- Company Tab -->
             <div class="tab-pane fade show active" id="companyTab">
             <form id="companyForm">
-                <input type="text" name="companyName" id="companyName" class="form-control mb-4" placeholder="Company Name" />
-                <input type="text"  name="businessType" id="businessType" class="form-control mb-4" placeholder="Business Type" />
-                <input type="email" name="companyEmail" id="companyEmail" class="form-control mb-4" placeholder="Company Email" />
-                <input type="text" name="companyAddress"  id="companyAddress"  class="form-control mb-4" placeholder="Company Address" />
-                <input type="text" name="country" id="country" class="form-control mb-4" placeholder="Country" />
+                <div class="row">
+                  <div class="col-sm-6">
+                      <input type="text" name="companyName" id="companyName" class="form-control mb-4" placeholder="Company Name" />
+                  </div>
+                  <div class="col-sm-6">
+                      <input type="email" name="companyEmail" id="companyEmail" class="form-control mb-4" placeholder="Company Email" />
+                  </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input type="text" name="companyAddress"  id="companyAddress"  class="form-control mb-4" placeholder="Company Address" />
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" name="country" id="country" class="form-control mb-4" placeholder="Country" />
+                    </div>
+                </div>
+                <textarea name="companyDescription" class="form-control mb-4" id="companyDescription" placeholder="Company Description"></textarea>
+               
+                <div>
+                  <h4>Select Business Type:</h4>
+                  <label class="mb-2">
+                    <input type="radio"  style="height: 16px !important;" class="form-check-input mb-2" name="business_type" value="service"> Service
+                  </label>
+                  <label style="margin-left: 40px;">
+                    <input type="radio"  style="height: 16px !important;" class="form-check-input mb-2"  name="business_type" value="product"> Product
+                  </label>
+                </div>
+
+                 <div id="serviceBox" class="textarea-box hidden">
+                    <label>Service Knowledge:</label><br>
+                    <textarea rows="3" cols="40" name="serviceKnowledge" id="serviceKnowledge" class="form-control mb-4 mt-2"></textarea>
+                  </div>
+
+                  <div id="productBox" class="textarea-box hidden">
+                    <label>Product Knowledge:</label><br>
+                    <textarea rows="3" cols="40" name="productKnowledge" id="productKnowledge" class="form-control mb-4 mt-2"></textarea>
+                  </div>
+
+                   <div>
+                    <label>Pricing Guidelines:</label><br>
+                    <textarea rows="3" cols="40" name="priceGuidelines"  id="priceGuidelines" class="form-control mb-4 mt-2"></textarea>
+                  </div>
+
                 <button type="button" id="companyBtn" style="background-color: #3b65ea;color: white;width: 100px;height: 50px;outline: none;border: none;border-radius: 10px;">Next  <i class='fas fa-arrow-alt-circle-right'></i></button>
             </form>
             </div>
@@ -123,7 +172,7 @@
     <img src="{{asset('img/mylogo.png')}}" alt="logo" width="100px" height="100px" style="border-radius: 50px;margin-bottom: 30px;">
     <h1 style="font-family: sans-serif;">Hello, Welcome!</h1>
     <p class="mt-3">Already have an account?</p>
-    <button onClick="window.location='{{route('login')}}'" style="width: 45%;height: 11%;border-radius: 12px;" class="btn btn-outline-light mt-2" data-bs-toggle="modal" data-bs-target="#registerModal">Login</button>
+    <button onClick="window.location='{{route('login')}}'" style="width: 45%;height: 9%;border-radius: 12px;" class="btn btn-outline-light mt-2" data-bs-toggle="modal" data-bs-target="#registerModal">Login</button>
   </div>
 
   
@@ -148,23 +197,26 @@ $(document).ready(function(){
 
     $(document).on('click','#userBtn',function(){
 
-       let companyName= $('#companyName').val();
-       let businessType= $('#businessType').val();
-       let companyEmail= $('#companyEmail').val();
-       let companyAddress= $('#companyAddress').val();
-       let country= $('#country').val();
-       let firstname= $('#firstname').val();
-       let lastname= $('#lastname').val();
-       let userEmail= $('#userEmail').val();
-       let password= $('#password').val();
-       let confirmpassword= $('#confirmpassword').val();
+      let companyName= $('#companyName').val();
+      let companyEmail= $('#companyEmail').val();
+      let companyAddress= $('#companyAddress').val();
+      let country= $('#country').val();
+      let firstname= $('#firstname').val();
+      let lastname= $('#lastname').val();
+      let userEmail= $('#userEmail').val();
+      let password= $('#password').val();
+      let confirmpassword= $('#confirmpassword').val();
+      let companyDescription= $('#companyDescription').val();
+      let businessType = $("input[name='business_type']:checked").val();
+      let service_knowledge= $('#serviceKnowledge').val();
+      let product_knowledge= $('#productKnowledge').val();
+      let priceGuidelines= $('#priceGuidelines').val();
         
        $.ajax({
         url:'{{route('register')}}',
         type:"post",
         data:{
             companyName:companyName,
-            businessType:businessType,
             company_email:companyEmail,
             companyAddress:companyAddress,
             country:country,
@@ -173,6 +225,11 @@ $(document).ready(function(){
             email:userEmail,
             password:password,
             password_confirmation:confirmpassword,
+            companyDescription:companyDescription,
+            businessType:businessType,
+            service_knowledge:service_knowledge,
+            product_knowledge:product_knowledge,
+            priceGuidelines:priceGuidelines,
             csrf: $('meta[name="csrf-token"]').attr('content')
         }
        }).done(function(response){
@@ -187,6 +244,20 @@ $(document).ready(function(){
 
 
     })
+
+
+    document.querySelectorAll('input[name="business_type"]').forEach((radio) => {
+      radio.addEventListener('change', function () {
+        if (this.value === "service") {
+          document.getElementById("serviceBox").classList.remove("hidden");
+          document.getElementById("productBox").classList.add("hidden");
+        } else if (this.value === "product") {
+          document.getElementById("productBox").classList.remove("hidden");
+          document.getElementById("serviceBox").classList.add("hidden");
+        }
+      });
+    });
+
 
 })
 

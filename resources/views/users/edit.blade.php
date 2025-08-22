@@ -37,10 +37,10 @@
                                                         <label class="form-label">User Role:</label>
                                                         <select class="form-control form-select mb-4" name="user_role" id="user_role">
                                                             <option value="" selected>Choose User Role</option>
-                                                            <option value="Admin" {{ (old('user_role', $user->user_role ?? '') === 'Admin') ? 'selected' : '' }}>Admin</option>
-                                                            <option value="Sales Officer" {{ (old('user_role', $user->user_role ?? '') === 'Sales Officer') ? 'selected' : '' }}>Sales Officer</option>
-                                                            <option value="AI Agent" {{ (old('user_role', $user->user_role ?? '') === 'AI Agent') ? 'selected' : '' }}>AI Agent</option>
-                                                            <option value="Client" {{ (old('user_role', $user->user_role ?? '') === 'Client') ? 'selected' : '' }}>Client</option>
+                                                            <option value="admin" {{ (old('user_role', $user->user_role ?? '') === 'admin') ? 'selected' : '' }}>Admin</option>
+                                                            <option value="sales officer" {{ (old('user_role', $user->user_role ?? '') === 'sales officer') ? 'selected' : '' }}>Sales Officer</option>
+                                                            <option value="ai agent" {{ (old('user_role', $user->user_role ?? '') === 'ai agent') ? 'selected' : '' }}>AI Agent</option>
+                                                            <option value="client" {{ (old('user_role', $user->user_role ?? '') === 'client') ? 'selected' : '' }}>Client</option>
                                                         </select>
                                                     </div>
                                                 </div>

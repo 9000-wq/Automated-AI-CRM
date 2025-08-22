@@ -34,26 +34,52 @@ class RegisteredUserController extends Controller
 
         $request->validate([
             'companyName' => ['required'],
-            'businessType' => ['required'],
             'company_email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Company::class],
             'companyAddress' => ['required'],
             'country' => ['required'],
+            'companyDescription' => ['required'],
+            'businessType' => ['required'],
+
+            // 👇 Conditional rules
+            'service_knowledge' => ['required_if:businessType,service'],
+            'product_knowledge' => ['required_if:businessType,product'],
+
+            'priceGuidelines' => ['required'],
             
             'firstname' => ['required', 'string', 'max:255'],
             'lastname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-
         ]);
 
         
-        $company = Company::create([
-            'company_name'   => $request->companyName,
-            'business_type'  => $request->businessType,
-            'company_email'  => $request->company_email,
-            'company_address'=> $request->companyAddress,
-            'country'        => $request->country,
-        ]);
+        if( $request->businessType =='service'){
+
+            $company = Company::create([
+                'company_name'   => $request->companyName,
+                'business_type'  => $request->businessType,
+                'company_email'  => $request->company_email,
+                'company_address'=> $request->companyAddress,
+                'country'        => $request->country,
+                'company_description'=>$request->companyDescription,
+                'price_guidelines'=>$request->priceGuidelines,
+                'bussiness_knowledge'=>$request->service_knowledge,
+            ]);
+
+        }else{
+            $company = Company::create([
+                'company_name'   => $request->companyName,
+                'business_type'  => $request->businessType,
+                'company_email'  => $request->company_email,
+                'company_address'=> $request->companyAddress,
+                'country'        => $request->country,
+                'company_description'=>$request->companyDescription,
+                'price_guidelines'=>$request->priceGuidelines,
+                'bussiness_knowledge'=>$request->product_knowledge,
+            ]);
+        }
+
+      
         
         $companyId = $company->id;
 
