@@ -94,26 +94,30 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/fetchaccounts', [LeadController::class,'fetchaccounts'])->name('fetchaccounts');
 
+        Route::get('/companyinfo', [HomeController::class,'companyinfo'])->name('companyinfo');
+        Route::post('/updatecompanyinfo/{companyid?}', [HomeController::class,'updatecompanyinfo'])->name('updatecompanyinfo');
+
+
         
     });
-        Route::get('/email-logs', [EmailController::class, 'showEmailLogs'])->name('email-logs');
-        Route::get('/email-logs/data', [EmailController::class, 'getEmailLogsData'])->name('email-logs-data');
-        Route::get('/ajax/leads', [EmailController::class, 'getLeads'])->name('ajax.leads');
-        Route::post('sendleademail', [LeadController::class, 'sendleademail'])->name('sendleademail');
-        Route::post('leaduploadimage', [LeadController::class, 'leaduploadimage'])->name('leaduploadimage');
-        Route::post('leaduploadfile', [LeadController::class, 'leaduploadfile'])->name('leaduploadfile');
+    Route::get('/email-logs', [EmailController::class, 'showEmailLogs'])->name('email-logs');
+    Route::get('/email-logs/data', [EmailController::class, 'getEmailLogsData'])->name('email-logs-data');
+    Route::get('/ajax/leads', [EmailController::class, 'getLeads'])->name('ajax.leads');
+    Route::post('sendleademail', [LeadController::class, 'sendleademail'])->name('sendleademail');
+    Route::post('leaduploadimage', [LeadController::class, 'leaduploadimage'])->name('leaduploadimage');
+    Route::post('leaduploadfile', [LeadController::class, 'leaduploadfile'])->name('leaduploadfile');
 
-        Route::get('/call-screen/{leadid?}/{contact?}', [CallController::class, 'callScreen'])->name('call-screen');
-        Route::get('generate-twilio-token', [CallController::class, 'generateTwilioToken'])->name('generate-twilio-token');
+    Route::get('/call-screen/{leadid?}/{contact?}', [CallController::class, 'callScreen'])->name('call-screen');
+    Route::get('generate-twilio-token', [CallController::class, 'generateTwilioToken'])->name('generate-twilio-token');
 
 
-        
+    
 
-        Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
-        Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
-        Route::get('/calls/history/{lead}/{call?}', [CallController::class, 'history'])->name('call.history');
-        Route::post('/leads/{lead}/call-history', [CallController::class, 'updateDetails'])->name('call.history.update');
-Route::get('/ajax/users/call', [UserController::class, 'searchUsers'])->name('ajax.users.call');
+    Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
+    Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
+    Route::get('/calls/history/{lead}/{call?}', [CallController::class, 'history'])->name('call.history');
+    Route::post('/leads/{lead}/call-history', [CallController::class, 'updateDetails'])->name('call.history.update');
+    Route::get('/ajax/users/call', [UserController::class, 'searchUsers'])->name('ajax.users.call');
     Route::middleware(['role:super admin'])->group(function () {
 
         Route::get('/manageprices', [HomeController::class, 'index'])->name('manageprices');

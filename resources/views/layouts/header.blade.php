@@ -132,6 +132,17 @@
 
 
 					@if(Auth::user()->user_role == 'super admin' or Auth::user()->user_role == 'admin')
+						<li class="sidebar-item {{ request()->routeIs('companyinfo') ? 'active' : '' }}">
+							<a class="sidebar-link" href="{{ route('companyinfo') }}">
+								<i class="fas fa-user-circle"></i>
+								<span class="align-middle">Company Info</span>
+							</a>
+						</li>
+					@endif
+
+
+
+					@if(Auth::user()->user_role == 'super admin' or Auth::user()->user_role == 'admin')
 						<li
 							class="sidebar-item  {{ request()->routeIs('leads.index') || request()->routeIs('leads.create') || request()->routeIs('leads.show') || request()->routeIs('leads.edit') || request()->routeIs('leadcontact') ? 'active' : '' }}">
 							<a class="sidebar-link" href="{{route('leads.index')}}">

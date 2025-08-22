@@ -7,6 +7,8 @@ use App\Models\Company;
 use App\Models\Plan;
 use App\Models\CompanyPlan;
 use DataTables;
+use Illuminate\Validation\Rule;
+
 
 class HomeController extends Controller
 {
@@ -88,6 +90,69 @@ class HomeController extends Controller
 
         CompanyPlan::find($planid)->delete();
         return response()->json(['message'=>'Plan Inactive Successfully.']);
+
+
+    }
+
+
+    public function companyinfo()
+    {
+        $companyid= auth()->user()->company_id;
+        $companyinfo= Company::find($companyid);
+        return view('companyinfo')->with('companyinfo',$companyinfo);
+    }
+
+    public function updatecompanyinfo(Request $request)
+    {
+
+       
+        $request->validate([
+            'companyName' => ['required'],
+            'company_email' => ['required', 'string', 'lowercase', 'email', 'max:255',
+            Rule::unique('companies', 'company_email')->ignore($request->companyid, 'id'), // adjust column name if not 'id'
+            ],
+            'companyAddress' => ['required'],
+            'country' => ['required'],
+            'companyDescription' => ['required'],
+            'business_type' => ['required'],
+
+            // 👇 Conditional rules
+            'serviceKnowledge' => ['required_if:business_type,service'],
+            'productKnowledge' => ['required_if:business_type,product'],
+
+            'priceGuidelines' => ['required'],
+        ]);
+
+
+        if( $request->business_type == 'service'){
+
+            $company = Company::where('id',$request->companyid)->update([
+                'company_name'   => $request->companyName,
+                'business_type'  => $request->business_type,
+                'company_email'  => $request->company_email,
+                'company_address'=> $request->companyAddress,
+                'country'        => $request->country,
+                'company_description'=>$request->companyDescription,
+                'price_guidelines'=>$request->priceGuidelines,
+                'bussiness_knowledge'=>$request->serviceKnowledge,
+            ]);
+
+        }else{
+           
+            $company = Company::where('id',$request->companyid)->update([
+                'company_name'   => $request->companyName,
+                'business_type'  => $request->business_type,
+                'company_email'  => $request->company_email,
+                'company_address'=> $request->companyAddress,
+                'country'        => $request->country,
+                'company_description'=>$request->companyDescription,
+                'price_guidelines'=>$request->priceGuidelines,
+                'bussiness_knowledge'=>$request->productKnowledge,
+            ]);
+        }
+
+
+        return redirect()->route('companyinfo')->with('success', 'User updated successfully.');
 
 
     }
