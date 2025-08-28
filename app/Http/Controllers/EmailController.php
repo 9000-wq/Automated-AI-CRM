@@ -76,21 +76,21 @@ class EmailController extends Controller
     }
 
     public function getLeads(Request $request)
-{
+    {
 
-    $search = $request->input('term');
+        $search = $request->input('term');
 
-    $leads = Lead::query()
-        ->where('company_id', auth()->user()->company_id)
-        ->when($search, function ($query, $search) {
-            $query->where('name', 'like', "%{$search}%");
-        })
-        ->orderBy('name')
-        ->paginate(20, ['id', 'name']);
+        $leads = Lead::query()
+            ->where('company_id', auth()->user()->company_id)
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            ->orderBy('name')
+            ->paginate(20, ['id', 'name']);
 
-    return response()->json([
-        'data' => $leads->items(),
-        'total' => $leads->total()
-    ]);
-}
+        return response()->json([
+            'data' => $leads->items(),
+            'total' => $leads->total()
+        ]);
+    }
 }

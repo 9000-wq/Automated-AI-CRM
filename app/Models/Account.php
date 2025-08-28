@@ -14,6 +14,13 @@ class Account extends Model
         'address', 'city', 'country', 'status','company_id'
     ];
 
+    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
     public function leads()
     {
         return $this->hasMany(Lead::class);

@@ -211,10 +211,18 @@ class LeadController extends Controller
 
     public function destroy(Request $request)
     {
-        $leadid = $request->leadid;
-        Lead::find($leadid)->delete();
-        return back()->with('success', 'Lead deleted.');
+        $lead = Lead::find($request->leadid);
+
+        if (!$lead) {
+            return redirect()->back()->with('error', 'Lead not found.');
+        }
+
+        $lead->delete();
+
+        return redirect()->back()->with('success', 'Lead deleted successfully.');
     }
+
+
 
     public function editcontact(Request $request)
     {
@@ -359,8 +367,13 @@ class LeadController extends Controller
 
     public function deletenotes(Request $request)
     {
-        $noteid = $request->noteid;
-        Note::find($noteid)->delete();
+        $note = Note::find($request->noteid);
+
+        if (!$note) {
+            return response()->json(['error' => 'Note not found.'], 404);
+        }
+
+        $note->delete();
 
         return response()->json(['success' => 'Note Deleted Successfully.']);
     }
@@ -458,37 +471,37 @@ class LeadController extends Controller
 
 
    public function sendleademail(Request $request)
-{
+    {
+        
+
+            $validated = $request->validate([
+                'to' => 'required|email',
+                'subject' => 'required|string|max:255',
+                'body' => 'required|string',
+            ]);
+
+
     
+            $attachments = $this->extractFilePathsFromHtml($request->body);
 
-        $validated = $request->validate([
-            'to' => 'required|email',
-            'subject' => 'required|string|max:255',
-            'body' => 'required|string',
-        ]);
+            $ccemails=explode(',',$request->cc);
 
+            Mail::to($validated['to'])
+                ->cc($ccemails)
+                ->queue(new LeadEmail($validated['subject'], $validated['body'], $attachments));
 
-  
-        $attachments = $this->extractFilePathsFromHtml($request->body);
+            // Save to database after successful email send
+            $emaillog = new EmailLog();
+            $emaillog->email = $request->to;
+            $emaillog->cc = $request->cc;
+            $emaillog->subject = $request->subject;
+            $emaillog->body = $request->body;
+            $emaillog->lead_id = $request->leadid;
+            $emaillog->save();
 
-        $ccemails=explode(',',$request->cc);
-
-        Mail::to($validated['to'])
-            ->cc($ccemails)
-            ->queue(new LeadEmail($validated['subject'], $validated['body'], $attachments));
-
-        // Save to database after successful email send
-        $emaillog = new EmailLog();
-        $emaillog->email = $request->to;
-        $emaillog->cc = $request->cc;
-        $emaillog->subject = $request->subject;
-        $emaillog->body = $request->body;
-        $emaillog->lead_id = $request->leadid;
-        $emaillog->save();
-
-        return response()->json(['success' => 'Email sent successfully.']);
-    
-}
+            return response()->json(['success' => 'Email sent successfully.']);
+        
+    }
 
     public function leaduploadImage(Request $request)
     {

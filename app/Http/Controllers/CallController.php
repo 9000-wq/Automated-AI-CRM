@@ -13,17 +13,17 @@ use Illuminate\Support\Facades\Log;
 class CallController extends Controller
 {
 
-  public function history(Lead $lead, Call $call)
-{
-    if (!$call) {
-        $call = Call::where('lead_id', $lead->id)
-                  ->where('status', 'planned')
-                  ->latest()
-                  ->first();
-    }
+    public function history(Lead $lead, Call $call=null)
+    {
+        if (!$call) {
+            $call = Call::where('lead_id', $lead->id)
+                    ->where('status', 'planned')
+                    ->latest()
+                    ->first();
+        }
 
-    return view('leads.callhistory', compact('lead', 'call'));
-}
+        return view('leads.callhistory', compact('lead', 'call'));
+    }
 
 public function updateDetails(Request $request, Lead $lead)
 {
@@ -129,25 +129,25 @@ public function updateDetails(Request $request, Lead $lead)
         }
     }
 
-  public function getCallsByLead($leadId)
-{
-    // Activities: Planned or In Progress calls
-    $activities = Call::where('lead_id', $leadId)
-                    ->whereIn('status', ['planned']) 
+    public function getCallsByLead($leadId)
+    {
+        // Activities: Planned or In Progress calls
+        $activities = Call::where('lead_id', $leadId)
+                        ->whereIn('status', ['planned']) 
+                        ->orderBy('date_start', 'desc')
+                        ->get();
+
+        // History: Completed/Held calls
+        $history = Call::where('lead_id', $leadId)
+                    ->where('status', 'held') 
                     ->orderBy('date_start', 'desc')
                     ->get();
 
-    // History: Completed/Held calls
-    $history = Call::where('lead_id', $leadId)
-                 ->where('status', 'held') 
-                 ->orderBy('date_start', 'desc')
-                 ->get();
-
-    return response()->json([
-        'activities' => $activities,
-        'history' => $history
-    ]);
-}
+        return response()->json([
+            'activities' => $activities,
+            'history' => $history
+        ]);
+    }
 
 
     public function callScreen(Request $request)

@@ -44,7 +44,7 @@ class PlanController extends Controller
         return view('plans.show', compact('plan'));
     }
 
-    public function edit(Plan $plan)
+    public function edit(Plan $plan=null)
     {
         return view('plans.edit', compact('plan'));
     }
@@ -70,9 +70,11 @@ class PlanController extends Controller
 
     public function destroy(Request $req)
     {
+        $plan = Plan::find($req->planid);
 
-        $planid= $req->planid;
-        Plan::find($planid)->delete();
+        if ($plan) {
+            $plan->delete();
+        }
 
         return redirect()->route('plans.index')->with('success', 'Plan deleted successfully.');
     }

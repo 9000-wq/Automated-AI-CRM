@@ -12,7 +12,7 @@ class EmailLog extends Model
     protected $fillable = [
         'email',
         'cc',
-        'parent_id',
+        'lead_id',
         'subject',
         'body',
     ];

@@ -57,30 +57,30 @@ class UserController extends Controller
         return view('users.create')->with('companies',$companies);
      }
  
-     public function store(Request $request)
-     {
-         $validated = $request->validate([
-             'first_name' => 'required|string|max:255',
-             'last_name' => 'required|string|max:255',
-             'email' => 'required|email|unique:users',
-             'user_role'=>'required',
-             'company'=>'required',
-             'password' => 'required|string|min:6',
-         ]);
- 
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name'  => 'required|string|max:255',
+            'email'      => 'required|email|unique:users,email',
+            'user_role'  => 'required',
+            'company'    => 'required',
+            'password'   => 'required|string|min:6',
+        ]);
 
-         User::create([
-            'name'=> $request->first_name.' '.$request->last_name,
-            'email'=>$request->email,
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'company_id'=>$request->company,
-            'user_role'=>$request->user_role,
-            'password'=> Hash::make($request->pasword)
-         ]);
- 
-         return redirect()->route('users.index')->with('success', 'User created successfully.');
-     }
+        User::create([
+            'name'       => $request->first_name . ' ' . $request->last_name,
+            'email'      => $request->email,
+            'first_name' => $request->first_name,
+            'last_name'  => $request->last_name,
+            'company_id' => $request->company,
+            'user_role'  => $request->user_role,
+            'password'   => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('users.index')
+                        ->with('success', 'User created successfully.');
+    }
  
      public function edit(User $user)
      {
@@ -100,19 +100,20 @@ class UserController extends Controller
  
      public function update(Request $request, User $user)
      {
-         $validated = $request->validate([
+        $validated = $request->validate([
             'first_name' => 'required|string|max:255',
-             'last_name' => 'required|string|max:255',
-             'email' => 'required|email',
-             'user_role'=>'required',
-             'company'=>'required',
-         ]);
- 
-         if ($request->filled('password')) {
-             $validated['password'] = Hash::make($validated['password']);
-         } else {
-             unset($validated['password']);
-         }
+            'last_name'  => 'required|string|max:255',
+            'email'      => 'required|email',
+            'user_role'  => 'required',
+            'company'    => 'required',
+            'password'   => 'nullable|string|min:8',
+        ]);
+
+        if ($request->filled('password')) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
 
          $validated['company_id'] = $request->company;
          unset($validated['company']);
@@ -132,23 +133,23 @@ class UserController extends Controller
 
 
 
-   public function searchUsers(Request $request)
-{
-    $search = $request->input('term');
+    public function searchUsers(Request $request)
+    {
+        $search = $request->input('term');
 
-    $users = User::query()
-        ->where('company_id', auth()->user()->company_id) // optional
-        ->when($search, function ($query, $search) {
-            $query->where('name', 'like', "%{$search}%");
-        })
-        ->orderBy('name')
-        ->paginate(20, ['id', 'name']);
+        $users = User::query()
+            ->where('company_id', auth()->user()->company_id) // optional
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            ->orderBy('name')
+            ->paginate(20, ['id', 'name']);
 
-    return response()->json([
-        'data' => $users->items(),
-        'total' => $users->total()
-    ]);
-}
+        return response()->json([
+            'data' => $users->items(),
+            'total' => $users->total()
+        ]);
+    }
 
 
 }

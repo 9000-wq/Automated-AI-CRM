@@ -34,4 +34,11 @@ class lead extends Model
     {
         return $this->hasMany(Call::class);
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class); // leads table has company_id
+    }
+    
+
 }

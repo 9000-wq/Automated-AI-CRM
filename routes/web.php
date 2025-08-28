@@ -38,6 +38,8 @@ Route::get('/csrf-token', function () {
 
 
 Route::middleware('auth')->group(function () {
+
+    //Profile Controller
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -45,7 +47,7 @@ Route::middleware('auth')->group(function () {
     //CRUD for AI Calls table
 
 
-
+    //User Controller
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/createusers', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
@@ -53,31 +55,36 @@ Route::middleware('auth')->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
 
+    //Account Controller
     Route::resource('accounts', AccountController::class);
-    Route::get('/accounts/{id}/contacts', [AccountController::class, 'getContacts']);
-    Route::get('/accounts/{id}/leads', [AccountController::class, 'getLeads']);
+    Route::get('/accounts/{id}/contacts', [AccountController::class, 'getContacts'])->name('accounts.getContacts');
+    Route::get('/accounts/{id}/leads', [AccountController::class, 'getLeads'])->name('accounts.getLeads');
     Route::get('/account', [AccountController::class, 'showaccount'])->name('account');
     Route::post('/account/store', [AccountController::class, 'store'])->name('account.store');
     Route::get('/home/account', [AccountController::class, 'account'])->name('home.account');
-
     Route::get('/account/{id}/edit', [AccountController::class, 'edit'])->name('account.edit');
-
     Route::put('/accounts/{id}', [AccountController::class, 'update'])->name('account.update');
 
+    //Lead Controller
     Route::get('Opportunities', [LeadController::class, 'Opportunities'])->name('Opportunities');
     Route::get('/leads/fetch', [LeadController::class, 'fetchLeads'])->name('leads.fetch');
+
+    //Contact Controller
     Route::resource('contacts', ContactController::class);
-    Route::get('/contacts/by-lead/{lead_id}', [ContactController::class, 'getContactsByLead']);
+    Route::get('/contacts/by-lead/{lead_id}', [ContactController::class, 'getContactsByLead'])->name('getContactsByLead');
     
 
+    //Ai Call Controller
     Route::get('/AiCalls', [AiCallController::class,'aicalls'])->name('AiCalls');
+
+    //Ai Email Controller
     Route::get('/AiEmails', [AiEmailController::class,'aiemails'])->name('AiEmails');
 
 
 
     Route::middleware(['role:super admin|admin'])->group(function () {
         // Lead Routes
-
+       
         Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
         Route::get('/leads/create', [LeadController::class, 'create'])->name('leads.create');
         Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');

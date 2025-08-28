@@ -10,81 +10,11 @@ use App\Models\Contact;
 
 class AccountController extends Controller
 {
-    public function getContacts($id)
-    {
-        $account = Account::with('contacts')->find($id);
-
-        if (!$account) {
-            return response()->json(['message' => 'Account not found'], 404);
-        }
-
-        return response()->json($account->contacts);
-    }
-
-    public function getLeads($id)
-    {
-        $account = Account::with('leads')->find($id);
-
-        if (!$account) {
-            return response()->json(['message' => 'Account not found'], 404);
-        }
-
-        return response()->json($account->leads);
-    }
 
     public function index()
     {
         return response()->json(Account::all());
     }
-
-    public function showaccount()
-    {
-        return view('createaccount');
-    }
-
-    public function account(Request $request)
-    {
-        if ($request->ajax()) {
-
-
-            if(auth()->user()->user_role =='super admin'){
-                $data = Account::select('*');
-            }else{
-                $data = Account::select('*')->where('company_id',auth()->user()->company_id);
-            }
-
-            return DataTables::of($data)
-                ->addColumn('status', function ($row) {
-                    if ($row->status === 'active') {
-                        return '<span class="btn btn-success">Active</span>';
-                    } else {
-                        return '<span class="btn btn-secondary">InActive</span>';
-                    }
-                })
-                ->addColumn('action', function ($row) {
-    return '<div class="d-flex gap-1">
-                <a href="' . route('account.edit', $row->id) . '" class="btn btn-warning">
-                    <i class="fas fa-edit"></i>
-                </a>
-                <button id="' . $row->id . '" class="deletebtn btn btn-danger">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>';
-})
-
-                ->rawColumns(['status', 'action']) // Allow HTML rendering
-                ->make(true);
-        }
-
-        return view('account');
-    }
-
-   public function edit($id)
-{
-    $account = Account::with('contacts.ContactRole')->findOrFail($id);
-    return view('editaccount', compact('account'));
-}
-
 
 
     public function store(Request $request)
@@ -155,96 +85,176 @@ class AccountController extends Controller
         return response()->json($account);
     }
 
-  public function update(Request $request, $id)
-  
-{
-    
-    $validatedData = $request->validate([
-        'name' => 'required',
-        'email' => 'required|email',
-        'status' => 'required',
-        // other account validations...
-    ]);
 
-    if ($request->has('contacts') && is_array($request->contacts) && count($request->contacts) > 0) {
-            $rules['contacts'] = 'array|min:1';
+    public function edit($id)
+    {
+        $account = Account::with('contacts.ContactRole')->findOrFail($id);
+        return view('editaccount', compact('account'));
+    }
+
+
+
     
-            foreach ($request->contacts as $index => $contact) {
-  
-               
-                    $rules["contacts.$index.name"] = 'required|string|max:255';
-                    $rules["contacts.$index.phone"] = 'required|string|max:20';
-                    $rules["contacts.$index.birthday"] = 'nullable|date';
-                    $rules["contacts.$index.address"] = 'nullable|string|max:255';
-                    $rules["contacts.$index.description"] = 'nullable|string';
-                    $rules["contacts.$index.contact_role"] = 'required';
+
+    public function update(Request $request, $id)
+    {
+    
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'status' => 'required',
+            // other account validations...
+        ]);
+
+        if ($request->has('contacts') && is_array($request->contacts) && count($request->contacts) > 0) {
+                $rules['contacts'] = 'array|min:1';
+        
+                foreach ($request->contacts as $index => $contact) {
+    
                 
-                    if (!isset($contact['contact_id'])) {
-                        $rules["contacts.$index.email"] = 'required|email|max:255|unique:contacts,email';
-                    } else {
-                        $rules["contacts.$index.email"] = 'required|email|max:255';
-                    }
+                        $rules["contacts.$index.name"] = 'required|string|max:255';
+                        $rules["contacts.$index.phone"] = 'required|string|max:20';
+                        $rules["contacts.$index.birthday"] = 'nullable|date';
+                        $rules["contacts.$index.address"] = 'nullable|string|max:255';
+                        $rules["contacts.$index.description"] = 'nullable|string';
+                        $rules["contacts.$index.contact_role"] = 'required';
+                    
+                        if (!isset($contact['contact_id'])) {
+                            $rules["contacts.$index.email"] = 'required|email|max:255|unique:contacts,email';
+                        } else {
+                            $rules["contacts.$index.email"] = 'required|email|max:255';
+                        }
 
+                }
+
+                $validated = $request->validate($rules);
             }
 
-            $validated = $request->validate($rules);
-        }
+        $validatedData['company_id'] = auth()->user()->company_id; 
+        $account = Account::findOrFail($id);
+        $account->update($validatedData);
 
-    $validatedData['company_id'] = auth()->user()->company_id; 
-    $account = Account::findOrFail($id);
-    $account->update($validatedData);
+        // Add updated contacts
+        if ($request->contacts) {
+            foreach ($request->contacts as $contact) {
+                $role = ContactRole::firstOrCreate(['label' => $contact['contact_role'] ?? '']);
 
-    // Add updated contacts
-    if ($request->contacts) {
-        foreach ($request->contacts as $contact) {
-            $role = ContactRole::firstOrCreate(['label' => $contact['contact_role'] ?? '']);
+            if (isset($contact['contact_id'])) {
 
-        if (isset($contact['contact_id'])) {
-
-                Contact::where('id',$contact['contact_id'] )->update([
-                'name' => $contact['name'],
-                'email' => $contact['email'],
-                'phone' => $contact['phone'],
-                'birthday' => $contact['birthday'] ?? null,
-                'address' => $contact['address'] ?? null,
-                'description' => $contact['description'] ?? null,
-                'contact_role_id' => $role->id,
-                'account_id'=>$account->id,
-                'company_id'=>auth()->user()->company_id
-            ]);
-        }
-        else{
-                Contact::create([
-                'name' => $contact['name'],
-                'email' => $contact['email'],
-                'phone' => $contact['phone'],
-                'birthday' => $contact['birthday'] ?? null,
-                'address' => $contact['address'] ?? null,
-                'description' => $contact['description'] ?? null,
-                'contact_role_id' => $role->id,
-                'account_id'=>$account->id,
-                'company_id'=>auth()->user()->company_id
-            ]);
-        }
+                    Contact::where('id',$contact['contact_id'] )->update([
+                    'name' => $contact['name'],
+                    'email' => $contact['email'],
+                    'phone' => $contact['phone'],
+                    'birthday' => $contact['birthday'] ?? null,
+                    'address' => $contact['address'] ?? null,
+                    'description' => $contact['description'] ?? null,
+                    'contact_role_id' => $role->id,
+                    'account_id'=>$account->id,
+                    'company_id'=>auth()->user()->company_id
+                ]);
+            }
+            else{
+                    Contact::create([
+                    'name' => $contact['name'],
+                    'email' => $contact['email'],
+                    'phone' => $contact['phone'],
+                    'birthday' => $contact['birthday'] ?? null,
+                    'address' => $contact['address'] ?? null,
+                    'description' => $contact['description'] ?? null,
+                    'contact_role_id' => $role->id,
+                    'account_id'=>$account->id,
+                    'company_id'=>auth()->user()->company_id
+                ]);
+            }
            
         }
     }
 
     return redirect()->route('home.account')->with('success', 'Account updated with contacts');
-}
+    }
 
 
-   public function destroy($id)
-{
-    $account = Account::findOrFail($id);
+    public function destroy($id)
+    {
+        $account = Account::findOrFail($id);
 
-    // Delete all associated contacts first
-    $account->contacts()->delete();
+        // Delete all associated contacts first
+        $account->contacts()->delete();
 
-    // Then delete the account
-    $account->delete();
+        // Then delete the account
+        $account->delete();
 
-    return response()->json(['message' => 'Account and associated contacts deleted successfully']);
-}
+        return response()->json(['message' => 'Account and associated contacts deleted successfully']);
+    }
+
+
+
+    public function getContacts($id)
+    {
+        $account = Account::with('contacts')->find($id);
+
+        if (!$account) {
+            return response()->json(['message' => 'Account not found'], 404);
+        }
+
+        return response()->json($account->contacts);
+    }
+
+    public function getLeads($id)
+    {
+        $account = Account::with('leads')->find($id);
+
+        if (!$account) {
+            return response()->json(['message' => 'Account not found'], 404);
+        }
+
+        return response()->json($account->leads);
+    }
+
+
+
+    public function showaccount()
+    {
+        return view('createaccount');
+    }
+
+    public function account(Request $request)
+    {
+        if ($request->ajax()) {
+
+
+            if(auth()->user()->user_role =='super admin'){
+                $data = Account::select('*');
+            }else{
+                $data = Account::select('*')->where('company_id',auth()->user()->company_id);
+            }
+
+            return DataTables::of($data)
+                ->addColumn('status', function ($row) {
+                    if ($row->status === 'active') {
+                        return '<span class="btn btn-success">Active</span>';
+                    } else {
+                        return '<span class="btn btn-secondary">InActive</span>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+    return '<div class="d-flex gap-1">
+                <a href="' . route('account.edit', $row->id) . '" class="btn btn-warning">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <button id="' . $row->id . '" class="deletebtn btn btn-danger">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>';
+})
+
+                ->rawColumns(['status', 'action']) // Allow HTML rendering
+                ->make(true);
+        }
+
+        return view('account');
+    }
+
+   
 
 }
