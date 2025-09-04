@@ -7,6 +7,11 @@ use App\Models\ContactRole;
 use App\Models\Lead;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\Company;
+use Auth;
+use Carbon\Carbon;
+
+
 
 class ContactController extends Controller
 {
@@ -136,4 +141,76 @@ class ContactController extends Controller
             'message' => 'Contact deleted successfully'
         ]);
     }
+
+
+    public function ScrapContacts()
+    {
+
+        $companyInfo = Company::find(Auth::user()->company_id);
+
+        // Access specific columns
+        $scrapper = $companyInfo->scrapper;
+        $scrapperTime = $companyInfo->scrapper_date_time;
+
+        // Convert to Carbon instance
+        $scrapperTime = Carbon::parse($scrapperTime);
+
+        // Get human-readable difference
+        $scrapperTime= $scrapperTime->diffForHumans();  
+
+
+
+        return view('ScrapContacts')->with('scrapper',$scrapper)->with('scrapperTime',$scrapperTime);
+    }
+
+
+   
+    public function StartScrapper(Request $request)
+    {
+        $companyId = $request->companyid;
+
+        // Find the company
+        $company = Company::find($companyId);
+        if (!$company) {
+            return response()->json(['error' => 'Company not found'], 404);
+        }
+
+        // Prepare the data to send to the API
+        $payload = [
+            'companyid' => $companyId,
+            'data' => $company  // Sending the whole company object
+        ];
+
+        try {
+            // Call external API
+            // $response = Http::post('https://example.com/your-api-endpoint', $payload);
+
+            // // Check if API call was successful
+            // if ($response->successful()) {
+                // Update scrapper column after successful API call
+                $company->update([
+                    'scrapper' => 1
+                ]);
+
+                return response()->json([
+                    'message' => 'Scrapper started and API called successfully',
+                    'company' => $company
+                ]);
+            // } else {
+            //     return response()->json([
+            //         'message' => 'API call failed',
+            //         'response' => $response->body()
+            //     ], 500);
+            // }
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error calling API',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+
+
 }

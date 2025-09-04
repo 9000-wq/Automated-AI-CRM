@@ -104,6 +104,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/companyinfo', [HomeController::class,'companyinfo'])->name('companyinfo');
         Route::post('/updatecompanyinfo/{companyid?}', [HomeController::class,'updatecompanyinfo'])->name('updatecompanyinfo');
 
+        Route::get('/ScrapContacts', [ContactController::class,'ScrapContacts'])->name('ScrapContacts');
+
+        Route::post('/StartScrapper',[ContactController::class,'StartScrapper'])->name('StartScrapper');
+
 
         
     });

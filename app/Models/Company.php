@@ -20,6 +20,8 @@ class Company extends Model
         'company_description',
         'price_guidelines',
         'bussiness_knowledge',
+        'scrapper',
+        'scrapper_date_time',
     ];
 
 

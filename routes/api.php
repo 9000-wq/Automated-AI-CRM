@@ -7,6 +7,7 @@ use App\Http\Controllers\SalesPipelineController;
 use Illuminate\Http\Request;          // ✅ This one is correct
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Company;
 use App\Http\Controllers\LeadScoreController;
 
 Route::middleware('auth:sanctum')->prefix('lead-scores')->group(function () {
@@ -34,16 +35,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('ai_emails', AiEmailController::class);
 });
 
+
 Route::post('/token', function (Request $request) {
-    $request->validate([
+    $validator = Validator::make($request->all(), [
         'email' => 'required|email',
         'password' => 'required'
     ]);
 
-    if (!Auth::attempt($request->only('email', 'password'))) {
+    if ($validator->fails()) {
         return response()->json([
-            'message' => 'Invalid credentials'
-        ], 401);
+            'success' => false,
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    if (!Auth::attempt($request->only('email', 'password'))) {
+        return response()->json(['message' => 'Invalid credentials'], 401);
     }
 
     $user = User::where('email', $request->email)->first();
@@ -54,6 +61,28 @@ Route::post('/token', function (Request $request) {
 });
 
 
+
 Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     return $request->user();
 });
+
+
+Route::middleware('auth:sanctum')->post('/insertContacts', function (Request $request) {
+ 
+    $data=$request->data;
+    $company_id=$request->company_id;
+
+    Company::where('id',$company_id)->update([
+        'scrapper'=> 0,
+        'scrapper_date_time'=>date('Y-m-d H:i:s')
+    ]);
+
+    return response()->json(['Message'=>'Contacts Inserted Successfully.']);
+
+
+
+});
+
+
+
+

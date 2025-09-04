@@ -224,6 +224,13 @@
 							<i class="fa fa-envelope"></i> <span class="align-middle">AI Emails</span>
 						</a>
 					</li>
+
+					<li
+						class="sidebar-item  {{ request()->routeIs('ScrapContacts') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{route('ScrapContacts')}}">
+							<i class="fa fa-phone-square"></i> <span class="align-middle">Scrap Contacts</span>
+						</a>
+					</li>
 	
 
 					<li class="sidebar-item ">
