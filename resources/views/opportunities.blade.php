@@ -18,7 +18,7 @@
                                
                                     @foreach(['New', 'Contacted', 'Follow-Up', 'Converted', 'Lost'] as $status)
                                         <div class="col-md-2 m-3">
-                                            <button class="mb-3" style="background-color: #3b65ea;width:16rem; border: none;outline: none;border-radius: 9px;">
+                                            <button class="mb-3" style="background-color: #3b65ea;width:13rem; border: none;outline: none;border-radius: 9px;">
                                                 <h3 style="color:white; text-align: left;padding-top: 7px; margin-left: 0.6rem;">{{ $status }}</h3>
                                             </button>
                                             <div id="column-{{ strtolower($status) }}">
