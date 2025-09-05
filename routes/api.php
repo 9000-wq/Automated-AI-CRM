@@ -76,6 +76,18 @@ Route::middleware('auth:sanctum')->post('/insertContacts', function (Request $re
     $company_id=$request->company_id;
 
 
+    $validator = Validator::make($request->all(), [
+        'company_id' => 'required|exists:companies,id',
+        'data'       => 'required|json', // ensure it's JSON string
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    
     $contacts = json_decode($contacts, true); 
 
     foreach ($contacts as $websiteUrl => $persons) {
