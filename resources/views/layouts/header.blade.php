@@ -109,7 +109,7 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar js-sidebar">
 			<div style="padding: 0px;background-color: #3b65ea;font-size: medium;" class="sidebar-content js-simplebar">
-				<a class="sidebar-brand" href="index.html">
+				<a class="sidebar-brand" href="{{route('dashboard')}}">
 					<img src="{{asset('img/mylogo.png')}}" alt="" width="60px" height="60px" style="border-radius: 35px;">
 					<span class="align-middle" style="font-family: ui-serif;font-size: 20px;">CortexCRM</span>
 				</a>
@@ -278,7 +278,7 @@
 								<a class="dropdown-item" href="#"><i class="align-middle me-1"
 										data-feather="pie-chart"></i> Analytics</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="index.html"><i class="align-middle me-1"
+								<a class="dropdown-item" href="{{route('dashboard')}}"><i class="align-middle me-1"
 										data-feather="settings"></i> Settings & Privacy</a>
 								<a class="dropdown-item" href="#"><i class="align-middle me-1"
 										data-feather="help-circle"></i> Help Center</a>
