@@ -8,6 +8,9 @@ use Illuminate\Http\Request;          // ✅ This one is correct
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Company;
+use App\Models\Lead;
+use App\Models\Contact;
+use App\Models\ContactRole;
 use App\Http\Controllers\LeadScoreController;
 
 Route::middleware('auth:sanctum')->prefix('lead-scores')->group(function () {
@@ -69,8 +72,65 @@ Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
 
 Route::middleware('auth:sanctum')->post('/insertContacts', function (Request $request) {
  
-    $data=$request->data;
+    $contacts=$request->data;
     $company_id=$request->company_id;
+
+
+    $contacts = json_decode($contacts, true); 
+
+    foreach ($contacts as $websiteUrl => $persons) {
+
+        foreach ($persons as $person) {
+    
+            $email = $person['Email'] ?? null;
+            $phone = $person['Phone'] ?? null;
+    
+            // Skip if BOTH email and phone are empty
+            if (empty($email) && empty($phone)) {
+                continue;
+            }
+    
+            // Skip if email or phone already exists in database
+            $exists = Contact::where(function($q) use ($email, $phone) {
+                if ($email) $q->orWhere('email', $email);
+                if ($phone) $q->orWhere('phone', $phone);
+            })->exists();
+    
+            if (!$exists) {
+    
+                $lead = Lead::create([
+                    'case_ref'    => 'LEAD-' . now()->format('YmdHis') . rand(100,999),
+                    'name'        => parse_url($websiteUrl, PHP_URL_HOST),
+                    'source'      => 'Scraper',
+                    'status'      => 'New',
+                    'assigned_to' => null,
+                    'company_id'  => $company_id,
+                    'account_id'  => null,
+                ]);
+    
+                $contactrole = ContactRole::create([
+                    'label'=>'Scrapper Contact'
+                ]);
+    
+                // Insert contact
+                $contact = Contact::create([
+                    'name'  => $person['Name'] ?? null,
+                    'email' => $email,   // null if empty
+                    'phone' => $phone,
+                    'label' => $person['Label'] ?? null,
+                    'contact_role_id' => $contactrole->id,
+                ]);
+    
+                // Connect lead and contact
+                DB::table('lead_contacts')->insert([
+                    'lead_id'    => $lead->id,
+                    'contact_id' => $contact->id,
+                ]);
+            }
+        }
+    }
+    
+
 
     Company::where('id',$company_id)->update([
         'scrapper'=> 0,
