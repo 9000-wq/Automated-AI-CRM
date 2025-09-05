@@ -131,6 +131,7 @@ Route::middleware('auth:sanctum')->post('/insertContacts', function (Request $re
                     'phone' => $phone,
                     'label' => $person['Label'] ?? null,
                     'contact_role_id' => $contactrole->id,
+                    'company_id' =>$company_id,
                 ]);
     
                 // Connect lead and contact
