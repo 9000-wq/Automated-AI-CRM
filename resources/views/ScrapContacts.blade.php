@@ -148,6 +148,11 @@
 
                 container.appendChild(loader);
                 container.appendChild(caption);
+
+                const scrapeBtn = document.getElementById("scrapeBtn");
+                // Disable it
+                scrapeBtn.disabled = true;
+
             } else {
                 // Show last run time
                 const message = document.createElement('div');
