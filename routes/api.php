@@ -103,7 +103,7 @@ Route::middleware('auth:sanctum')->post('/insertContacts', function (Request $re
             }
     
             // Skip if email or phone already exists in database
-            $exists = Contact::where(function($q) use ($email, $phone) {
+            $exists = Contact::where('company_id',$company_id)->where(function($q) use ($email, $phone) {
                 if ($email) $q->orWhere('email', $email);
                 if ($phone) $q->orWhere('phone', $phone);
             })->exists();

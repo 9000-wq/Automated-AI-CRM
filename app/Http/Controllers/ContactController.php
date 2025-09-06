@@ -10,6 +10,7 @@ use Yajra\DataTables\DataTables;
 use App\Models\Company;
 use Auth;
 use Carbon\Carbon;
+use Http;
 
 
 
@@ -177,16 +178,25 @@ class ContactController extends Controller
 
         // Prepare the data to send to the API
         $payload = [
-            'companyid' => $companyId,
-            'data' => $company  // Sending the whole company object
+            'company_id' => $companyId,
+            'data' => [
+                "description" =>  $company->company_description,
+                "name" =>   $company->company_name,
+                "knowledge" =>   $company->bussiness_knowledge,
+                "price_guidelines" =>   $company->price_guidelines,
+                "business_type" =>   $company->business_type,
+                "company_address" => $company->company_address,
+                "country" => $company->country,
+
+            ]
         ];
 
         try {
             // Call external API
-            // $response = Http::post('https://example.com/your-api-endpoint', $payload);
+            $response = Http::post('http://65.2.6.221:8015/scrap', $payload);
 
-            // // Check if API call was successful
-            // if ($response->successful()) {
+            // Check if API call was successful
+            if ($response->successful()) {
                 // Update scrapper column after successful API call
                 $company->update([
                     'scrapper' => 1
@@ -194,14 +204,15 @@ class ContactController extends Controller
 
                 return response()->json([
                     'message' => 'Scrapper started and API called successfully',
-                    'company' => $company
+                    'company' => $company,
+                    'api_data'  => $response->json() // 👈 return parsed API response here
                 ]);
-            // } else {
-            //     return response()->json([
-            //         'message' => 'API call failed',
-            //         'response' => $response->body()
-            //     ], 500);
-            // }
+            } else {
+                return response()->json([
+                    'message' => 'API call failed',
+                    'response' => $response->body()
+                ], 500);
+            }
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error calling API',
