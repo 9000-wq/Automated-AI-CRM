@@ -12,6 +12,8 @@ use App\Http\Controllers\CallController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AiCallController;
 use App\Http\Controllers\AiEmailController;
+use App\Http\Controllers\EmailsController;
+
 
 
 
@@ -145,6 +147,11 @@ Route::middleware('auth')->group(function () {
         Route::delete('/deleteplans', [PlanController::class, 'destroy'])->name('plans.destroy'); // Delete plan
 
     });
+
+        //Email Controller
+
+Route::get('/emails', [EmailsController::class, 'index'])->name('emails');
+
 
 });
 
