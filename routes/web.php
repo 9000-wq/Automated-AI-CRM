@@ -16,9 +16,6 @@ use App\Http\Controllers\EmailsController;
 
 
 
-
-
-
 Route::get('/welcome', function () {
     return view('welcome');
 });
@@ -40,6 +37,34 @@ Route::get('/csrf-token', function () {
 
 
 Route::middleware('auth')->group(function () {
+
+    // IMAP Email Settings
+    // Route::get('/email-settings', [EmailController::class, 'index'])->name('email.settings');
+
+    // // Gmail
+    // Route::get('/google/auth', [EmailController::class, 'redirectToGoogle'])->name('google.auth');
+    // Route::get('/auth/google/callback', [EmailController::class, 'handleGoogleCallback'])->name('google.callback');
+
+    // // Outlook
+    // Route::get('/outlook/auth', [EmailController::class, 'redirectToOutlook'])->name('outlook.auth');
+    // Route::get('/outlook/callback', [EmailController::class, 'handleOutlookCallback'])->name('outlook.callback');
+
+    // // IMAP/SMTP
+    // Route::post('/imap/save', [EmailController::class, 'saveImap'])->name('imap.save');
+
+    // Gmail
+    Route::get('/auth/google/redirect', [EmailController::class, 'redirectToGoogle'])->name('google.redirect');
+    Route::get('/auth/google/callback', [EmailController::class, 'handleGoogleCallback'])->name('google.callback');
+
+    // Outlook
+    Route::get('/auth/outlook/redirect', [EmailController::class, 'redirectToOutlook'])->name('outlook.redirect');
+    Route::get('/auth/outlook/callback', [EmailController::class, 'handleOutlookCallback'])->name('outlook.callback');
+
+    // IMAP
+    Route::post('/imap/save', [EmailController::class, 'saveImap'])->name('imap.save');
+
+    // Email settings page
+    Route::get('/email-settings', [EmailController::class, 'index'])->name('email.settings');
 
     //Profile Controller
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -93,6 +118,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/leads/{lead}', [LeadController::class, 'show'])->name('leads.show');
         Route::get('/leads/{lead}/edit', [LeadController::class, 'edit'])->name('leads.edit');
         Route::put('/leads/{lead}', [LeadController::class, 'update'])->name('leads.update');
+        Route::post('/leads/scrape', [LeadController::class, 'scrape'])->name('leads.scrape');
+
+
         Route::delete('/leads', [LeadController::class, 'destroy'])->name('leads.destroy');
         Route::get('/editcontact/{contact?}/{leadid?}', [LeadController::class, 'editcontact'])->name('leadcontact');
         Route::put('/updatelead', [LeadController::class, 'updatelead'])->name('updateleadcontact');
