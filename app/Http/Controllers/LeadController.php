@@ -553,22 +553,27 @@ class LeadController extends Controller
 
             $newLeads[] = Lead::where('status', 'New')
                 ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->where('company_id',auth()->user()->company_id)
                 ->count();
 
             $followUp[] = Lead::where('status', 'Follow-up')
                 ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->where('company_id',auth()->user()->company_id)
                 ->count();
 
             $contacted[] = Lead::where('status', 'Contacted')
                 ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->where('company_id',auth()->user()->company_id)
                 ->count();
 
             $converted[] = Lead::where('status', 'Converted')
                 ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->where('company_id',auth()->user()->company_id)
                 ->count();
 
             $lost[] = Lead::where('status', 'Lost')
                 ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->where('company_id',auth()->user()->company_id)
                 ->count();
         }
 
@@ -591,6 +596,7 @@ class LeadController extends Controller
         $results = DB::table('leads')
             ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
             ->where('status', 'converted')
+            ->where('company_id',auth()->user()->company_id)
             ->groupBy(DB::raw('MONTH(created_at)'))
             ->pluck('total', 'month');
 
