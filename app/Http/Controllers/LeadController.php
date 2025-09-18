@@ -18,6 +18,8 @@ use DataTables;
 use Illuminate\Validation\Rule;
 use DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+
 
 
 
@@ -526,6 +528,85 @@ class LeadController extends Controller
     }
 
 
+
+    
+    public function getLeadStats()
+    {
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();
+
+        $labels = [];
+        $newLeads = [];
+        $followUp = [];
+        $contacted = [];
+        $converted = [];
+        $lost = [];
+
+        // Loop through each day of the week
+        $period = \Carbon\CarbonPeriod::create($startOfWeek, $endOfWeek);
+
+        foreach ($period as $date) {
+            // ✅ Use full date format
+            $labels[] = $date->format('Y-m-d'); // Example: 2025-09-14
+            // OR you can use something more readable:
+            // $labels[] = $date->format('M d'); // Example: Sep 14
+
+            $newLeads[] = Lead::where('status', 'New')
+                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->count();
+
+            $followUp[] = Lead::where('status', 'Follow-up')
+                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->count();
+
+            $contacted[] = Lead::where('status', 'Contacted')
+                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->count();
+
+            $converted[] = Lead::where('status', 'Converted')
+                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->count();
+
+            $lost[] = Lead::where('status', 'Lost')
+                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->count();
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'new_leads' => $newLeads,
+            'follow_up' => $followUp,
+            'contacted' => $contacted,
+            'converted' => $converted,
+            'lost'      => $lost,
+        ]);
+    }
+
+
+
+
+    public function monthlySuccess()
+    {
+        // Query leads grouped by month (converted leads only)
+        $results = DB::table('leads')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->where('status', 'converted')
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->pluck('total', 'month');
+
+        // Create a fixed array for 12 months (fill missing months with 0)
+        $monthlyData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $monthlyData[] = $results[$i] ?? 0;
+        }
+
+        return response()->json([
+            'labels' => ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+            'data' => $monthlyData
+        ]);
+    }
+    
+    
 
 
 }
