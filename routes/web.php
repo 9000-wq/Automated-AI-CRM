@@ -177,8 +177,11 @@ Route::middleware('auth')->group(function () {
     });
 
         //Email Controller
-
+// Manually email compose
 Route::get('/emails', [EmailsController::class, 'index'])->name('emails');
+
+// Manually email compose
+Route::post('/emails/send', [App\Http\Controllers\EmailsController::class, 'sendEmail'])->name('emails.send');
 
 
 });
