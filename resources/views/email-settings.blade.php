@@ -19,9 +19,9 @@
             {{-- Outlook --}}
             <div class="card p-3 mb-3">
                 <h4>Outlook</h4>
-                @if(isset($accounts['outlook']))
+                @if(!empty($accounts) && isset($accounts[0]) && $accounts[0]->provider === 'outlook')
                     <p class="text-success">
-                        ✅ Connected as <strong>{{ $accounts['outlook']->email }}</strong>
+                        ✅ Connected as <strong>{{ $accounts[0]->email }}</strong>
                     </p>
                 @else
                     <a href="{{ route('outlook.redirect') }}" class="btn btn-primary">Connect Outlook</a>
@@ -31,9 +31,9 @@
             {{-- IMAP --}}
             <div class="card p-3 mb-3">
                 <h4>Custom IMAP/SMTP</h4>
-                @if(isset($accounts['imap']))
+                @if(!empty($accounts) && isset($accounts[0]) && $accounts[0]->provider === 'imap')
                     <p class="text-success">
-                        ✅ Connected as <strong>{{ $accounts['imap']->email }}</strong>
+                        ✅ Connected as <strong>{{ $accounts[0]->email }}</strong>
                     </p>
                 @else
                     <form action="{{ route('imap.save') }}" method="POST">

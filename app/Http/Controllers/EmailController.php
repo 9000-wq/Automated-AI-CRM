@@ -212,19 +212,60 @@ class EmailController extends Controller
     // ✅ IMAP Save
     public function saveImap(Request $request)
     {
-        EmailAccount::updateOrCreate(
-            ['user_id' => Auth::id(), 'provider' => 'imap'],
-            [
-                'email' => $request->email,
-                'imap_host' => $request->imap_host,
-                'imap_port' => $request->imap_port,
-                'imap_encryption' => $request->imap_encryption,
-                'imap_username' => $request->imap_username,
-                'imap_password' => encrypt($request->imap_password), // secure storage
-            ]
-        );
+        $request->validate([
+            'email' => 'required|email',
+            'imap_host' => 'required|string',
+            'imap_port' => 'required|numeric',
+            'imap_encryption' => 'nullable|string',
+            'imap_username' => 'required|string',
+            'imap_password' => 'required|string',
+        ]);
 
-        return redirect()->route('email.settings')->with('success', 'IMAP settings saved!');
+        try {
+            // Build mailbox connection string
+            $mailbox = "{" . $request->imap_host . ":" . $request->imap_port 
+                    . "/imap" 
+                    . ($request->imap_encryption ? "/" . $request->imap_encryption : "") 
+                    . "}INBOX";
+
+            // Try to connect
+            $connection = @imap_open($mailbox, $request->imap_username, $request->imap_password);
+
+            if (!$connection) {
+                // return response()->json([
+                //     'success' => false,
+                //     'message' => 'IMAP connection failed: ' . imap_last_error(),
+                // ], 400);
+                return redirect()->route('email.settings')->with('error', 'IMAP connection failed: ' . imap_last_error());
+            }
+
+            imap_close($connection);
+
+            // Save only if connection works
+            EmailAccount::updateOrCreate(
+                ['user_id' => Auth::id(), 'provider' => 'imap'],
+                [
+                    'email' => $request->email,
+                    'imap_host' => $request->imap_host,
+                    'imap_port' => $request->imap_port,
+                    'imap_encryption' => $request->imap_encryption,
+                    'imap_username' => $request->imap_username,
+                    'imap_password' => encrypt($request->imap_password),
+                ]
+            );
+
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'IMAP settings verified & saved!',
+            // ]);
+            return redirect()->route('email.settings')->with('success', 'IMAP settings verified & saved!');
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'IMAP check failed: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
