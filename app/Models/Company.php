@@ -19,6 +19,7 @@ class Company extends Model
         'country',
         'company_description',
         'price_guidelines',
+        'prompt',
         'bussiness_knowledge',
         'scrapper',
         'scrapper_date_time',
