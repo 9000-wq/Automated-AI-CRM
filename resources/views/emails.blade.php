@@ -4,6 +4,26 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
 <style>
+   .sidebar-active {
+        background-color: #e9ecef;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+      #emailTable td {
+        white-space: normal !important;   /* Allow text wrapping */
+        word-break: break-word;           /* Break long words */
+        max-width: 250px;                 /* Prevent column from being too wide */
+    }
+
+    .email-preview {
+        display: block;
+        max-width: 250px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Show ... when truncated */
+    }
+
     #modal-toggle {
         display: none;
     }
@@ -179,11 +199,12 @@
             <div class="col-md-2 border-end bg-light vh-100">
                 <h5 class="fw-bold mb-3">Emails</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="#" class="text-danger fw-bold"><i class="bi bi-grid-3x3-gap me-2"></i> All</a>
-                    </li>
+                   
                     <li class="mb-2"><a href="#"><i class="bi bi-inbox me-2"></i> Inbox</a></li>
                     <li class="mb-2"><a href="#"><i class="bi bi-star me-2"></i> Important</a></li>
-                    <li class="mb-2"><a href="#"><i class="bi bi-send me-2"></i> Sent</a></li>
+<li class="mb-2">
+    <a href="{{ route('emails.sent') }}"><i class="bi bi-send me-2"></i> Sent</a>
+</li>
                     <li class="mb-2"><a href="#"><i class="bi bi-person-badge me-2"></i> My Personal</a></li>
                     <li class="mb-2"><a href="#"><i class="bi bi-briefcase me-2"></i> Sales</a></li>
                     <li class="mb-2"><a href="#"><i class="bi bi-archive me-2"></i> Archive</a></li>

@@ -13,6 +13,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AiCallController;
 use App\Http\Controllers\AiEmailController;
 use App\Http\Controllers\EmailsController;
+use App\Http\Controllers\EmailSentController;
 
 
 
@@ -70,6 +71,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+// compose email fetch from db or show sent page
+Route::get('/emails/sent', [EmailSentController::class, 'sent'])->name('emails.sent');
+Route::get('/emails/sent/list', [EmailSentController::class, 'sentList'])->name('emails.sent.list');
+
+
 
     //CRUD for AI Calls table
 
