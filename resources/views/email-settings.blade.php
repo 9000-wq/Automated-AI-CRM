@@ -1,8 +1,6 @@
-@include('layouts.header')
-<main class="content">
-    <div class="container-fluid p-0">
-        <div class="container">
-            <h2>Email Integrations</h2>
+
+    <div class="container-fluid mt-3 p-0">
+            <h1 class="h3 mb-3"><strong>Email Integrations</strong></h1>
 
             {{-- Gmail --}}
             <div class="card p-3 mb-3">
@@ -36,7 +34,7 @@
                         ✅ Connected as <strong>{{ $accounts[0]->email }}</strong>
                     </p>
                 @else
-                    <form action="{{ route('imap.save') }}" method="POST">
+                    <form id="imapForm" action="{{ route('imap.save') }}" method="POST">
                         @csrf
                         <div class="mb-2">
                             <label>Email</label>
@@ -67,9 +65,60 @@
                         </div>
                         <button type="submit" class="btn btn-success">Save IMAP Settings</button>
                     </form>
+                    <div id="imapMessage" class="mt-2"></div>
+                    <button class="btn btn-secondary" id="resetButton">Reset</button>
                 @endif
             </div>
-        </div>
     </div>
-</main>
-@include('layouts.footer')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#resetButton').on('click', function() {
+        if (confirm('Are you sure you want to reset Email settings?')) {
+            $.ajax({
+                url: '{{ route("email.reset") }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    alert('Email settings have been reset.');
+                    location.reload();
+                },
+                error: function() {
+                    alert('Error resetting Email settings.');
+                }
+            });
+        }
+    });
+    $('#imapForm').on('submit', function(e) {
+        e.preventDefault();
+        let form = $(this);
+        let formData = form.serialize();
+
+        $('#imapMessage').html('<p class="text-info">⏳ Checking IMAP connection...</p>');
+
+        $.ajax({
+            url: form.attr('action'),
+            method: 'POST',
+            data: formData,
+            success: function(response, status, xhr) {
+                // If Laravel returns a redirect, jQuery won't auto-follow it
+                if (xhr.getResponseHeader('Content-Type').includes('text/html')) {
+                    // Laravel redirect HTML response -> just reload the page
+                    window.location.href = xhr.responseURL;
+                } else if (response.success) {
+                    $('#imapMessage').html('<p class="text-success">✅ ' + response.message + '</p>');
+                }
+            },
+            error: function(xhr) {
+                let errMsg = "❌ Unexpected error occurred.";
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errMsg = xhr.responseJSON.message;
+                }
+                $('#imapMessage').html('<p class="text-danger">' + errMsg + '</p>');
+            }
+        });
+    });
+});
+</script>

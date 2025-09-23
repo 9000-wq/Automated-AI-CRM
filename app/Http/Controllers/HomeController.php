@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\Plan;
 use App\Models\CompanyPlan;
+use App\Models\EmailAccount;
+use Illuminate\Support\Facades\Auth;
 use DataTables;
 use Illuminate\Validation\Rule;
 
@@ -99,7 +101,11 @@ class HomeController extends Controller
     {
         $companyid= auth()->user()->company_id;
         $companyinfo= Company::find($companyid);
-        return view('companyinfo')->with('companyinfo',$companyinfo);
+
+        $accounts = EmailAccount::where('user_id', Auth::id())->get();
+        // return view('email-settings', compact('accounts'));
+
+        return view('companyinfo')->with('companyinfo',$companyinfo)->with('accounts',$accounts);
     }
 
     public function updatecompanyinfo(Request $request)

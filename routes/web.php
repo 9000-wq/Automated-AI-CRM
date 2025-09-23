@@ -15,6 +15,7 @@ use App\Http\Controllers\AiEmailController;
 use App\Http\Controllers\EmailsController;
 use App\Models\Lead;
 use Carbon\Carbon;
+use App\Http\Controllers\EmailSentController;
 
 
 
@@ -87,10 +88,11 @@ Route::middleware('auth')->group(function () {
 
     // Outlook
     Route::get('/auth/outlook/redirect', [EmailController::class, 'redirectToOutlook'])->name('outlook.redirect');
-    Route::get('/auth/outlook/callback', [EmailController::class, 'handleOutlookCallback'])->name('outlook.callback');
+    Route::get('/auth/outlook/callback', [EmailController::class, 'handleOutlookCallback'])->name('services.outlook.callback');
 
     // IMAP
     Route::post('/imap/save', [EmailController::class, 'saveImap'])->name('imap.save');
+    Route::post('/email/reset', [EmailController::class, 'emailReset'])->name('email.reset');
 
     // Email settings page
     Route::get('/email-settings', [EmailController::class, 'index'])->name('email.settings');
@@ -99,6 +101,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // compose email fetch from db or show sent page
+    Route::get('/emails/sent', [EmailSentController::class, 'sent'])->name('emails.sent');
+    Route::get('/emails/sent/list', [EmailSentController::class, 'sentList'])->name('emails.sent.list');
 
     //CRUD for AI Calls table
 
@@ -180,9 +186,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/call-screen/{leadid?}/{contact?}', [CallController::class, 'callScreen'])->name('call-screen');
     Route::get('generate-twilio-token', [CallController::class, 'generateTwilioToken'])->name('generate-twilio-token');
 
-
-    
-
     Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
     Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
     Route::get('/calls/history/{lead}/{call?}', [CallController::class, 'history'])->name('call.history');
@@ -205,14 +208,16 @@ Route::middleware('auth')->group(function () {
 
     });
 
-        //Email Controller
-
-        Route::get('/emails', [EmailsController::class, 'index'])->name('emails');
 
 
         Route::get('/leadStats', [LeadController::class, 'getLeadStats'])->name('leads.stats');
         Route::get('/leadsMonthlySuccess', [LeadController::class, 'monthlySuccess'])->name('monthlySuccess');
 
+// Manually email compose
+Route::get('/emails', [EmailsController::class, 'index'])->name('emails');
+
+// Manually email compose
+Route::post('/emails/send', [App\Http\Controllers\EmailsController::class, 'sendEmail'])->name('emails.send');
 
 
 });
