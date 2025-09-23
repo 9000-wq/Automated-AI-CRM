@@ -6,6 +6,7 @@ use Google_Client;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
 use App\Models\EmailLog;
+use Illuminate\Encryption\Encrypter;
 use App\Models\Lead; // Added Lead model import
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -144,13 +145,27 @@ class EmailController extends Controller
         $token = $client->fetchAccessTokenWithAuthCode($request->code);
 
         if (isset($token['error'])) {
-            return redirect()->route('email.settings')
+            return redirect()->route('companyinfo')
                 ->with('error', 'Google authentication failed: ' . $token['error_description']);
         }
         // Get email from Google API
         $client->setAccessToken($token['access_token']);
         $oauth2 = new Google_Service_Oauth2($client);
         $googleUser = $oauth2->userinfo->get();
+
+        
+        // ✅ Check if this email already belongs to another user
+        $existing = EmailAccount::where('email', $googleUser->email)
+            ->where('user_id', '!=', Auth::id())
+            ->first();
+
+        if ($existing) {
+            return redirect()->route('companyinfo')
+                ->with('error', 'This email account is already connected by another user.');
+        }
+
+        // 🔥 Delete old accounts for this user
+        EmailAccount::where('user_id', Auth::id())->delete();
 
         EmailAccount::updateOrCreate(
             ['user_id' => Auth::id(), 'provider' => 'gmail'],
@@ -162,7 +177,7 @@ class EmailController extends Controller
             ]
         );
 
-        return redirect()->route('email.settings')->with('success', 'Gmail connected!');
+        return redirect()->route('companyinfo')->with('success', 'Gmail connected!');
     }
 
     // ✅ Outlook OAuth (Microsoft Graph API)
@@ -171,7 +186,7 @@ class EmailController extends Controller
         $url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?' . http_build_query([
             'client_id' => config('services.outlook.client_id'),
             'response_type' => 'code',
-            'redirect_uri' => route('outlook.callback'),
+            'redirect_uri' => route('services.outlook.callback'),
             'response_mode' => 'query',
             'scope' => 'offline_access Mail.Read Mail.Send User.Read',
         ]);
@@ -187,7 +202,7 @@ class EmailController extends Controller
             'client_id' => config('services.outlook.client_id'),
             'client_secret' => config('services.outlook.client_secret'),
             'code' => $request->code,
-            'redirect_uri' => route('outlook.callback'),
+            'redirect_uri' => route('services.outlook.callback'),
             'grant_type' => 'authorization_code',
         ])->json();
 
@@ -195,6 +210,9 @@ class EmailController extends Controller
         $graphResponse = Http::withToken($response['access_token'])
             ->get('https://graph.microsoft.com/v1.0/me')
             ->json();
+
+        // 🔥 Delete old accounts for this user
+        EmailAccount::where('user_id', Auth::id())->delete();
 
         EmailAccount::updateOrCreate(
             ['user_id' => Auth::id(), 'provider' => 'outlook'],
@@ -206,7 +224,7 @@ class EmailController extends Controller
             ]
         );
 
-        return redirect()->route('email.settings')->with('success', 'Outlook connected!');
+        return redirect()->route('companyinfo')->with('success', 'Outlook connected!');
     }
 
     // ✅ IMAP Save
@@ -232,14 +250,20 @@ class EmailController extends Controller
             $connection = @imap_open($mailbox, $request->imap_username, $request->imap_password);
 
             if (!$connection) {
-                // return response()->json([
-                //     'success' => false,
-                //     'message' => 'IMAP connection failed: ' . imap_last_error(),
-                // ], 400);
-                return redirect()->route('email.settings')->with('error', 'IMAP connection failed: ' . imap_last_error());
+               return response()->json([
+                    'success' => false,
+                    'message' => 'IMAP connection failed: ' . imap_last_error(),
+                ], 400);
             }
 
             imap_close($connection);
+            // 🔥 Delete old accounts for this user
+            EmailAccount::where('user_id', Auth::id())->delete();
+
+            // Use custom encrypter with EMAIL_SECRET_KEY
+            $email_secret_key = env('EMAIL_SECRET_KEY'); // base64 encoded
+            $encrypter = new Encrypter(base64_decode($email_secret_key), 'AES-256-CBC');
+            $encrypted_password = $encrypter->encrypt($request->imap_password, false);
 
             // Save only if connection works
             EmailAccount::updateOrCreate(
@@ -250,7 +274,7 @@ class EmailController extends Controller
                     'imap_port' => $request->imap_port,
                     'imap_encryption' => $request->imap_encryption,
                     'imap_username' => $request->imap_username,
-                    'imap_password' => encrypt($request->imap_password),
+                    'imap_password' => $encrypted_password,
                 ]
             );
 
@@ -258,7 +282,7 @@ class EmailController extends Controller
             //     'success' => true,
             //     'message' => 'IMAP settings verified & saved!',
             // ]);
-            return redirect()->route('email.settings')->with('success', 'IMAP settings verified & saved!');
+            return redirect()->route('companyinfo')->with('success', 'IMAP settings verified & saved!');
 
         } catch (\Exception $e) {
             return response()->json([
@@ -268,6 +292,17 @@ class EmailController extends Controller
         }
     }
 
+    public function emailReset(Request $request)
+    {
+        try {
+            // 🔥 Delete old accounts for this user
+            EmailAccount::where('user_id', Auth::id())->delete();
+
+            return redirect()->route('companyinfo')->with('success', 'Email settings reset successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('companyinfo')->with('error', 'Failed to reset Email settings: ' . $e->getMessage());
+        }
+    }
     /**
      * Update access token & expiry when Python refreshes it.
      */

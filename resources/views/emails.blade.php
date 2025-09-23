@@ -190,7 +190,7 @@
     }
 </style>
 
-@if(!empty($accounts) && isset($accounts[0]) && $accounts[0]->provider === 'gmail')
+@if(!empty($accounts) && isset($accounts[0]) && in_array($accounts[0]->provider, ['gmail', 'imap', 'outlook']))
     <p class="text-success">✅ Connected as <strong>{{ $accounts[0]->email }}</strong></p>
 
     <div class="container-fluid py-3">
@@ -308,7 +308,12 @@
     </div>
 
 @else
-    <a href="{{ route('google.redirect') }}" class="btn btn-danger">Connect Gmail</a>
+    <div class="alert alert-warning text-center">
+        ⚠️ No valid email account connected. Please connect Gmail, Outlook, or IMAP first.
+        <br>
+        <br>
+        <a href="{{ url('/companyinfo') }}" class="btn btn-primary btn-sm ms-2">Go to Company Info</a>
+    </div>
 @endif
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

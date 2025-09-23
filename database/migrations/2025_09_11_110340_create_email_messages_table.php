@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('email_messages', function (Blueprint $table) {
             $table->id();
-            $table->string('thread_id');
+            $table->unsignedBigInteger('thread_id');
             $table->string('message_id')->unique();
             $table->string('from_email')->nullable();
             $table->string('to_email')->nullable();
@@ -21,13 +21,12 @@ return new class extends Migration
             $table->text('snippet')->nullable();
             $table->longText('body')->nullable();
             $table->boolean('is_auto_reply')->default(false);
-            $table->enum('status', ['Sent', 'Opened', 'Replied', 'Bounced'])
-            ->default('Sent');
+            $table->enum('status', ['Sent', 'Opened', 'Replied', 'Bounced'])->default('Sent');
             $table->timestamp('created_at')->useCurrent();
 
-            // Index + relation
+            // Foreign key
             $table->foreign('thread_id')
-                  ->references('thread_id')
+                  ->references('id')   // 🔧 usually FK references `id` not `thread_id`
                   ->on('email_threads')
                   ->cascadeOnDelete();
         });
@@ -38,10 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('email_messages', function (Blueprint $table) {
-            $table->dropForeign(['thread_id']); // drop FK first
-            $table->dropIndex(['thread_id']);   // drop index if exists
-        });
         Schema::dropIfExists('email_messages');
     }
 };

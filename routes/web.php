@@ -59,10 +59,11 @@ Route::middleware('auth')->group(function () {
 
     // Outlook
     Route::get('/auth/outlook/redirect', [EmailController::class, 'redirectToOutlook'])->name('outlook.redirect');
-    Route::get('/auth/outlook/callback', [EmailController::class, 'handleOutlookCallback'])->name('outlook.callback');
+    Route::get('/auth/outlook/callback', [EmailController::class, 'handleOutlookCallback'])->name('services.outlook.callback');
 
     // IMAP
     Route::post('/imap/save', [EmailController::class, 'saveImap'])->name('imap.save');
+    Route::post('/email/reset', [EmailController::class, 'emailReset'])->name('email.reset');
 
     // Email settings page
     Route::get('/email-settings', [EmailController::class, 'index'])->name('email.settings');
@@ -72,11 +73,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-// compose email fetch from db or show sent page
-Route::get('/emails/sent', [EmailSentController::class, 'sent'])->name('emails.sent');
-Route::get('/emails/sent/list', [EmailSentController::class, 'sentList'])->name('emails.sent.list');
-
-
+    // compose email fetch from db or show sent page
+    Route::get('/emails/sent', [EmailSentController::class, 'sent'])->name('emails.sent');
+    Route::get('/emails/sent/list', [EmailSentController::class, 'sentList'])->name('emails.sent.list');
 
     //CRUD for AI Calls table
 
@@ -157,9 +156,6 @@ Route::get('/emails/sent/list', [EmailSentController::class, 'sentList'])->name(
 
     Route::get('/call-screen/{leadid?}/{contact?}', [CallController::class, 'callScreen'])->name('call-screen');
     Route::get('generate-twilio-token', [CallController::class, 'generateTwilioToken'])->name('generate-twilio-token');
-
-
-    
 
     Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
     Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');

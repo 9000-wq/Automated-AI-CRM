@@ -89,6 +89,8 @@
                                                     @endif
 
                                                 </form>
+
+                                                @include('email-settings')
                                             </div>
 										</div>
 										
@@ -101,7 +103,7 @@
 						
 					</div>
 
-					
+                    
 
 					
 
