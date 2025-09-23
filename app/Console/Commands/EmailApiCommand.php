@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Http;
 
 class EmailApiCommand extends Command
 {
@@ -26,16 +27,17 @@ class EmailApiCommand extends Command
     public function handle()
     {
         try {
+
             // Example API call
-            // $response = Http::get('https://example.com/api/endpoint');
+            $response = Http::get(env('API_URL_ENDPOINT').'/endpoint');
 
-            // if ($response->successful()) {
-            //     $this->info('API call successful: ' . $response->body());
-            // } else {
-            //     $this->error('API call failed: ' . $response->status());
-            // }
+            if ($response->successful()) {
+                $this->info('API call successful: ' . $response->body());
+            } else {
+                $this->error('API call failed: ' . $response->status());
+            }
 
-            echo 1;
+
 
         } catch (\Exception $e) {
             $this->error('Error: ' . $e->getMessage());
