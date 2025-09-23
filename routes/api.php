@@ -12,6 +12,7 @@ use App\Models\Lead;
 use App\Models\Contact;
 use App\Models\ContactRole;
 use App\Http\Controllers\LeadScoreController;
+use App\Http\Controllers\EmailController;
 
 Route::middleware('auth:sanctum')->prefix('lead-scores')->group(function () {
     Route::get('/', [LeadScoreController::class, 'index']);
@@ -38,6 +39,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('ai_emails', AiEmailController::class);
 });
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/update-token', [EmailController::class, 'updateToken']);
+});
 
 Route::post('/token', function (Request $request) {
     $validator = Validator::make($request->all(), [
