@@ -9,4 +9,4 @@ Artisan::command('inspire', function () {
 
 
 // ✅ Schedule your API call here
-Schedule::command('api:call')->everyMinute();
+Schedule::command('email:call')->everyMinute();
