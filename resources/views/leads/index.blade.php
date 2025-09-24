@@ -147,6 +147,7 @@
     $(document).on('click','.scrapeBtn',function(){
        let id= $(this).attr('id');
 
+
             const url = "{{route('leads.scrape')}}";
 
             $.ajax({

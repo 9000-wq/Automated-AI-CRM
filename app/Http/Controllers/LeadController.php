@@ -46,7 +46,7 @@ class LeadController extends Controller
                     $btn = "<a href='" . route('leads.show', $row->id) . "' class='btn btn-info'><i class='fas fa-eye'></i></a>
                             <a href='" . route('leads.edit', $row->id) . "' class='btn btn-warning'><i class='fas fa-edit'></i></a>
                             <button class='btn btn-danger deletebtn' id='$row->id'><i class='fas fa-trash'></i></button>
-                            <button href='" . route('leads.scrape', $row->id) . "' class='btn btn-secondary scrapeBtn'><i class='fas fa-robot'></i></button>
+                            <button  id='".$row->id."' class='btn btn-secondary scrapeBtn'><i class='fas fa-robot'></i></button>
                             <a href='" . route('leadcontact') . "/lead$row->id' class='btn btn-primary addContact' title='Add Contact' id='$row->id'><i class='fas fa-address-book	'></i></a>";
                     return $btn;
                 })->editColumn('status', function ($row) {
@@ -161,14 +161,17 @@ class LeadController extends Controller
 
 
 
-    public function scrape($leadId = null): \Illuminate\Http\JsonResponse
+    public function scrape(Request $request) : \Illuminate\Http\JsonResponse
     {
+
+        $leadId= $request->leadid;
         // Optional: fetch the lead if needed
         $lead = null;
         if ($leadId) {
             $lead = Lead::find($leadId);
         }
 
+        
         $results = Lead::select(
                 'leads.name as customer_name',
                 'c.company_name',
