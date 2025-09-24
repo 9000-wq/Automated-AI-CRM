@@ -32,9 +32,9 @@ class LeadController extends Controller
         if ($request->ajax()) {
 
             if (auth()->user()->user_role == 'super admin') {
-                $data = Lead::select('leads.*', 'users.name as assigned_user_name')->leftjoin('users', 'leads.assigned_to', '=', 'users.id');
+                $data = Lead::select('leads.*', 'users.name as assigned_user_name')->leftjoin('users', 'leads.assigned_to', '=', 'users.id')->orderBy('created_at','desc');
             } else {
-                $data = Lead::select('leads.*', 'users.name as assigned_user_name')->leftjoin('users', 'leads.assigned_to', '=', 'users.id')->where('leads.company_id', auth()->user()->company_id);
+                $data = Lead::select('leads.*', 'users.name as assigned_user_name')->leftjoin('users', 'leads.assigned_to', '=', 'users.id')->where('leads.company_id', auth()->user()->company_id)->orderBy('created_at','desc');
             }
 
 
@@ -160,77 +160,81 @@ class LeadController extends Controller
     }
 
 
-public function scrape($leadId = null): \Illuminate\Http\JsonResponse
-{
-    // Optional: fetch the lead if needed
-    $lead = null;
-    if ($leadId) {
-        $lead = Lead::find($leadId);
+
+    public function scrape($leadId = null): \Illuminate\Http\JsonResponse
+    {
+        // Optional: fetch the lead if needed
+        $lead = null;
+        if ($leadId) {
+            $lead = Lead::find($leadId);
+        }
+
+        $results = Lead::select(
+                'leads.name as customer_name',
+                'c.company_name',
+                'c.company_description',
+                'c.bussiness_knowledge',
+                'c.price_guidelines',
+                'c.business_type',
+                'c.company_email',
+                'contacts.email',
+                'contacts.phone'
+            )
+            ->join('companies as c', 'c.id', '=', 'leads.company_id')
+            ->leftJoin('lead_contacts as lc', 'lc.lead_id', '=', 'leads.id')
+            ->leftJoin('contacts', 'contacts.id', '=', 'lc.contact_id')
+            ->where('leads.status', 'New')
+            ->where('leads.id',$leadId)
+            ->get();
+
+        $userId = Auth::id();
+
+        $firstResult = $results->first();
+
+        // prepare payload
+        $companyDescription = '';
+        if ($firstResult) {
+            $companyDescription = $firstResult->company_description 
+                . ' | Knowledge: ' . $firstResult->bussiness_knowledge 
+                . ' | Pricing: ' . $firstResult->price_guidelines;
+        }
+
+        $payload = [
+            'user_id' => $userId,
+            'to' => $firstResult->email ?? '', 
+            'our_company_name' => $firstResult->company_name ?? '', 
+            'customer_name' => $firstResult->customer_name ?? '', 
+            'company_description' => $companyDescription,
+            'number' => (int) ($firstResult->phone_number ?? 0)
+        ]; 
+        
+                
+
+        $response = Http::post(env('API_URL_ENDPOINT').'/send-email', $payload);
+
+        return response()->json([
+            'success' => true,
+            'lead' => $lead,
+            'results' => $results,
+            'api_response' => $response->json()
+        ], 200);
     }
 
-    $results = Lead::select(
-            'leads.name as customer_name',
-            'c.company_name',
-            'c.company_description',
-            'c.bussiness_knowledge',
-            'c.price_guidelines',
-            'c.business_type',
-            'c.company_email',
-            'contacts.email',
-            'contacts.phone'
-        )
-        ->join('companies as c', 'c.id', '=', 'leads.company_id')
-        ->leftJoin('lead_contacts as lc', 'lc.lead_id', '=', 'leads.id')
-        ->leftJoin('contacts', 'contacts.id', '=', 'lc.contact_id')
-        ->where('leads.source', 'Email')
-        ->where('leads.status', 'New')
-        ->get();
 
-    $userId = Auth::id();
+    public function show(Lead $lead)
+    {
+        $activities = Call::where('lead_id', $lead->id)
+                        ->whereIn('status', ['planned'])
+                        ->orderBy('date_start', 'desc')
+                        ->get();
 
-    $firstResult = $results->first();
-
-    // prepare payload
-    $companyDescription = '';
-    if ($firstResult) {
-        $companyDescription = $firstResult->company_description 
-            . ' | Knowledge: ' . $firstResult->bussiness_knowledge 
-            . ' | Pricing: ' . $firstResult->price_guidelines;
-    }
-
-    $payload = [
-        'user_id' => $userId,
-        'to' => $firstResult->email ?? '', 
-        'our_company_name' => $firstResult->company_name ?? '', 
-        'customer_name' => $firstResult->customer_name ?? '', 
-        'company_description' => $companyDescription,
-        'number' => (int) $firstResult->phone_number
-    ];
-
-    $response = Http::post('http://127.0.0.1:8005/send-email', $payload);
-
-    return response()->json([
-        'success' => true,
-        'lead' => $lead,
-        'results' => $results,
-        'api_response' => $response->json()
-    ], 200);
-}
-
-  public function show(Lead $lead)
-{
-    $activities = Call::where('lead_id', $lead->id)
-                    ->whereIn('status', ['planned'])
+        $history = Call::where('lead_id', $lead->id)
+                    ->where('status', 'held')
                     ->orderBy('date_start', 'desc')
                     ->get();
 
-    $history = Call::where('lead_id', $lead->id)
-                 ->where('status', 'held')
-                 ->orderBy('date_start', 'desc')
-                 ->get();
-
-    return view('leads.show', compact('lead', 'activities', 'history'));
-}
+        return view('leads.show', compact('lead', 'activities', 'history'));
+    }
 
 // public function getUsers(Request $request)
 // {
