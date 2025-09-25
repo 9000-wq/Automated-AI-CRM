@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
 
     // Outlook
     Route::get('/auth/outlook/redirect', [EmailController::class, 'redirectToOutlook'])->name('outlook.redirect');
-    Route::get('/auth/outlook/callback', [EmailController::class, 'handleOutlookCallback'])->name('outlook.callback');
+    Route::get('/auth/outlook/callback', [EmailController::class, 'handleOutlookCallback'])->name('services.outlook.callback');
 
     // IMAP
     Route::post('/imap/save', [EmailController::class, 'saveImap'])->name('imap.save');

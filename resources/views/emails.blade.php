@@ -4,16 +4,16 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
 <style>
-   .sidebar-active {
+    .sidebar-active {
         background-color: #e9ecef;
         border-radius: 5px;
         font-weight: bold;
     }
 
-      #emailTable td {
-        white-space: normal !important;   /* Allow text wrapping */
-        word-break: break-word;           /* Break long words */
-        max-width: 250px;                 /* Prevent column from being too wide */
+    #emailTable td {
+        white-space: normal !important;
+        word-break: break-word;
+        max-width: 250px;
     }
 
     .email-preview {
@@ -21,7 +21,7 @@
         max-width: 250px;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis; /* Show ... when truncated */
+        text-overflow: ellipsis;
     }
 
     #modal-toggle {
@@ -162,9 +162,9 @@
     }
 
     .alert-success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
+        /* background: #d4edda; */
+        color: #3bbe5a;
+        /* border: 1px solid #c3e6cb; */
     }
 
     .alert-danger {
@@ -173,13 +173,6 @@
         border: 1px solid #f5c6cb;
     }
 
-    .email-preview {
-        max-width: 300px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
     .refresh-btn {
         margin-left: 10px;
         cursor: pointer;
@@ -188,23 +181,38 @@
         border-radius: 4px;
         padding: 5px 10px;
     }
+
+    .provider-badge {
+        background: #28a745;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin-left: 10px;
+    }
 </style>
 
-@if(!empty($accounts) && isset($accounts[0]) && $accounts[0]->provider === 'gmail')
-    <p class="text-success">✅ Connected as <strong>{{ $accounts[0]->email }}</strong></p>
+<div class="container-fluid py-3">
+    @if(!empty($accounts) && isset($accounts[0]))
+        @php
+            $provider = $accounts[0]->provider;
+        @endphp
 
-    <div class="container-fluid py-3">
+        <div class="alert alert-success d-flex justify-content-between align-items-center">
+            <div>
+                ✅ Connected as <strong>{{ $accounts[0]->email }}</strong>
+                <span class="provider-badge">{{ strtoupper($provider) }}</span>
+            </div>
+        </div>
+
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-2 border-end bg-light vh-100">
                 <h5 class="fw-bold mb-3">Emails</h5>
                 <ul class="list-unstyled">
-                   
                     <li class="mb-2"><a href="#"><i class="bi bi-inbox me-2"></i> Inbox</a></li>
                     <li class="mb-2"><a href="#"><i class="bi bi-star me-2"></i> Important</a></li>
-<li class="mb-2">
-    <a href="{{ route('emails.sent') }}"><i class="bi bi-send me-2"></i> Sent</a>
-</li>
+                    <li class="mb-2"><a href="{{ route('emails.sent') }}"><i class="bi bi-send me-2"></i> Sent</a></li>
                     <li class="mb-2"><a href="#"><i class="bi bi-person-badge me-2"></i> My Personal</a></li>
                     <li class="mb-2"><a href="#"><i class="bi bi-briefcase me-2"></i> Sales</a></li>
                     <li class="mb-2"><a href="#"><i class="bi bi-archive me-2"></i> Archive</a></li>
@@ -221,7 +229,7 @@
                             <option>Inbox</option>
                             <option>Important</option>
                         </select>
-                        <input type="text" class="form-control" placeholder="Email Address">
+                        <input type="text" class="form-control" placeholder="Search emails...">
                         <button class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
                     </div>
 
@@ -263,53 +271,68 @@
                 </main>
             </div>
         </div>
-    </div>
 
-    <!-- Hidden Checkbox -->
-    <input type="checkbox" id="modal-toggle">
+        <!-- Hidden Checkbox for Compose Modal -->
+        <input type="checkbox" id="modal-toggle">
 
-    <!-- Compose Modal -->
-    <div class="modal-overlay">
-        <div class="modal-box">
-            <label for="modal-toggle" class="modal-close">&times;</label>
-            <h2>Compose Email</h2>
-            <div class="email-controls">
-                <button class="btn btn-send" type="button" onclick="sendEmail()">Send</button>
-                <label for="modal-toggle" class="btn btn-secondary">Cancel</label>
-            </div>
-
-            <div class="messageinfo"></div>
-
-            <form id="sendleademails">
-                <div class="email-fields">
-                    <div class="parallel-fields">
-                        <div class="field-group">
-                            <label class="required">To</label>
-                            <input type="email" id="emailTo" placeholder="Enter recipient email" required>
-                        </div>
-                        <div class="field-group">
-                            <label>CC</label>
-                            <input type="email" id="emailCC">
-                        </div>
-                    </div>
-                    <div class="parallel-fields">
-                        <div class="field-group">
-                            <label class="required">Subject</label>
-                            <input type="text" id="emailSubject" placeholder="Email subject" required>
-                        </div>
-                    </div>
-                    <div class="field-group">
-                        <label>Body</label>
-                        <textarea id="emailBodyText"></textarea>
-                    </div>
+        <!-- Compose Modal -->
+        <div class="modal-overlay">
+            <div class="modal-box">
+                <label for="modal-toggle" class="modal-close">&times;</label>
+                <h2>Compose Email</h2>
+                <div class="email-controls">
+                    <button class="btn btn-send" type="button" onclick="sendEmail()">Send</button>
+                    <label for="modal-toggle" class="btn btn-secondary">Cancel</label>
                 </div>
-            </form>
-        </div>
-    </div>
 
-@else
-    <a href="{{ route('google.redirect') }}" class="btn btn-danger">Connect Gmail</a>
-@endif
+                <div class="messageinfo"></div>
+
+                <form id="sendleademails">
+                    <div class="email-fields">
+                        <div class="parallel-fields">
+                            <div class="field-group">
+                                <label class="required">To</label>
+                                <input type="email" id="emailTo" placeholder="Enter recipient email" required>
+                            </div>
+                            <div class="field-group">
+                                <label>CC</label>
+                                <input type="email" id="emailCC">
+                            </div>
+                        </div>
+                        <div class="parallel-fields">
+                            <div class="field-group">
+                                <label class="required">Subject</label>
+                                <input type="text" id="emailSubject" placeholder="Email subject" required>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label>Body</label>
+                            <textarea id="emailBodyText"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    @else
+        {{-- No Account Connected --}}
+        <div class="alert alert-warning text-center">
+            <div class="row mt-3">
+                <div class="col-12 mb-2">
+                    <a href="{{ route('google.redirect') }}" class="btn btn-danger w-100">
+                        <i class="bi bi-google"></i> Connect Gmail
+                    </a>
+                </div>
+                {{-- <div class="col-12">
+                    <a href="{{ route('imap.connect') }}" class="btn btn-primary w-100">
+                        <i class="bi bi-envelope"></i> Connect IMAP
+                    </a>
+                </div> --}}
+            </div>
+        </div>
+
+    @endif
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -320,70 +343,107 @@
     var emailTable;
     var pageToken = '';
     var currentPage = 1;
-
+    var perPage = 10; // <- added
     $(document).ready(function () {
         emailTable = $('#emailTable').DataTable({
             processing: true,
             serverSide: true,
+            lengthChange: false,
             ajax: {
                 url: "{{ route('emails') }}",
+                type: "GET",
                 data: function (d) {
-                    d.pageToken = pageToken;
-                    d.page = currentPage;
+                    d.pageToken = pageToken;  // Gmail pagination
+                    d.page = currentPage;     // IMAP pagination
+                    d.perPage = perPage;      // ← now defined
+                },
+
+
+                dataSrc: function (json) {
+                    pageToken = json.nextPageToken || '';
+                    return json.data || [];
                 }
             },
             columns: [
-                { data: 'from', name: 'from' },
-                { data: 'subject', name: 'subject' },
-                { 
-                    data: 'body_preview', 
-                    name: 'body_preview',
-                    render: function(data, type, row) {
-                        return '<span class="email-preview">' + data + '</span>';
-                    }
+                { data: 'from' },                                       // stays as-is
+                {
+                    data: 'subject',
+                    render: data => (data ? String(data) : '(No Subject)') // force string
                 },
-                { 
-                    data: 'date', 
-                    name: 'date',
-                    render: function(data, type, row) {
-                        if (data) {
-                            return new Date(data).toLocaleString();
-                        }
-                        return 'N/A';
+                {
+                    data: 'body_full',
+                    render: function (data, type, row) {
+                        const preview = row.body_preview || '';
+                        const fullBody = data || preview;
+
+                        // Ensure unique id per row
+                        const id = 'email-body-' + row.id; // make sure row.id exists and is unique
+
+                        // If full body is same as preview, don't show "See More"
+                        if (!fullBody || fullBody === preview) return preview;
+
+                        // Show preview + hidden full body + toggle link
+                        return `
+            <span id="${id}-preview">${preview}</span>
+            <span id="${id}-full" style="display:none;">${fullBody}</span>
+            <a href="javascript:void(0)" onclick="toggleBody('${id}')" style="color:#1a73e8; margin-left:5px;">See More</a>
+        `;
+                    }
+                }
+                ,
+                {
+                    data: 'date',
+                    render: function (data) {
+                        if (!data) return 'N/A';
+                        // if it is already a string, use it; if it is the object, use data.date
+                        const dateStr = typeof data === 'string' ? data : data.date;
+                        return dateStr || 'N/A';
                     }
                 }
             ],
-            paging: true,
-            pageLength: 10,
+            pageLength: perPage,
             ordering: true,
-            order: [[3, 'desc']], // Sort by date column (index 3) in descending order
+            order: [[3, 'desc']],
             searching: false,
-            language: {
-                emptyTable: 'No emails found'
-            },
-            drawCallback: function (settings) {
-                var api = this.api();
-                var data = api.ajax.json();
-                pageToken = data.nextPageToken || '';
-                
-                // Update paging controls
-                $('.previous.paginate_button').off('click').on('click', function() {
-                    if (currentPage > 1) {
-                        currentPage--;
-                        api.ajax.reload();
-                    }
-                });
-                
-                $('.next.paginate_button').off('click').on('click', function() {
-                    if (pageToken) {
-                        currentPage++;
-                        api.ajax.reload();
-                    }
-                });
-            }
         });
     });
-    
+    function toggleBody(id) {
+        const preview = document.getElementById(id + '-preview');
+        const full = document.getElementById(id + '-full');
+        const link = full.nextElementSibling || preview.nextElementSibling; // the <a> tag
+
+        if (!full || !preview || !link) return;
+
+        if (full.style.display === 'none') {
+            full.style.display = 'inline';
+            preview.style.display = 'none';
+            link.textContent = 'See Less';
+        } else {
+            full.style.display = 'none';
+            preview.style.display = 'inline';
+            link.textContent = 'See More';
+        }
+    }
+
+    function updatePaginationControls() {
+        $('.previous.paginate_button').off('click').on('click', function () {
+            if (currentPage > 1) {
+                currentPage--;
+                emailTable.ajax.reload();
+            }
+        });
+
+        $('.next.paginate_button').off('click').on('click', function () {
+            // For Gmail, check nextPageToken, for IMAP check total pages
+            let totalPages = Math.ceil(emailTable.page.info().recordsTotal / perPage);
+            if (pageToken || currentPage < totalPages) {
+                currentPage++;
+                emailTable.ajax.reload();
+            }
+        });
+    }
+
+
     // Function to refresh the inbox
     function refreshInbox() {
         pageToken = '';
@@ -391,13 +451,15 @@
         emailTable.ajax.reload();
 
         const refreshBtn = document.querySelector('.refresh-btn');
-        refreshBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i>';
-        refreshBtn.classList.add('refreshing');
-        
+        refreshBtn.innerHTML = '<i class="bi bi-arrow-clockwise spinner"></i>';
+        refreshBtn.disabled = true;
+
         setTimeout(() => {
-            refreshBtn.classList.remove('refreshing');
+            refreshBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i>';
+            refreshBtn.disabled = false;
         }, 2000);
     }
+
 
     // Send Email
     function sendEmail() {
@@ -418,7 +480,7 @@
             $('.messageinfo').html('<div class="alert alert-danger">Please enter a valid email address for the recipient.</div>');
             return;
         }
-        
+
         if (cc && !emailRegex.test(cc)) {
             $('.messageinfo').html('<div class="alert alert-danger">Please enter a valid email address for CC.</div>');
             return;
@@ -442,19 +504,20 @@
             success: function (res) {
                 sendButton.innerHTML = originalText;
                 sendButton.disabled = false;
-                
+
                 if (res.status === 'success') {
                     $('.messageinfo').html('<div class="alert alert-success">' + res.message + '</div>');
                     $('#sendleademails')[0].reset();
 
-                    // ✅ Always reload inbox from page 1
+                    // Refresh inbox
                     pageToken = '';
                     currentPage = 1;
-                    emailTable.ajax.reload(null, false);
+                    emailTable.ajax.reload();
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         document.getElementById('modal-toggle').checked = false;
-                    }, 1000);
+                        $('.messageinfo').html('');
+                    }, 2000);
                 } else {
                     $('.messageinfo').html('<div class="alert alert-danger">' + res.message + '</div>');
                 }
@@ -462,29 +525,36 @@
             error: function (xhr) {
                 sendButton.innerHTML = originalText;
                 sendButton.disabled = false;
-                
+
                 let errorMessage = 'Failed to send email';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     errorMessage = xhr.responseJSON.message;
                 } else if (xhr.statusText) {
                     errorMessage = xhr.statusText;
                 }
-                
+
                 $('.messageinfo').html('<div class="alert alert-danger">' + errorMessage + '</div>');
             }
         });
     }
 
     // Compose form handler
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const composeForm = document.getElementById('sendleademails');
         if (composeForm) {
-            composeForm.addEventListener('keypress', function(e) {
+            composeForm.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
                     e.preventDefault();
                 }
             });
         }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                document.getElementById('modal-toggle').checked = false;
+            }
+        });
     });
 </script>
 

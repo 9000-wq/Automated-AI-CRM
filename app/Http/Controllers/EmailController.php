@@ -171,7 +171,7 @@ class EmailController extends Controller
         $url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?' . http_build_query([
             'client_id' => config('services.outlook.client_id'),
             'response_type' => 'code',
-            'redirect_uri' => route('outlook.callback'),
+            'redirect_uri' => route('services.outlook.callback'),
             'response_mode' => 'query',
             'scope' => 'offline_access Mail.Read Mail.Send User.Read',
         ]);
@@ -187,7 +187,7 @@ class EmailController extends Controller
             'client_id' => config('services.outlook.client_id'),
             'client_secret' => config('services.outlook.client_secret'),
             'code' => $request->code,
-            'redirect_uri' => route('outlook.callback'),
+            'redirect_uri' => route('services.outlook.callback'),
             'grant_type' => 'authorization_code',
         ])->json();
 
