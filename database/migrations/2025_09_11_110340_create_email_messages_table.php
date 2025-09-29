@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('email_messages', function (Blueprint $table) {
             $table->id();
+            $table->string('internet_message_id', 255)->nullable()->unique()->after('id');
             $table->unsignedBigInteger('thread_id');
             $table->string('message_id')->unique();
             $table->string('from_email')->nullable();
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->text('snippet')->nullable();
             $table->longText('body')->nullable();
             $table->boolean('is_auto_reply')->default(false);
-            $table->enum('status', ['Sent', 'Opened', 'Replied', 'Bounced'])->default('Sent');
+            $table->string('status', 50)->default('Sent');
             $table->timestamp('created_at')->useCurrent();
 
             // Foreign key

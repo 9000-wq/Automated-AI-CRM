@@ -182,6 +182,7 @@ public function scrape($leadId = null): \Illuminate\Http\JsonResponse
         ->leftJoin('contacts', 'contacts.id', '=', 'lc.contact_id')
         ->where('leads.source', 'Email')
         ->where('leads.status', 'New')
+        ->where('leads.id',$leadId)
         ->get();
 
     $userId = Auth::id();
@@ -202,10 +203,10 @@ public function scrape($leadId = null): \Illuminate\Http\JsonResponse
         'our_company_name' => $firstResult->company_name ?? '', 
         'customer_name' => $firstResult->customer_name ?? '', 
         'company_description' => $companyDescription,
-        'number' => (int) $firstResult->phone_number
+        'number' => (int) $firstResult->phone_number ?? 0
     ];
 
-    $response = Http::post('http://127.0.0.1:8005/send-email', $payload);
+    $response = Http::post(env('API_URL_ENDPOINT').'/send-email', $payload);
 
     return response()->json([
         'success' => true,

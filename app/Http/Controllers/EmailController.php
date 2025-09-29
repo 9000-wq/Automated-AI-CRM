@@ -244,7 +244,7 @@ class EmailController extends Controller
             $mailbox = "{" . $request->imap_host . ":" . $request->imap_port 
                     . "/imap" 
                     . ($request->imap_encryption ? "/" . $request->imap_encryption : "") 
-                    . "}INBOX";
+                    . "/novalidate-cert}INBOX";
 
             // Try to connect
             $connection = @imap_open($mailbox, $request->imap_username, $request->imap_password);
