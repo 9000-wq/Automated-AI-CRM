@@ -20,6 +20,8 @@ use DataTables;
 use Illuminate\Validation\Rule;
 use DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+
 
 
 
@@ -30,9 +32,9 @@ class LeadController extends Controller
         if ($request->ajax()) {
 
             if (auth()->user()->user_role == 'super admin') {
-                $data = Lead::select('leads.*', 'users.name as assigned_user_name')->leftjoin('users', 'leads.assigned_to', '=', 'users.id');
+                $data = Lead::select('leads.*', 'users.name as assigned_user_name')->leftjoin('users', 'leads.assigned_to', '=', 'users.id')->orderBy('created_at','desc');
             } else {
-                $data = Lead::select('leads.*', 'users.name as assigned_user_name')->leftjoin('users', 'leads.assigned_to', '=', 'users.id')->where('leads.company_id', auth()->user()->company_id);
+                $data = Lead::select('leads.*', 'users.name as assigned_user_name')->leftjoin('users', 'leads.assigned_to', '=', 'users.id')->where('leads.company_id', auth()->user()->company_id)->orderBy('created_at','desc');
             }
 
 
@@ -44,7 +46,7 @@ class LeadController extends Controller
                     $btn = "<a href='" . route('leads.show', $row->id) . "' class='btn btn-info'><i class='fas fa-eye'></i></a>
                             <a href='" . route('leads.edit', $row->id) . "' class='btn btn-warning'><i class='fas fa-edit'></i></a>
                             <button class='btn btn-danger deletebtn' id='$row->id'><i class='fas fa-trash'></i></button>
-                            <button href='" . route('leads.scrape', $row->id) . "' class='btn btn-secondary scrapeBtn'><i class='fas fa-robot'></i></button>
+                            <button  id='".$row->id."' class='btn btn-secondary scrapeBtn'><i class='fas fa-robot'></i></button>
                             <a href='" . route('leadcontact') . "/lead$row->id' class='btn btn-primary addContact' title='Add Contact' id='$row->id'><i class='fas fa-address-book	'></i></a>";
                     return $btn;
                 })->editColumn('status', function ($row) {
@@ -158,78 +160,84 @@ class LeadController extends Controller
     }
 
 
-public function scrape($leadId = null): \Illuminate\Http\JsonResponse
-{
-    // Optional: fetch the lead if needed
-    $lead = null;
-    if ($leadId) {
-        $lead = Lead::find($leadId);
+
+    public function scrape(Request $request) : \Illuminate\Http\JsonResponse
+    {
+
+        $leadId= $request->leadid;
+        // Optional: fetch the lead if needed
+        $lead = null;
+        if ($leadId) {
+            $lead = Lead::find($leadId);
+        }
+
+        
+        $results = Lead::select(
+                'leads.name as customer_name',
+                'c.company_name',
+                'c.company_description',
+                'c.bussiness_knowledge',
+                'c.price_guidelines',
+                'c.business_type',
+                'c.company_email',
+                'contacts.email',
+                'contacts.phone'
+            )
+            ->join('companies as c', 'c.id', '=', 'leads.company_id')
+            ->leftJoin('lead_contacts as lc', 'lc.lead_id', '=', 'leads.id')
+            ->leftJoin('contacts', 'contacts.id', '=', 'lc.contact_id')
+            ->where('leads.status', 'New')
+            ->where('leads.id',$leadId)
+            ->get();
+
+        $userId = Auth::id();
+
+        $firstResult = $results->first();
+
+        // prepare payload
+        $companyDescription = '';
+        if ($firstResult) {
+            $companyDescription = $firstResult->company_description 
+                . ' | Knowledge: ' . $firstResult->bussiness_knowledge 
+                . ' | Pricing: ' . $firstResult->price_guidelines;
+        }
+
+        $payload = [
+            'user_id' => $userId,
+            'to' => $firstResult->email ?? '', 
+            'our_company_name' => $firstResult->company_name ?? '', 
+            'customer_name' => $firstResult->customer_name ?? '', 
+            'company_description' => $companyDescription,
+            'number' => (int) ($firstResult->phone_number ?? 0)
+        ]; 
+        
+                
+
+        $response = Http::post(env('API_URL_ENDPOINT').'/send-email', $payload);
+
+        return response()->json([
+            'success' => true,
+            'lead' => $lead,
+            'results' => $results,
+            'api_response' => $response->json()
+        ], 200);
     }
 
-    $results = Lead::select(
-            'leads.name as customer_name',
-            'c.company_name',
-            'c.company_description',
-            'c.bussiness_knowledge',
-            'c.price_guidelines',
-            'c.business_type',
-            'c.company_email',
-            'contacts.email',
-            'contacts.phone'
-        )
-        ->join('companies as c', 'c.id', '=', 'leads.company_id')
-        ->leftJoin('lead_contacts as lc', 'lc.lead_id', '=', 'leads.id')
-        ->leftJoin('contacts', 'contacts.id', '=', 'lc.contact_id')
-        ->where('leads.source', 'Email')
-        ->where('leads.status', 'New')
-        ->where('leads.id',$leadId)
-        ->get();
 
-    $userId = Auth::id();
+    public function show(Lead $lead)
+    {
+        $activities = Call::where('lead_id', $lead->id)
+                        ->whereIn('status', ['planned'])
+                        ->orderBy('date_start', 'desc')
+                        ->get();
 
-    $firstResult = $results->first();
-
-    // prepare payload
-    $companyDescription = '';
-    if ($firstResult) {
-        $companyDescription = $firstResult->company_description 
-            . ' | Knowledge: ' . $firstResult->bussiness_knowledge 
-            . ' | Pricing: ' . $firstResult->price_guidelines;
-    }
-
-    $payload = [
-        'user_id' => $userId,
-        'to' => $firstResult->email ?? '', 
-        'our_company_name' => $firstResult->company_name ?? '', 
-        'customer_name' => $firstResult->customer_name ?? '', 
-        'company_description' => $companyDescription,
-        'number' => (int) $firstResult->phone_number ?? 0
-    ];
-
-    $response = Http::post(env('API_URL_ENDPOINT').'/send-email', $payload);
-
-    return response()->json([
-        'success' => true,
-        'lead' => $lead,
-        'results' => $results,
-        'api_response' => $response->json()
-    ], 200);
-}
-
-  public function show(Lead $lead)
-{
-    $activities = Call::where('lead_id', $lead->id)
-                    ->whereIn('status', ['planned'])
+        $history = Call::where('lead_id', $lead->id)
+                    ->where('status', 'held')
                     ->orderBy('date_start', 'desc')
                     ->get();
 
-    $history = Call::where('lead_id', $lead->id)
-                 ->where('status', 'held')
-                 ->orderBy('date_start', 'desc')
-                 ->get();
-
-    return view('leads.show', compact('lead', 'activities', 'history'));
-}
+        return view('leads.show', compact('lead', 'activities', 'history'));
+    }
 
 // public function getUsers(Request $request)
 // {
@@ -587,6 +595,91 @@ public function scrape($leadId = null): \Illuminate\Http\JsonResponse
     }
 
 
+
+    
+    public function getLeadStats()
+    {
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();
+
+        $labels = [];
+        $newLeads = [];
+        $followUp = [];
+        $contacted = [];
+        $converted = [];
+        $lost = [];
+
+        // Loop through each day of the week
+        $period = \Carbon\CarbonPeriod::create($startOfWeek, $endOfWeek);
+
+        foreach ($period as $date) {
+            // ✅ Use full date format
+            $labels[] = $date->format('Y-m-d'); // Example: 2025-09-14
+            // OR you can use something more readable:
+            // $labels[] = $date->format('M d'); // Example: Sep 14
+
+            $newLeads[] = Lead::where('status', 'New')
+                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->where('company_id',auth()->user()->company_id)
+                ->count();
+
+            $followUp[] = Lead::where('status', 'Follow-up')
+                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->where('company_id',auth()->user()->company_id)
+                ->count();
+
+            $contacted[] = Lead::where('status', 'Contacted')
+                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->where('company_id',auth()->user()->company_id)
+                ->count();
+
+            $converted[] = Lead::where('status', 'Converted')
+                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->where('company_id',auth()->user()->company_id)
+                ->count();
+
+            $lost[] = Lead::where('status', 'Lost')
+                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                ->where('company_id',auth()->user()->company_id)
+                ->count();
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'new_leads' => $newLeads,
+            'follow_up' => $followUp,
+            'contacted' => $contacted,
+            'converted' => $converted,
+            'lost'      => $lost,
+        ]);
+    }
+
+
+
+
+    public function monthlySuccess()
+    {
+        // Query leads grouped by month (converted leads only)
+        $results = DB::table('leads')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->where('status', 'converted')
+            ->where('company_id',auth()->user()->company_id)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->pluck('total', 'month');
+
+        // Create a fixed array for 12 months (fill missing months with 0)
+        $monthlyData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $monthlyData[] = $results[$i] ?? 0;
+        }
+
+        return response()->json([
+            'labels' => ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+            'data' => $monthlyData
+        ]);
+    }
+    
+    
 
 
 }

@@ -13,6 +13,8 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AiCallController;
 use App\Http\Controllers\AiEmailController;
 use App\Http\Controllers\EmailsController;
+use App\Models\Lead;
+use Carbon\Carbon;
 use App\Http\Controllers\EmailSentController;
 
 
@@ -22,7 +24,34 @@ Route::get('/welcome', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    
+
+    $startOfWeek = Carbon::now()->startOfWeek(); // Monday 00:00:00
+    $endOfWeek   = Carbon::now()->endOfWeek();   // Sunday 23:59:59
+
+    $newLeadsCount = Lead::where('status', 'New')
+    ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+    ->where('company_id',auth()->user()->company_id)
+    ->count();
+
+    $FollowUpLeads = Lead::where('status', 'Follow-up')
+    ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+    ->where('company_id',auth()->user()->company_id)
+    ->count();
+
+    $convertedLeads = Lead::where('status', 'Converted')
+    ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+    ->where('company_id',auth()->user()->company_id)
+    ->count();
+
+    $contactedLeads = Lead::where('status', 'Contacted')
+    ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+    ->where('company_id',auth()->user()->company_id)
+    ->count();
+
+    return view('dashboard')->with('newLeadsCount',$newLeadsCount)->with('FollowUpLeads',$FollowUpLeads)->with('convertedLeads',$convertedLeads)->with('contactedLeads',$contactedLeads);
+
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/csrf-token', function () {
@@ -173,7 +202,11 @@ Route::middleware('auth')->group(function () {
 
     });
 
-        //Email Controller
+
+
+        Route::get('/leadStats', [LeadController::class, 'getLeadStats'])->name('leads.stats');
+        Route::get('/leadsMonthlySuccess', [LeadController::class, 'monthlySuccess'])->name('monthlySuccess');
+
 // Manually email compose
 Route::get('/emails', [EmailsController::class, 'index'])->name('emails');
 
