@@ -26,13 +26,13 @@
             <h5 class="fw-bold mb-3">Emails</h5>
             <ul class="list-unstyled">
                 <li class="mb-2"><a href="{{ route('emails') }}"><i class="bi bi-inbox me-2"></i> Inbox</a></li>
-                <li class="mb-2"><a href="#"><i class="bi bi-star me-2"></i> Important</a></li>
+                <!-- <li class="mb-2"><a href="#"><i class="bi bi-star me-2"></i> Important</a></li> -->
                 <li class="mb-2"><a href="{{ route('emails.sent') }}" class="sidebar-active"><i class="bi bi-send me-2"></i> Sent</a></li>
-                <li class="mb-2"><a href="#"><i class="bi bi-person-badge me-2"></i> My Personal</a></li>
+                <!-- <li class="mb-2"><a href="#"><i class="bi bi-person-badge me-2"></i> My Personal</a></li>
                 <li class="mb-2"><a href="#"><i class="bi bi-briefcase me-2"></i> Sales</a></li>
                 <li class="mb-2"><a href="#"><i class="bi bi-archive me-2"></i> Archive</a></li>
                 <li class="mb-2"><a href="#"><i class="bi bi-file-earmark-text me-2"></i> Drafts</a></li>
-                <li class="mb-2"><a href="#"><i class="bi bi-trash me-2"></i> Trash</a></li>
+                <li class="mb-2"><a href="#"><i class="bi bi-trash me-2"></i> Trash</a></li> -->
             </ul>
         </div>
 
