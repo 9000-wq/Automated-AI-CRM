@@ -54,7 +54,18 @@
         to { opacity: 1; }
     }
 
-    .modal-toggle:checked ~ .modal-overlay {
+    /* .modal-toggle:checked ~ .modal-overlay {
+        display: flex;
+    } */
+
+
+        
+    #compose-modal-toggle:checked ~ .modal-overlay.compose-modal {
+    display: flex;
+    }
+
+    /* View modal only */
+    #view-modal-toggle:checked ~ .modal-overlay.view-modal {
         display: flex;
     }
 
@@ -342,7 +353,7 @@
         <input type="checkbox" id="compose-modal-toggle" class="modal-toggle">
 
         <!-- Compose Modal -->
-        <div class="modal-overlay">
+        <div class="modal-overlay compose-modal">
             <div class="modal-box">
                 <label for="compose-modal-toggle" class="modal-close">&times;</label>
                 <h2>Compose Email</h2>
@@ -384,8 +395,8 @@
         <input type="checkbox" id="view-modal-toggle" class="modal-toggle">
 
         <!-- View Email Modal -->
-        <div class="modal-overlay">
-            <div class="modal-box view-modal">
+        <div class="modal-overlay view-modal">
+            <div class="modal-box">
                 <label for="view-modal-toggle" class="modal-close">&times;</label>
                 <h2>Email Details</h2>
                 <div class="email-fields">
