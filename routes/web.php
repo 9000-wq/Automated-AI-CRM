@@ -17,10 +17,14 @@ use App\Http\Controllers\MarketingController;
 use Illuminate\Http\Request;
 use App\Models\Lead;
 use Carbon\Carbon;
+<<<<<<< HEAD
 use App\Http\Controllers\FacebookController;
 
 
 
+=======
+use App\Http\Controllers\EmailSentController;
+>>>>>>> 109562d7955b14017e2d40ee83e32e07ab1cfb02
 
 
 
@@ -28,10 +32,6 @@ use App\Http\Controllers\FacebookController;
 Route::get('/', function () {
     return view('welcome'); 
 })->name('index');
-
-
-
-
 
 
 Route::get('/dashboard', function () {
@@ -71,14 +71,45 @@ Route::get('/csrf-token', function () {
     ]);
 });
 
-
-
 Route::middleware('auth')->group(function () {
+
+    // IMAP Email Settings
+    // Route::get('/email-settings', [EmailController::class, 'index'])->name('email.settings');
+
+    // // Gmail
+    // Route::get('/google/auth', [EmailController::class, 'redirectToGoogle'])->name('google.auth');
+    // Route::get('/auth/google/callback', [EmailController::class, 'handleGoogleCallback'])->name('google.callback');
+
+    // // Outlook
+    // Route::get('/outlook/auth', [EmailController::class, 'redirectToOutlook'])->name('outlook.auth');
+    // Route::get('/outlook/callback', [EmailController::class, 'handleOutlookCallback'])->name('outlook.callback');
+
+    // // IMAP/SMTP
+    // Route::post('/imap/save', [EmailController::class, 'saveImap'])->name('imap.save');
+
+    // Gmail
+    Route::get('/auth/google/redirect', [EmailController::class, 'redirectToGoogle'])->name('google.redirect');
+    Route::get('/auth/google/callback', [EmailController::class, 'handleGoogleCallback'])->name('google.callback');
+
+    // Outlook
+    Route::get('/auth/outlook/redirect', [EmailController::class, 'redirectToOutlook'])->name('outlook.redirect');
+    Route::get('/auth/outlook/callback', [EmailController::class, 'handleOutlookCallback'])->name('services.outlook.callback');
+
+    // IMAP
+    Route::post('/imap/save', [EmailController::class, 'saveImap'])->name('imap.save');
+    Route::post('/email/reset', [EmailController::class, 'emailReset'])->name('email.reset');
+
+    // Email settings page
+    Route::get('/email-settings', [EmailController::class, 'index'])->name('email.settings');
 
     //Profile Controller
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // compose email fetch from db or show sent page
+    Route::get('/emails/sent', [EmailSentController::class, 'sent'])->name('emails.sent');
+    Route::get('/emails/sent/list', [EmailSentController::class, 'sentList'])->name('emails.sent.list');
 
     //CRUD for AI Calls table
 
@@ -149,6 +180,9 @@ Route::get('/facebook/callback', [FacebookController::class, 'handleFacebookCall
         Route::get('/leads/{lead}', [LeadController::class, 'show'])->name('leads.show');
         Route::get('/leads/{lead}/edit', [LeadController::class, 'edit'])->name('leads.edit');
         Route::put('/leads/{lead}', [LeadController::class, 'update'])->name('leads.update');
+        Route::post('/leads/scrape', [LeadController::class, 'scrape'])->name('leads.scrape');
+
+
         Route::delete('/leads', [LeadController::class, 'destroy'])->name('leads.destroy');
         Route::get('/editcontact/{contact?}/{leadid?}', [LeadController::class, 'editcontact'])->name('leadcontact');
         Route::put('/updatelead', [LeadController::class, 'updatelead'])->name('updateleadcontact');
@@ -179,9 +213,6 @@ Route::get('/facebook/callback', [FacebookController::class, 'handleFacebookCall
     Route::get('/call-screen/{leadid?}/{contact?}', [CallController::class, 'callScreen'])->name('call-screen');
     Route::get('generate-twilio-token', [CallController::class, 'generateTwilioToken'])->name('generate-twilio-token');
 
-
-    
-
     Route::get('/create-call/{lead?}', [LeadController::class, 'createCall'])->name('create.call');
     Route::post('/create-call/{lead?}', [CallController::class, 'store'])->name('store.call');
     Route::get('/calls/history/{lead}/{call?}', [CallController::class, 'history'])->name('call.history');
@@ -204,14 +235,16 @@ Route::get('/facebook/callback', [FacebookController::class, 'handleFacebookCall
 
     });
 
-        //Email Controller
-
-        Route::get('/emails', [EmailsController::class, 'index'])->name('emails');
 
 
         Route::get('/leadStats', [LeadController::class, 'getLeadStats'])->name('leads.stats');
         Route::get('/leadsMonthlySuccess', [LeadController::class, 'monthlySuccess'])->name('monthlySuccess');
 
+// Manually email compose
+Route::get('/emails', [EmailsController::class, 'index'])->name('emails');
+
+// Manually email compose
+Route::post('/emails/send', [App\Http\Controllers\EmailsController::class, 'sendEmail'])->name('emails.send');
 
 
 });

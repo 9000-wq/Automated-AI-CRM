@@ -51,6 +51,10 @@
                                                             <label for="priceGuidelines" class="form-label">Price Guidelines <span class="text-danger">*</span></label>
                                                             <textarea  class="form-control mt-1" name="priceGuidelines" id="priceGuidelines">{{$companyinfo->price_guidelines}}</textarea>
                                                         </div>
+                                                        <div class="col-md-6">
+                                                            <label for="set_a_prompt" class="form-label">Set a Prompt <span class="text-danger">*</span></label>
+                                                            <textarea  class="form-control mt-1" name="set_a_prompt" id="set_a_prompt">{{$companyinfo->set_a_prompt}}</textarea>
+                                                        </div>
                                                     </div>
 
                                                     <div class="mt-3">
@@ -85,6 +89,8 @@
                                                     @endif
 
                                                 </form>
+
+                                                @include('email-settings')
                                             </div>
 										</div>
 										
@@ -97,7 +103,7 @@
 						
 					</div>
 
-					
+                    
 
 					
 

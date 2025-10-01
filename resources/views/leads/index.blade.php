@@ -144,6 +144,32 @@
 
      })
 
+    $(document).on('click','.scrapeBtn',function(){
+       let id= $(this).attr('id');
+
+
+            const url = "{{route('leads.scrape')}}";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    _method: 'POST',
+                    _token: '{{ csrf_token() }}',
+                    leadid:id
+                },
+                success: function (response) {
+
+                    if(response.success){
+                        swal("✅ AI Email Automation completed successfully!", {
+                            icon: "success",
+                        });
+                    }
+           
+                    // location.reload(); // Reload or remove row dynamically
+                },
+            });
+    });
 
 
  })

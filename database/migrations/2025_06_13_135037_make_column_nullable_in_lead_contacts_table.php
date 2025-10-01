@@ -17,7 +17,12 @@ return new class extends Migration
     public function down()
     {
         Schema::table('lead_contacts', function (Blueprint $table) {
-            $table->unsignedBigInteger('account_id')->nullable(false)->change();
+            // Replace NULL values before enforcing NOT NULL
+            DB::table('lead_contacts')
+                ->whereNull('account_id')
+                ->update(['account_id' => 0]); // or a valid account_id from accounts table
+
+            $table->unsignedBigInteger('account_id')->default(0)->nullable(false)->change();
         });
     }
 };

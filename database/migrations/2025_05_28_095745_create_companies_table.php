@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('business_type');
             $table->text('company_email');
             $table->text('company_address');
+            $table->text('set_a_prompt')->nullable(); 
             $table->text('country');
             $table->timestamps();
         });
