@@ -247,6 +247,16 @@
 						</a>
 					</li>
 
+
+									<a href="#" class="sidebar-link"><strong>Marketing Module</strong></a>
+
+					<li
+						class="sidebar-item  {{ request()->routeIs('upload-marketing-post') ? 'active' : '' }}">
+						<a class="sidebar-link" href="{{route('upload-marketing-post')}}">
+							<i class="fas fa-phone"></i> <span class="align-middle">Generate post</span>
+						</a>
+					</li>
+
 				</ul>
 
 			</div>

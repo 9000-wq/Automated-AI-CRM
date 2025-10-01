@@ -13,17 +13,22 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AiCallController;
 use App\Http\Controllers\AiEmailController;
 use App\Http\Controllers\EmailsController;
+use App\Http\Controllers\MarketingController;
+use Illuminate\Http\Request;
 use App\Models\Lead;
 use Carbon\Carbon;
+use App\Http\Controllers\FacebookController;
 
 
 
 
 
 
-Route::get('/welcome', function () {
-    return view('welcome');
-});
+
+Route::get('/', function () {
+    return view('welcome'); 
+})->name('index');
+
 
 
 
@@ -110,6 +115,28 @@ Route::middleware('auth')->group(function () {
 
     //Ai Email Controller
     Route::get('/AiEmails', [AiEmailController::class,'aiemails'])->name('AiEmails');
+   
+
+   //Marketing Module
+     Route::get('/upload-marketing-post', [MarketingController::class, 'showUploadForm'])
+    ->name('upload-marketing-post'); 
+     Route::post('/upload-marketing-post', [MarketingController::class, 'uploadFile'])
+    ->name('marketing.upload.file');
+    Route::post('/save-marketing-post', [MarketingController::class, 'saveMarketingPost'])
+    ->name('marketing.save');
+    Route::get('/preview/{id}', [MarketingController::class, 'showPreview'])->name('marketing.preview');
+Route::post('/marketing/review', [MarketingController::class, 'reviewAd'])->name('marketing.review');
+
+
+Route::get('/facebook/connect', [FacebookController::class, 'redirectToFacebook'])->name('facebook.connect');
+Route::get('/facebook/callback', [FacebookController::class, 'handleFacebookCallback'])->name('facebook.callback');
+
+
+
+
+
+
+
 
 
 
